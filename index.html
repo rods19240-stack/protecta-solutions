@@ -1,104 +1,410 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Protecta Solutions | Protecta Core</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <meta
+        name="theme-color"
+        content="#05070d"
+    >
+
+    <title>
+        Protecta Solutions | Protecta Core
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
 </head>
+
 
 <body>
 
-<div class="app">
+<!-- =========================================================
+     BOOT / INTRO
+========================================================= -->
 
-    <!-- SIDEBAR -->
+<div
+    class="boot-screen"
+    id="bootScreen"
+>
+
+    <div class="boot-background"></div>
+
+    <div class="boot-grid"></div>
+
+    <div class="boot-particles" id="bootParticles"></div>
+
+
+    <div class="boot-content">
+
+        <div
+            class="boot-logo"
+            id="bootLogo"
+        >
+
+            <div class="logo-glow"></div>
+
+            <img
+                src="protecta-logo-transparent.png"
+                alt="Protecta Solutions"
+            >
+
+        </div>
+
+
+        <div
+            class="boot-subtitle"
+            id="bootSubtitle"
+        >
+
+            PROTECTA CORE
+
+        </div>
+
+
+        <div
+            class="boot-description"
+            id="bootDescription"
+        >
+
+            GRAPH INTELLIGENCE & RISK ANALYTICS
+
+        </div>
+
+
+        <button
+            class="initialize-button"
+            id="initializeButton"
+        >
+
+            <span class="button-line"></span>
+
+            <span class="button-text">
+                INITIALIZE CORE
+            </span>
+
+            <span class="button-arrow">
+                →
+            </span>
+
+            <span class="button-line"></span>
+
+        </button>
+
+
+        <div
+            class="boot-hint"
+            id="bootHint"
+        >
+            CLICK TO ENTER
+        </div>
+
+    </div>
+
+
+    <!-- LOGO PARTICLES -->
+
+    <div
+        class="logo-particles"
+        id="logoParticles"
+    ></div>
+
+
+    <!-- SYSTEM INITIALIZATION -->
+
+    <div
+        class="system-loader"
+        id="systemLoader"
+    >
+
+        <div class="loader-title">
+            PROTECTA CORE
+        </div>
+
+        <div
+            class="loader-status"
+            id="loaderStatus"
+        >
+            INITIALIZING SYSTEM
+        </div>
+
+        <div class="loader-progress">
+
+            <div
+                class="loader-progress-bar"
+                id="loaderProgressBar"
+            ></div>
+
+        </div>
+
+        <div class="loader-percent" id="loaderPercent">
+            0%
+        </div>
+
+    </div>
+
+
+    <!-- FINAL GRAPH TRANSITION -->
+
+    <div
+        class="boot-network"
+        id="bootNetwork"
+    >
+
+        <svg
+            viewBox="0 0 1000 600"
+            preserveAspectRatio="none"
+        >
+
+            <line x1="500" y1="300" x2="180" y2="130"></line>
+            <line x1="500" y1="300" x2="820" y2="130"></line>
+
+            <line x1="500" y1="300" x2="160" y2="450"></line>
+            <line x1="500" y1="300" x2="840" y2="450"></line>
+
+            <line x1="180" y1="130" x2="820" y2="130"></line>
+            <line x1="160" y1="450" x2="840" y2="450"></line>
+
+            <line x1="180" y1="130" x2="160" y2="450"></line>
+            <line x1="820" y1="130" x2="840" y2="450"></line>
+
+        </svg>
+
+
+        <div class="boot-node core">
+            CORE
+        </div>
+
+        <div class="boot-node n1">C</div>
+        <div class="boot-node n2">A</div>
+        <div class="boot-node n3">D</div>
+        <div class="boot-node n4">T</div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<div
+    class="app"
+    id="application"
+>
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     <aside class="sidebar">
 
+
         <div class="brand">
+
             <img
                 src="protecta-logo-transparent.png"
                 alt="Protecta Solutions"
                 class="brand-logo"
             >
+
         </div>
+
 
         <div class="system-label">
             PROTECTA CORE
         </div>
 
+
         <nav class="navigation">
 
-            <a href="#" class="nav-item active">
+            <a
+                href="#dashboard"
+                class="nav-item active"
+            >
+
                 <span class="nav-icon">⌂</span>
-                <span data-es="Panel de Control" data-en="Control Center">Panel de Control</span>
+
+                <span
+                    data-es="Panel de Control"
+                    data-en="Control Center"
+                >
+                    Panel de Control
+                </span>
+
             </a>
 
-            <a href="#" class="nav-item">
+
+            <a
+                href="#network"
+                class="nav-item"
+            >
+
                 <span class="nav-icon">◈</span>
-                <span data-es="Inteligencia de Grafos" data-en="Graph Intelligence">Inteligencia de Grafos</span>
+
+                <span
+                    data-es="Inteligencia de Grafos"
+                    data-en="Graph Intelligence"
+                >
+                    Inteligencia de Grafos
+                </span>
+
             </a>
 
-            <a href="#" class="nav-item">
+
+            <a
+                href="#entities"
+                class="nav-item"
+            >
+
                 <span class="nav-icon">⌕</span>
-                <span data-es="Explorador" data-en="Explorer">Explorador</span>
+
+                <span
+                    data-es="Explorador"
+                    data-en="Explorer"
+                >
+                    Explorador
+                </span>
+
             </a>
 
-            <a href="#" class="nav-item">
+
+            <a
+                href="#activity"
+                class="nav-item"
+            >
+
                 <span class="nav-icon">◌</span>
-                <span data-es="Actividad" data-en="Activity">Actividad</span>
+
+                <span
+                    data-es="Actividad"
+                    data-en="Activity"
+                >
+                    Actividad
+                </span>
+
             </a>
 
-            <a href="#" class="nav-item">
+
+            <a
+                href="#alerts"
+                class="nav-item"
+            >
+
                 <span class="nav-icon">!</span>
-                <span data-es="Alertas" data-en="Alerts">Alertas</span>
-                <b class="notification">7</b>
+
+                <span
+                    data-es="Alertas"
+                    data-en="Alerts"
+                >
+                    Alertas
+                </span>
+
+                <b class="notification">
+                    7
+                </b>
+
             </a>
 
-            <a href="#" class="nav-item">
+
+            <a
+                href="#analytics"
+                class="nav-item"
+            >
+
                 <span class="nav-icon">◒</span>
-                <span data-es="Analítica" data-en="Analytics">Analítica</span>
+
+                <span
+                    data-es="Analítica"
+                    data-en="Analytics"
+                >
+                    Analítica
+                </span>
+
             </a>
 
-            <a href="#" class="nav-item">
+
+            <a
+                href="#risk"
+                class="nav-item"
+            >
+
                 <span class="nav-icon">◇</span>
-                <span data-es="Motor de Riesgo" data-en="Risk Engine">Motor de Riesgo</span>
+
+                <span
+                    data-es="Motor de Riesgo"
+                    data-en="Risk Engine"
+                >
+                    Motor de Riesgo
+                </span>
+
             </a>
 
-            <a href="#" class="nav-item">
+
+            <a
+                href="#data"
+                class="nav-item"
+            >
+
                 <span class="nav-icon">▦</span>
-                <span data-es="Datos" data-en="Data">Datos</span>
+
+                <span
+                    data-es="Datos"
+                    data-en="Data"
+                >
+                    Datos
+                </span>
+
             </a>
 
         </nav>
+
 
         <div class="sidebar-bottom">
 
             <div class="connection-card">
 
                 <div class="connection-top">
+
                     <span class="status-dot"></span>
 
                     <span
                         data-es="SISTEMA EN LÍNEA"
-                        data-en="SYSTEM ONLINE">
+                        data-en="SYSTEM ONLINE"
+                    >
                         SISTEMA EN LÍNEA
                     </span>
+
                 </div>
+
 
                 <div class="connection-title">
                     NEO4J READY
                 </div>
 
+
                 <div
                     class="connection-sub"
                     data-es="Entorno de simulación"
-                    data-en="Simulation environment">
+                    data-en="Simulation environment"
+                >
                     Entorno de simulación
                 </div>
 
             </div>
+
 
             <div class="user-box">
 
@@ -106,17 +412,24 @@
                     PS
                 </div>
 
-                <div>
-                    <strong>Protecta Admin</strong>
+                <div class="user-info">
+
+                    <strong>
+                        Protecta Admin
+                    </strong>
 
                     <small
                         data-es="Administrador"
-                        data-en="Administrator">
+                        data-en="Administrator"
+                    >
                         Administrador
                     </small>
+
                 </div>
 
-                <span class="more">•••</span>
+                <span class="more">
+                    •••
+                </span>
 
             </div>
 
@@ -125,27 +438,42 @@
     </aside>
 
 
-    <!-- MAIN -->
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
     <main class="main">
 
+
         <!-- TOPBAR -->
+
         <header class="topbar">
 
             <div class="breadcrumb">
+
                 PROTECTA SOLUTIONS
+
                 <span>/</span>
+
                 <span
                     data-es="CENTRO DE COMANDO"
-                    data-en="COMMAND CENTER">
+                    data-en="COMMAND CENTER"
+                >
                     CENTRO DE COMANDO
                 </span>
+
             </div>
+
 
             <div class="top-actions">
 
+
                 <div class="search">
 
-                    <span>⌕</span>
+                    <span>
+                        ⌕
+                    </span>
 
                     <input
                         type="text"
@@ -155,19 +483,33 @@
                         placeholder="Buscar entidades, IDs, transacciones..."
                     >
 
-                    <kbd>CTRL K</kbd>
+                    <kbd>
+                        CTRL K
+                    </kbd>
 
                 </div>
 
-                <button class="language-button" id="languageButton">
+
+                <button
+                    class="language-button"
+                    id="languageButton"
+                >
                     🇪🇸 ES
                 </button>
 
-                <button class="icon-button">
+
+                <button
+                    class="icon-button"
+                    id="notificationButton"
+                >
                     ◌
                 </button>
 
-                <button class="icon-button">
+
+                <button
+                    class="icon-button"
+                    id="settingsButton"
+                >
                     ⚙
                 </button>
 
@@ -176,13 +518,23 @@
         </header>
 
 
-        <!-- CONTENT -->
+
+        <!-- =====================================================
+             CONTENT
+        ====================================================== -->
+
         <section class="content">
 
+
             <!-- HERO -->
-            <div class="hero">
+
+            <section
+                class="hero"
+                id="dashboard"
+            >
 
                 <div class="hero-content">
+
 
                     <div class="eyebrow">
 
@@ -190,57 +542,73 @@
 
                         <span
                             data-es="PLATAFORMA DE INTELIGENCIA GRÁFICA"
-                            data-en="GRAPH INTELLIGENCE PLATFORM">
+                            data-en="GRAPH INTELLIGENCE PLATFORM"
+                        >
                             PLATAFORMA DE INTELIGENCIA GRÁFICA
                         </span>
 
                     </div>
 
+
                     <h1>
 
                         <span
                             data-es="Visualiza las conexiones."
-                            data-en="Visualize the connections.">
+                            data-en="Visualize the connections."
+                        >
                             Visualiza las conexiones.
                         </span>
 
                         <strong
                             data-es="Descubre lo invisible."
-                            data-en="Discover the invisible.">
+                            data-en="Discover the invisible."
+                        >
                             Descubre lo invisible.
                         </strong>
 
                     </h1>
 
+
                     <p
                         data-es="Plataforma avanzada para explorar relaciones, detectar patrones y analizar redes complejas mediante inteligencia gráfica."
-                        data-en="Advanced platform for exploring relationships, detecting patterns and analyzing complex networks through graph intelligence.">
+                        data-en="Advanced platform for exploring relationships, detecting patterns and analyzing complex networks through graph intelligence."
+                    >
                         Plataforma avanzada para explorar relaciones,
                         detectar patrones y analizar redes complejas
                         mediante inteligencia gráfica.
                     </p>
 
+
                     <div class="hero-actions">
 
                         <button
                             class="primary-button"
-                            id="exploreButton">
+                            id="exploreButton"
+                        >
 
                             <span
                                 data-es="Explorar Network"
-                                data-en="Explore Network">
+                                data-en="Explore Network"
+                            >
                                 Explorar Network
                             </span>
 
-                            <span>→</span>
+                            <span>
+                                →
+                            </span>
 
                         </button>
 
-                        <button class="secondary-button">
+
+                        <button
+                            class="secondary-button"
+                            id="analyticsButton"
+                        >
 
                             <span
                                 data-es="Ver análisis"
-                                data-en="View analytics">
+                                data-en="View analytics"
+                            >
                                 Ver análisis
                             </span>
 
@@ -252,11 +620,17 @@
 
 
                 <!-- ORBIT -->
+
                 <div class="hero-orbit">
 
                     <div class="orbit orbit-one"></div>
+
                     <div class="orbit orbit-two"></div>
+
                     <div class="orbit orbit-three"></div>
+
+                    <div class="orbit-ring ring-glow"></div>
+
 
                     <div class="core-node">
 
@@ -266,42 +640,67 @@
 
                     </div>
 
-                    <div class="floating-node node-a">C</div>
-                    <div class="floating-node node-b">A</div>
-                    <div class="floating-node node-c">D</div>
-                    <div class="floating-node node-d">T</div>
+
+                    <div class="floating-node node-a">
+                        C
+                    </div>
+
+                    <div class="floating-node node-b">
+                        A
+                    </div>
+
+                    <div class="floating-node node-c">
+                        D
+                    </div>
+
+                    <div class="floating-node node-d">
+                        T
+                    </div>
 
                 </div>
 
-            </div>
+            </section>
+
 
 
             <!-- METRICS -->
-            <div class="metrics">
+
+            <section class="metrics">
+
 
                 <div class="metric-card">
 
                     <div class="metric-header">
+
                         <span
                             data-es="NODOS ACTIVOS"
-                            data-en="ACTIVE NODES">
+                            data-en="ACTIVE NODES"
+                        >
                             NODOS ACTIVOS
                         </span>
 
-                        <i>◈</i>
+                        <i>
+                            ◈
+                        </i>
+
                     </div>
+
 
                     <div class="metric-value">
                         24,891
                     </div>
 
+
                     <div class="metric-footer positive">
 
-                        <span>↑ 12.8%</span>
+                        <span>
+                            ↑ 12.8%
+                        </span>
 
                         <small
                             data-es="vs. periodo anterior"
-                            data-en="vs. previous period">
+                            data-en="vs. previous period"
+                        >
                             vs. periodo anterior
                         </small>
 
@@ -316,25 +715,33 @@
 
                         <span
                             data-es="CONEXIONES"
-                            data-en="CONNECTIONS">
+                            data-en="CONNECTIONS"
+                        >
                             CONEXIONES
                         </span>
 
-                        <i>⌁</i>
+                        <i>
+                            ⌁
+                        </i>
 
                     </div>
+
 
                     <div class="metric-value">
                         81,492
                     </div>
 
+
                     <div class="metric-footer positive">
 
-                        <span>↑ 8.4%</span>
+                        <span>
+                            ↑ 8.4%
+                        </span>
 
                         <small
                             data-es="red expandiéndose"
-                            data-en="network expanding">
+                            data-en="network expanding"
+                        >
                             red expandiéndose
                         </small>
 
@@ -343,34 +750,46 @@
                 </div>
 
 
-                <div class="metric-card">
+                <div
+                    class="metric-card"
+                    id="risk"
+                >
 
                     <div class="metric-header">
 
                         <span
                             data-es="RIESGO GLOBAL"
-                            data-en="GLOBAL RISK">
+                            data-en="GLOBAL RISK"
+                        >
                             RIESGO GLOBAL
                         </span>
 
-                        <i>◉</i>
+                        <i>
+                            ◉
+                        </i>
 
                     </div>
+
 
                     <div class="metric-value">
                         18.7
-                        <small>/100</small>
+                        <small>
+                            /100
+                        </small>
                     </div>
+
 
                     <div class="risk-bar">
                         <span></span>
                     </div>
 
+
                     <div class="metric-footer">
 
                         <small
                             data-es="Nivel moderado"
-                            data-en="Moderate level">
+                            data-en="Moderate level"
+                        >
                             Nivel moderado
                         </small>
 
@@ -385,25 +804,33 @@
 
                         <span
                             data-es="ANOMALÍAS"
-                            data-en="ANOMALIES">
+                            data-en="ANOMALIES"
+                        >
                             ANOMALÍAS
                         </span>
 
-                        <i>!</i>
+                        <i>
+                            !
+                        </i>
 
                     </div>
+
 
                     <div class="metric-value">
                         137
                     </div>
 
+
                     <div class="metric-footer warning">
 
-                        <span>● 7</span>
+                        <span>
+                            ● 7
+                        </span>
 
                         <small
                             data-es="críticas requieren atención"
-                            data-en="critical require attention">
+                            data-en="critical require attention"
+                        >
                             críticas requieren atención
                         </small>
 
@@ -411,14 +838,21 @@
 
                 </div>
 
-            </div>
+            </section>
 
 
-            <!-- DASHBOARD -->
+
+            <!-- NETWORK + ALERTS -->
+
             <div class="dashboard-grid">
 
+
                 <!-- GRAPH -->
-                <section class="panel graph-panel">
+
+                <section
+                    class="panel graph-panel"
+                    id="network"
+                >
 
                     <div class="panel-header">
 
@@ -430,11 +864,13 @@
 
                             <h2
                                 data-es="Mapa de relaciones"
-                                data-en="Relationship Map">
+                                data-en="Relationship Map"
+                            >
                                 Mapa de relaciones
                             </h2>
 
                         </div>
+
 
                         <div class="panel-controls">
 
@@ -450,7 +886,10 @@
                                 7D
                             </button>
 
-                            <button class="expand">
+                            <button
+                                class="expand"
+                                id="expandGraph"
+                            >
                                 ⛶
                             </button>
 
@@ -463,19 +902,26 @@
 
                         <div class="graph-grid"></div>
 
+                        <div class="scan-line"></div>
+
+
                         <svg
                             class="connections"
                             viewBox="0 0 900 520"
-                            preserveAspectRatio="none">
+                            preserveAspectRatio="none"
+                        >
 
                             <line x1="450" y1="260" x2="220" y2="130"/>
                             <line x1="450" y1="260" x2="690" y2="120"/>
                             <line x1="450" y1="260" x2="180" y2="350"/>
                             <line x1="450" y1="260" x2="710" y2="360"/>
+
                             <line x1="220" y1="130" x2="120" y2="240"/>
                             <line x1="690" y1="120" x2="790" y2="230"/>
+
                             <line x1="180" y1="350" x2="320" y2="430"/>
                             <line x1="710" y1="360" x2="590" y2="440"/>
+
                             <line x1="220" y1="130" x2="690" y2="120"/>
                             <line x1="180" y1="350" x2="710" y2="360"/>
 
@@ -486,18 +932,23 @@
 
                             <div class="node-pulse"></div>
 
-                            <span>CORE</span>
+                            <span>
+                                CORE
+                            </span>
 
                         </div>
 
 
                         <div class="graph-node client">
 
-                            <span class="node-symbol">C</span>
+                            <span class="node-symbol">
+                                C
+                            </span>
 
                             <small
                                 data-es="CLIENTE"
-                                data-en="CLIENT">
+                                data-en="CLIENT"
+                            >
                                 CLIENTE
                             </small>
 
@@ -506,11 +957,14 @@
 
                         <div class="graph-node account">
 
-                            <span class="node-symbol">A</span>
+                            <span class="node-symbol">
+                                A
+                            </span>
 
                             <small
                                 data-es="CUENTA"
-                                data-en="ACCOUNT">
+                                data-en="ACCOUNT"
+                            >
                                 CUENTA
                             </small>
 
@@ -519,11 +973,14 @@
 
                         <div class="graph-node device">
 
-                            <span class="node-symbol">D</span>
+                            <span class="node-symbol">
+                                D
+                            </span>
 
                             <small
                                 data-es="DISPOSITIVO"
-                                data-en="DEVICE">
+                                data-en="DEVICE"
+                            >
                                 DISPOSITIVO
                             </small>
 
@@ -532,11 +989,14 @@
 
                         <div class="graph-node location">
 
-                            <span class="node-symbol">L</span>
+                            <span class="node-symbol">
+                                L
+                            </span>
 
                             <small
                                 data-es="UBICACIÓN"
-                                data-en="LOCATION">
+                                data-en="LOCATION"
+                            >
                                 UBICACIÓN
                             </small>
 
@@ -545,11 +1005,14 @@
 
                         <div class="graph-node transaction">
 
-                            <span class="node-symbol">T</span>
+                            <span class="node-symbol">
+                                T
+                            </span>
 
                             <small
                                 data-es="TRANSACCIÓN"
-                                data-en="TRANSACTION">
+                                data-en="TRANSACTION"
+                            >
                                 TRANSACCIÓN
                             </small>
 
@@ -572,41 +1035,48 @@
                         <div class="graph-legend">
 
                             <div>
-                                <span class="legend-dot client-dot"></span>
+                                <span class="legend-dot"></span>
 
                                 <span
                                     data-es="Cliente"
-                                    data-en="Client">
+                                    data-en="Client"
+                                >
                                     Cliente
                                 </span>
                             </div>
 
+
                             <div>
-                                <span class="legend-dot account-dot"></span>
+                                <span class="legend-dot"></span>
 
                                 <span
                                     data-es="Cuenta"
-                                    data-en="Account">
+                                    data-en="Account"
+                                >
                                     Cuenta
                                 </span>
                             </div>
 
+
                             <div>
-                                <span class="legend-dot device-dot"></span>
+                                <span class="legend-dot"></span>
 
                                 <span
                                     data-es="Dispositivo"
-                                    data-en="Device">
+                                    data-en="Device"
+                                >
                                     Dispositivo
                                 </span>
                             </div>
 
+
                             <div>
-                                <span class="legend-dot transaction-dot"></span>
+                                <span class="legend-dot"></span>
 
                                 <span
                                     data-es="Transacción"
-                                    data-en="Transaction">
+                                    data-en="Transaction"
+                                >
                                     Transacción
                                 </span>
                             </div>
@@ -618,8 +1088,13 @@
                 </section>
 
 
+
                 <!-- ALERTS -->
-                <section class="panel alerts-panel">
+
+                <section
+                    class="panel alerts-panel"
+                    id="alerts"
+                >
 
                     <div class="panel-header">
 
@@ -631,16 +1106,20 @@
 
                             <h2
                                 data-es="Alertas recientes"
-                                data-en="Recent Alerts">
+                                data-en="Recent Alerts"
+                            >
                                 Alertas recientes
                             </h2>
 
                         </div>
 
+
                         <button
                             class="view-all"
+                            id="viewAlerts"
                             data-es="Ver todas →"
-                            data-en="View all →">
+                            data-en="View all →"
+                        >
                             Ver todas →
                         </button>
 
@@ -660,7 +1139,8 @@
 
                                 <strong
                                     data-es="Actividad de alto riesgo"
-                                    data-en="High-risk activity">
+                                    data-en="High-risk activity"
+                                >
                                     Actividad de alto riesgo
                                 </strong>
 
@@ -670,13 +1150,16 @@
 
                                 <small
                                     data-es="Hace 2 minutos"
-                                    data-en="2 minutes ago">
+                                    data-en="2 minutes ago"
+                                >
                                     Hace 2 minutos
                                 </small>
 
                             </div>
 
-                            <b>94</b>
+                            <b>
+                                94
+                            </b>
 
                         </div>
 
@@ -691,7 +1174,8 @@
 
                                 <strong
                                     data-es="Conexión inusual"
-                                    data-en="Unusual connection">
+                                    data-en="Unusual connection"
+                                >
                                     Conexión inusual
                                 </strong>
 
@@ -701,13 +1185,16 @@
 
                                 <small
                                     data-es="Hace 8 minutos"
-                                    data-en="8 minutes ago">
+                                    data-en="8 minutes ago"
+                                >
                                     Hace 8 minutos
                                 </small>
 
                             </div>
 
-                            <b>72</b>
+                            <b>
+                                72
+                            </b>
 
                         </div>
 
@@ -722,7 +1209,8 @@
 
                                 <strong
                                     data-es="Patrón detectado"
-                                    data-en="Pattern detected">
+                                    data-en="Pattern detected"
+                                >
                                     Patrón detectado
                                 </strong>
 
@@ -732,13 +1220,16 @@
 
                                 <small
                                     data-es="Hace 16 minutos"
-                                    data-en="16 minutes ago">
+                                    data-en="16 minutes ago"
+                                >
                                     Hace 16 minutos
                                 </small>
 
                             </div>
 
-                            <b>58</b>
+                            <b>
+                                58
+                            </b>
 
                         </div>
 
@@ -753,7 +1244,8 @@
 
                                 <strong
                                     data-es="Riesgo controlado"
-                                    data-en="Risk controlled">
+                                    data-en="Risk controlled"
+                                >
                                     Riesgo controlado
                                 </strong>
 
@@ -763,13 +1255,16 @@
 
                                 <small
                                     data-es="Hace 24 minutos"
-                                    data-en="24 minutes ago">
+                                    data-en="24 minutes ago"
+                                >
                                     Hace 24 minutos
                                 </small>
 
                             </div>
 
-                            <b>21</b>
+                            <b>
+                                21
+                            </b>
 
                         </div>
 
@@ -780,12 +1275,18 @@
             </div>
 
 
-            <!-- BOTTOM -->
+
+            <!-- ANALYTICS + ENTITIES -->
+
             <div class="bottom-grid">
 
 
                 <!-- ACTIVITY -->
-                <section class="panel activity-panel">
+
+                <section
+                    class="panel activity-panel"
+                    id="activity"
+                >
 
                     <div class="panel-header">
 
@@ -797,16 +1298,19 @@
 
                             <h2
                                 data-es="Actividad de la red"
-                                data-en="Network Activity">
+                                data-en="Network Activity"
+                            >
                                 Actividad de la red
                             </h2>
 
                         </div>
 
+
                         <button
                             class="view-all"
                             data-es="Historial →"
-                            data-en="History →">
+                            data-en="History →"
+                        >
                             Historial →
                         </button>
 
@@ -816,11 +1320,13 @@
                     <div class="activity-chart">
 
                         <div class="chart-y">
+
                             <span>100</span>
                             <span>75</span>
                             <span>50</span>
                             <span>25</span>
                             <span>0</span>
+
                         </div>
 
 
@@ -828,9 +1334,11 @@
 
                             <div class="chart-lines"></div>
 
+
                             <svg
                                 viewBox="0 0 800 250"
-                                preserveAspectRatio="none">
+                                preserveAspectRatio="none"
+                            >
 
                                 <defs>
 
@@ -839,15 +1347,18 @@
                                         x1="0"
                                         x2="0"
                                         y1="0"
-                                        y2="1">
+                                        y2="1"
+                                    >
 
                                         <stop
                                             offset="0%"
-                                            stop-opacity=".35"/>
+                                            stop-opacity=".35"
+                                        />
 
                                         <stop
                                             offset="100%"
-                                            stop-opacity="0"/>
+                                            stop-opacity="0"
+                                        />
 
                                     </linearGradient>
 
@@ -888,8 +1399,13 @@
                 </section>
 
 
+
                 <!-- ENTITIES -->
-                <section class="panel entities-panel">
+
+                <section
+                    class="panel entities-panel"
+                    id="entities"
+                >
 
                     <div class="panel-header">
 
@@ -901,26 +1417,36 @@
 
                             <h2
                                 data-es="Entidades principales"
-                                data-en="Main Entities">
+                                data-en="Main Entities"
+                            >
                                 Entidades principales
                             </h2>
 
                         </div>
 
+
                         <button
                             class="view-all"
+                            id="exploreEntities"
                             data-es="Explorar →"
-                            data-en="Explore →">
+                            data-en="Explore →"
+                        >
                             Explorar →
                         </button>
 
                     </div>
 
 
-                    <div class="entity-list">
+                    <div
+                        class="entity-list"
+                        id="entityList"
+                    >
 
 
-                        <div class="entity-row">
+                        <div
+                            class="entity-row"
+                            data-search="clientes client cliente"
+                        >
 
                             <div class="entity-icon cliente">
                                 C
@@ -930,13 +1456,15 @@
 
                                 <strong
                                     data-es="Clientes"
-                                    data-en="Clients">
+                                    data-en="Clients"
+                                >
                                     Clientes
                                 </strong>
 
                                 <small
                                     data-es="8,492 entidades"
-                                    data-en="8,492 entities">
+                                    data-en="8,492 entities"
+                                >
                                     8,492 entidades
                                 </small>
 
@@ -953,7 +1481,10 @@
                         </div>
 
 
-                        <div class="entity-row">
+                        <div
+                            class="entity-row"
+                            data-search="cuentas accounts cuenta"
+                        >
 
                             <div class="entity-icon cuenta">
                                 A
@@ -963,13 +1494,15 @@
 
                                 <strong
                                     data-es="Cuentas"
-                                    data-en="Accounts">
+                                    data-en="Accounts"
+                                >
                                     Cuentas
                                 </strong>
 
                                 <small
                                     data-es="6,821 entidades"
-                                    data-en="6,821 entities">
+                                    data-en="6,821 entities"
+                                >
                                     6,821 entidades
                                 </small>
 
@@ -986,7 +1519,10 @@
                         </div>
 
 
-                        <div class="entity-row">
+                        <div
+                            class="entity-row"
+                            data-search="dispositivos devices dispositivo"
+                        >
 
                             <div class="entity-icon dispositivo">
                                 D
@@ -996,13 +1532,15 @@
 
                                 <strong
                                     data-es="Dispositivos"
-                                    data-en="Devices">
+                                    data-en="Devices"
+                                >
                                     Dispositivos
                                 </strong>
 
                                 <small
                                     data-es="4,792 entidades"
-                                    data-en="4,792 entities">
+                                    data-en="4,792 entities"
+                                >
                                     4,792 entidades
                                 </small>
 
@@ -1019,7 +1557,10 @@
                         </div>
 
 
-                        <div class="entity-row">
+                        <div
+                            class="entity-row"
+                            data-search="ubicaciones locations ubicación"
+                        >
 
                             <div class="entity-icon ubicacion">
                                 L
@@ -1029,13 +1570,15 @@
 
                                 <strong
                                     data-es="Ubicaciones"
-                                    data-en="Locations">
+                                    data-en="Locations"
+                                >
                                     Ubicaciones
                                 </strong>
 
                                 <small
                                     data-es="2,941 entidades"
-                                    data-en="2,941 entities">
+                                    data-en="2,941 entities"
+                                >
                                     2,941 entidades
                                 </small>
 
@@ -1051,6 +1594,7 @@
 
                         </div>
 
+
                     </div>
 
                 </section>
@@ -1058,7 +1602,164 @@
             </div>
 
 
+
+            <!-- EXTRA SYSTEM SECTION -->
+
+            <section
+                class="system-panel"
+                id="analytics"
+            >
+
+                <div class="system-panel-header">
+
+                    <div>
+
+                        <div class="panel-kicker">
+                            INTELLIGENCE ENGINE
+                        </div>
+
+                        <h2
+                            data-es="Estado del ecosistema"
+                            data-en="Ecosystem Status"
+                        >
+                            Estado del ecosistema
+                        </h2>
+
+                    </div>
+
+                    <div class="system-live">
+                        <span></span>
+                        LIVE
+                    </div>
+
+                </div>
+
+
+                <div class="system-grid">
+
+
+                    <div class="system-module">
+
+                        <div class="module-icon">
+                            ◈
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                GRAPH ENGINE
+                            </strong>
+
+                            <small
+                                data-es="Procesamiento de relaciones"
+                                data-en="Relationship processing"
+                            >
+                                Procesamiento de relaciones
+                            </small>
+
+                        </div>
+
+                        <b>
+                            ONLINE
+                        </b>
+
+                    </div>
+
+
+                    <div class="system-module">
+
+                        <div class="module-icon">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                RISK ENGINE
+                            </strong>
+
+                            <small
+                                data-es="Análisis de riesgo"
+                                data-en="Risk analysis"
+                            >
+                                Análisis de riesgo
+                            </small>
+
+                        </div>
+
+                        <b>
+                            ONLINE
+                        </b>
+
+                    </div>
+
+
+                    <div class="system-module">
+
+                        <div class="module-icon">
+                            ⌁
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                NEO4J INTERFACE
+                            </strong>
+
+                            <small
+                                data-es="Conector preparado"
+                                data-en="Connector ready"
+                            >
+                                Conector preparado
+                            </small>
+
+                        </div>
+
+                        <b>
+                            READY
+                        </b>
+
+                    </div>
+
+
+                    <div
+                        class="system-module"
+                        id="data"
+                    >
+
+                        <div class="module-icon">
+                            ▦
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                DATA STREAM
+                            </strong>
+
+                            <small
+                                data-es="Flujo de datos"
+                                data-en="Data stream"
+                            >
+                                Flujo de datos
+                            </small>
+
+                        </div>
+
+                        <b>
+                            ACTIVE
+                        </b>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
             <!-- FOOTER -->
+
             <footer>
 
                 <div>
@@ -1082,14 +1783,16 @@
 
                         <span
                             data-es="TODOS LOS SISTEMAS OPERATIVOS"
-                            data-en="ALL SYSTEMS OPERATIONAL">
+                            data-en="ALL SYSTEMS OPERATIONAL"
+                        >
                             TODOS LOS SISTEMAS OPERATIVOS
                         </span>
 
                     </span>
 
+
                     <span>
-                        v0.1.0
+                        v0.3.0
                     </span>
 
                 </div>
@@ -1103,7 +1806,14 @@
 </div>
 
 
+<div
+    class="toast-container"
+    id="toastContainer"
+></div>
+
+
 <script src="script.js"></script>
 
 </body>
+
 </html>
