@@ -1438,6 +1438,163 @@ const ProtectaCore = {
 
     },
 
+    /* =====================================================
+    PRODUCTS
+    ===================================================== */
+
+    setupProducts() {
+
+        const filters =
+            document.querySelectorAll(
+                ".product-filter"
+            );
+
+        const products =
+            document.querySelectorAll(
+                ".product-card"
+            );
+
+        const counter =
+            document.getElementById(
+                "productCount"
+            );
+
+
+        if (!filters.length || !products.length)
+            return;
+
+
+        filters.forEach(filter => {
+
+            filter.addEventListener(
+                "click",
+                () => {
+
+                    filters.forEach(
+                        button => {
+
+                            button.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                    filter.classList.add(
+                        "active"
+                    );
+
+
+                    const category =
+                        filter.dataset.filter;
+
+
+                    let visible = 0;
+
+
+                    products.forEach(product => {
+
+                        const productCategory =
+                            product.dataset.category;
+
+
+                        const show =
+                            category === "all" ||
+                            productCategory === category;
+
+
+                        if (show) {
+
+                            product.classList.remove(
+                                "product-hidden"
+                            );
+
+                            visible++;
+
+                        } else {
+
+                            product.classList.add(
+                                "product-hidden"
+                            );
+
+                        }
+
+                    });
+
+
+                    if (counter) {
+
+                        counter.textContent =
+                            String(visible)
+                                .padStart(2, "0");
+
+                    }
+
+                }
+            );
+
+        });
+
+
+        const detailButtons =
+            document.querySelectorAll(
+                ".product-detail"
+            );
+
+
+        detailButtons.forEach(button => {
+
+            button.addEventListener(
+                "click",
+                () => {
+
+                    const card =
+                        button.closest(
+                            ".product-card"
+                        );
+
+
+                    if (!card) return;
+
+
+                    card.animate(
+
+                        [
+                            {
+                                transform:
+                                    "scale(1)"
+                            },
+
+                            {
+                                transform:
+                                    "scale(1.025)"
+                            },
+
+                            {
+                                transform:
+                                    "scale(1)"
+                            }
+                        ],
+
+                        {
+                            duration: 400
+                        }
+
+                    );
+
+
+                    console.log(
+                        "Protecta product selected"
+                    );
+
+                }
+            );
+
+        });
+
+    },
+
 
     /* =====================================================
        METRICS
@@ -1667,6 +1824,7 @@ document.addEventListener(
     () => {
 
         ProtectaCore.init();
+        this.setupProducts();
 
     }
 );
