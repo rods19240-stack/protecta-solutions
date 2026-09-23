@@ -1,2658 +1,761 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070d">
+    <title>Protecta Solutions | Acceso</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --black: #05070d;
+            --panel: #0b0f18;
+            --electric: #00a8ff;
+            --blue: #123bff;
+            --blue-light: #4d7cff;
+            --silver: #c8ced8;
+            --white: #f8fafc;
+            --muted: #737d91;
+            --green: #36e2a1;
+            --border: rgba(0, 168, 255, 0.15);
+        }
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    <meta
-        name="theme-color"
-        content="#05070d"
-    >
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
 
-    <title>
-        Protecta Solutions | Protecta Core
-    </title>
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
 
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 168, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 168, 255, 0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
 
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 50% 40% at 50% 30%, rgba(18, 59, 255, 0.22), transparent 60%),
+                radial-gradient(ellipse 40% 35% at 20% 80%, rgba(0, 168, 255, 0.08), transparent),
+                radial-gradient(ellipse 40% 35% at 80% 80%, rgba(18, 59, 255, 0.1), transparent);
+            pointer-events: none;
+            z-index: 0;
+            animation: glowPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.12) 2px,
+                rgba(0, 0, 0, 0.12) 4px
+            );
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.35;
+        }
+
+        .scan-beam {
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(
+                180deg,
+                transparent,
+                rgba(0, 168, 255, 0.06),
+                transparent
+            );
+            pointer-events: none;
+            z-index: 4;
+            animation: scanMove 5s linear infinite;
+        }
+
+        @keyframes scanMove {
+            0% { top: -120px; }
+            100% { top: 100%; }
+        }
+
+        #particles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .stage {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 980px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-block {
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .logo-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 28px;
+            opacity: 0;
+            transform: scale(0.85) translateY(20px);
+            filter: blur(8px);
+            animation: holoMaterialize 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        }
+
+        .logo-wrap img {
+            height: 52px;
+            width: auto;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(0, 168, 255, 0.45));
+        }
+
+        .logo-ring {
+            position: absolute;
+            inset: -18px;
+            border: 1px solid rgba(0, 168, 255, 0.25);
+            border-radius: 50%;
+            animation: ringSpin 12s linear infinite;
+        }
+
+        .logo-ring::after {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: var(--electric);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--electric);
+            transform: translateX(-50%);
+        }
+
+        @keyframes ringSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes holoMaterialize {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+                filter: blur(12px);
+            }
+            40% {
+                opacity: 0.6;
+                filter: blur(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .sys-line {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            color: var(--electric);
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            opacity: 0;
+            animation: fadeSlide 0.9s ease 0.9s forwards;
+            text-shadow: 0 0 20px rgba(0, 168, 255, 0.5);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(22px, 4.2vw, 34px);
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: holoMaterialize 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards;
+        }
+
+        h1 strong {
+            color: var(--electric);
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.4);
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+            max-width: 420px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeSlide 1s ease 1.4s forwards;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            width: 100%;
+            position: relative;
+        }
+
+        @media (max-width: 720px) {
+            .choices {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+            html, body {
+                overflow-y: auto;
+            }
+            .stage {
+                padding: 40px 20px;
+            }
+        }
+
+        .choice {
+            position: relative;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: rgba(11, 15, 24, 0.75);
+            border: 1px solid rgba(0, 168, 255, 0.18);
+            border-radius: 4px;
+            padding: 36px 30px;
+            text-align: left;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px) scale(0.92);
+            filter: blur(10px);
+            transition:
+                transform 0.35s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+        .choice.empresa {
+            animation: holoMaterialize 1.3s cubic-bezier(0.16, 1, 0.3, 1) 1.7s forwards;
+        }
+
+        .choice.cliente {
+            animation: holoMaterialize 1.3s cubic-bezier(0.16, 1, 0.3, 1) 2.05s forwards;
+        }
+
+        .choice::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 168, 255, 0.06) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(18, 59, 255, 0.06) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .choice::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 168, 255, 0.08),
+                transparent
+            );
+        }
+
+        .choice:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(0, 168, 255, 0.55);
+            box-shadow:
+                0 0 40px rgba(0, 168, 255, 0.15),
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                inset 0 0 30px rgba(0, 168, 255, 0.04);
+        }
+
+        .choice:hover::before {
+            opacity: 1;
+        }
+
+        .choice:hover::after {
+            animation: sweep 0.8s ease;
+        }
+
+        @keyframes sweep {
+            from { left: -100%; }
+            to { left: 120%; }
+        }
+
+        .choice .c1, .choice .c2, .choice .c3, .choice .c4 {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: var(--electric);
+            border-style: solid;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .choice:hover .c1,
+        .choice:hover .c2,
+        .choice:hover .c3,
+        .choice:hover .c4 {
+            opacity: 1;
+        }
+
+        .choice .c1 { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .choice .c2 { top: 0; right: 0; border-width: 2px 2px 0 0; }
+        .choice .c3 { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+        .choice .c4 { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+        .choice-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            background: rgba(0, 168, 255, 0.08);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            color: var(--electric);
+            box-shadow: 0 0 24px rgba(0, 168, 255, 0.15);
+        }
+
+        .choice.empresa .choice-icon {
+            background: rgba(18, 59, 255, 0.12);
+            border-color: rgba(77, 124, 255, 0.4);
+            color: var(--blue-light);
+            box-shadow: 0 0 24px rgba(18, 59, 255, 0.2);
+        }
+
+        .choice-icon .pulse {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            opacity: 0.3;
+            animation: iconPulse 2.5s ease-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .choice-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .choice h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .choice p {
+            font-size: 12.5px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            min-height: 60px;
+        }
+
+        .choice-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--electric);
+        }
+
+        .choice.empresa .choice-cta {
+            color: var(--blue-light);
+        }
+
+        .choice-cta .arrow {
+            display: inline-flex;
+            transition: transform 0.25s;
+        }
+
+        .choice:hover .choice-cta .arrow {
+            transform: translateX(6px);
+        }
+
+        .choice-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .choice-status i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            animation: statusBlink 2s ease infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .footer {
+            margin-top: 44px;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            opacity: 0;
+            animation: fadeSlide 1s ease 2.4s forwards;
+            text-transform: uppercase;
+        }
+
+        .footer strong {
+            color: var(--silver);
+            font-weight: 600;
+        }
+
+        .boot-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .boot-overlay.done {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .boot-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.35em;
+            color: var(--electric);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 168, 255, 0.6);
+        }
+
+        .boot-bar {
+            width: 180px;
+            height: 2px;
+            background: rgba(0, 168, 255, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .boot-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--blue), var(--electric));
+            box-shadow: 0 0 12px var(--electric);
+            animation: bootLoad 1.6s ease forwards;
+        }
+
+        @keyframes bootLoad {
+            to { width: 100%; }
+        }
+
+        .boot-pct {
+            margin-top: 12px;
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
 </head>
-
-
 <body>
 
-<!-- =========================================================
-     BOOT / INTRO
-========================================================= -->
+    <div class="boot-overlay" id="bootOverlay">
+        <div class="boot-text">Initializing access gateway</div>
+        <div class="boot-bar"><span></span></div>
+        <div class="boot-pct" id="bootPct">0%</div>
+    </div>
 
-<div
-    class="boot-screen"
-    id="bootScreen"
->
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="scan-beam"></div>
+    <div class="scanlines"></div>
+    <canvas id="particles"></canvas>
 
-    <div class="boot-background"></div>
+    <div class="stage">
 
-    <div class="boot-grid"></div>
+        <div class="header-block">
+            <div class="logo-wrap">
+                <div class="logo-ring"></div>
+                <img src="protecta-logo-transparent.png" alt="Protecta Solutions"
+                     onerror="this.style.display='none'">
+            </div>
+            <div class="sys-line">// access · select interface</div>
+            <h1>
+                ¿Cómo deseas <strong>ingresar</strong>?
+            </h1>
+            <p class="subtitle">
+                Selecciona el canal holográfico de acceso.
+                Empresa activa Protecta Core · Cliente abre el Portal.
+            </p>
+        </div>
 
-    <div class="boot-particles" id="bootParticles"></div>
+        <div class="choices">
 
+            <a href="empresa.html" class="choice empresa" id="cardEmpresa">
+                <span class="c1"></span><span class="c2"></span>
+                <span class="c3"></span><span class="c4"></span>
+                <div class="choice-status"><i></i> ONLINE</div>
+                <div class="choice-icon">
+                    <span class="pulse"></span>
+                    ◈
+                </div>
+                <div class="choice-label">Canal interno</div>
+                <h2>Empresa</h2>
+                <p>
+                    Protecta Core completo: inteligencia de grafos,
+                    motor de riesgo, alertas, Neo4j y monitoreo en vivo.
+                </p>
+                <div class="choice-cta">
+                    <span>Inicializar Core</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
 
-    <div class="boot-content">
-
-        <div
-            class="boot-logo"
-            id="bootLogo"
-        >
-
-            <div class="logo-glow"></div>
-
-            <img
-                src="protecta-logo-transparent.png"
-                alt="Protecta Solutions"
-            >
+            <a href="clientes.html" class="choice cliente" id="cardCliente">
+                <span class="c1"></span><span class="c2"></span>
+                <span class="c3"></span><span class="c4"></span>
+                <div class="choice-status"><i></i> ONLINE</div>
+                <div class="choice-icon">
+                    <span class="pulse"></span>
+                    ▣
+                </div>
+                <div class="choice-label">Canal cliente</div>
+                <h2>Cliente</h2>
+                <p>
+                    Portal de cliente: 9 líneas de producto, estado
+                    de servicios, soporte y documentos.
+                </p>
+                <div class="choice-cta">
+                    <span>Abrir Portal</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
 
         </div>
 
-
-        <div
-            class="boot-subtitle"
-            id="bootSubtitle"
-        >
-
-            PROTECTA CORE
-
-        </div>
-
-
-        <div
-            class="boot-description"
-            id="bootDescription"
-        >
-
-            GRAPH INTELLIGENCE & RISK ANALYTICS
-
-        </div>
-
-
-        <button
-            class="initialize-button"
-            id="initializeButton"
-        >
-
-            <span class="button-line"></span>
-
-            <span class="button-text">
-                INITIALIZE CORE
-            </span>
-
-            <span class="button-arrow">
-                →
-            </span>
-
-            <span class="button-line"></span>
-
-        </button>
-
-
-        <div
-            class="boot-hint"
-            id="bootHint"
-        >
-            CLICK TO ENTER
-        </div>
+        <p class="footer">
+            <strong>PROTECTA SOLUTIONS</strong> · Graph Intelligence &amp; Risk Analytics
+        </p>
 
     </div>
 
-
-    <!-- LOGO PARTICLES -->
-
-    <div
-        class="logo-particles"
-        id="logoParticles"
-    ></div>
-
-
-    <!-- SYSTEM INITIALIZATION -->
-
-    <div
-        class="system-loader"
-        id="systemLoader"
-    >
-
-        <div class="loader-title">
-            PROTECTA CORE
-        </div>
-
-        <div
-            class="loader-status"
-            id="loaderStatus"
-        >
-            INITIALIZING SYSTEM
-        </div>
-
-        <div class="loader-progress">
-
-            <div
-                class="loader-progress-bar"
-                id="loaderProgressBar"
-            ></div>
-
-        </div>
-
-        <div class="loader-percent" id="loaderPercent">
-            0%
-        </div>
-
-    </div>
-
-
-    <!-- FINAL GRAPH TRANSITION -->
-
-    <div
-        class="boot-network"
-        id="bootNetwork"
-    >
-
-        <svg
-            viewBox="0 0 1000 600"
-            preserveAspectRatio="none"
-        >
-
-            <line x1="500" y1="300" x2="180" y2="130"></line>
-            <line x1="500" y1="300" x2="820" y2="130"></line>
-
-            <line x1="500" y1="300" x2="160" y2="450"></line>
-            <line x1="500" y1="300" x2="840" y2="450"></line>
-
-            <line x1="180" y1="130" x2="820" y2="130"></line>
-            <line x1="160" y1="450" x2="840" y2="450"></line>
-
-            <line x1="180" y1="130" x2="160" y2="450"></line>
-            <line x1="820" y1="130" x2="840" y2="450"></line>
-
-        </svg>
-
-
-        <div class="boot-node core">
-            CORE
-        </div>
-
-        <div class="boot-node n1">C</div>
-        <div class="boot-node n2">A</div>
-        <div class="boot-node n3">D</div>
-        <div class="boot-node n4">T</div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     APPLICATION
-========================================================= -->
-
-<div
-    class="app"
-    id="application"
->
-
-
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <div class="brand">
-
-            <img
-                src="protecta-logo-transparent.png"
-                alt="Protecta Solutions"
-                class="brand-logo"
-            >
-
-        </div>
-
-
-        <div class="system-label">
-            PROTECTA CORE
-        </div>
-
-
-        <nav class="navigation">
-
-            <a
-                href="#dashboard"
-                class="nav-item active"
-            >
-
-                <span class="nav-icon">⌂</span>
-
-                <span
-                    data-es="Panel de Control"
-                    data-en="Control Center"
-                >
-                    Panel de Control
-                </span>
-
-            </a>
-
-
-            <a
-                href="#network"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">◈</span>
-
-                <span
-                    data-es="Inteligencia de Grafos"
-                    data-en="Graph Intelligence"
-                >
-                    Inteligencia de Grafos
-                </span>
-
-            </a>
-
-
-            <a
-                href="#entities"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">⌕</span>
-
-                <span
-                    data-es="Explorador"
-                    data-en="Explorer"
-                >
-                    Explorador
-                </span>
-
-            </a>
-
-
-            <a
-                href="#activity"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">◌</span>
-
-                <span
-                    data-es="Actividad"
-                    data-en="Activity"
-                >
-                    Actividad
-                </span>
-
-            </a>
-
-
-            <a
-                href="#alerts"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">!</span>
-
-                <span
-                    data-es="Alertas"
-                    data-en="Alerts"
-                >
-                    Alertas
-                </span>
-
-                <b class="notification">
-                    7
-                </b>
-
-            </a>
-
-
-            <a
-                href="#analytics"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">◒</span>
-
-                <span
-                    data-es="Analítica"
-                    data-en="Analytics"
-                >
-                    Analítica
-                </span>
-
-            </a>
-
-
-            <a
-                href="#risk"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">◇</span>
-
-                <span
-                    data-es="Motor de Riesgo"
-                    data-en="Risk Engine"
-                >
-                    Motor de Riesgo
-                </span>
-
-            </a>
-
-
-            <a
-                href="#data"
-                class="nav-item"
-            >
-
-                <span class="nav-icon">▦</span>
-
-                <span
-                    data-es="Datos"
-                    data-en="Data"
-                >
-                    Datos
-                </span>
-
-            </a>
-
-            <a href="#products" class="nav-item">
-
-                <span class="nav-icon">▣</span>
-
-                <span
-                    data-es="Productos"
-                    data-en="Products"
-                >
-                    Productos
-                </span>
-
-            </a>
-
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-            <a href="inicio.html" class="session-exit">
-                <span class="session-exit-arrow">←</span>
-                <span
-                    data-es="Cerrar sesión / Inicio"
-                    data-en="Sign out / Home"
-                >
-                    Cerrar sesión / Inicio
-                </span>
-            </a>
-
-            <div class="connection-card">
-
-                <div class="connection-top">
-
-                    <span class="status-dot"></span>
-
-                    <span
-                        data-es="SISTEMA EN LÍNEA"
-                        data-en="SYSTEM ONLINE"
-                    >
-                        SISTEMA EN LÍNEA
-                    </span>
-
-                </div>
-
-
-                <div class="connection-title">
-                    NEO4J READY
-                </div>
-
-
-                <div
-                    class="connection-sub"
-                    data-es="Entorno de simulación"
-                    data-en="Simulation environment"
-                >
-                    Entorno de simulación
-                </div>
-
-            </div>
-
-
-            <div class="user-box">
-
-                <div class="avatar">
-                    PS
-                </div>
-
-                <div class="user-info">
-
-                    <strong>
-                        Protecta Admin
-                    </strong>
-
-                    <small
-                        data-es="Administrador"
-                        data-en="Administrator"
-                    >
-                        Administrador
-                    </small>
-
-                </div>
-
-                <span class="more">
-                    •••
-                </span>
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-
-    <!-- =====================================================
-         MAIN
-    ====================================================== -->
-
-    <main class="main">
-
-
-        <!-- TOPBAR -->
-
-        <header class="topbar">
-
-            <div class="breadcrumb">
-
-                PROTECTA SOLUTIONS
-
-                <span>/</span>
-
-                <span
-                    data-es="CENTRO DE COMANDO"
-                    data-en="COMMAND CENTER"
-                >
-                    CENTRO DE COMANDO
-                </span>
-
-            </div>
-
-
-            <div class="top-actions">
-
-
-                <div class="search">
-
-                    <span>
-                        ⌕
-                    </span>
-
-                    <input
-                        type="text"
-                        id="globalSearch"
-                        data-placeholder-es="Buscar entidades, IDs, transacciones..."
-                        data-placeholder-en="Search entities, IDs, transactions..."
-                        placeholder="Buscar entidades, IDs, transacciones..."
-                    >
-
-                    <kbd>
-                        CTRL K
-                    </kbd>
-
-                </div>
-
-
-                <button
-                    class="language-button"
-                    id="languageButton"
-                >
-                    🇪🇸 ES
-                </button>
-
-
-                <button
-                    class="icon-button"
-                    id="notificationButton"
-                >
-                    ◌
-                </button>
-
-
-                <button
-                    class="icon-button"
-                    id="settingsButton"
-                >
-                    ⚙
-                </button>
-
-            </div>
-
-        </header>
-
-
-
-        <!-- =====================================================
-             CONTENT
-        ====================================================== -->
-
-        <section class="content">
-
-
-            <!-- HERO -->
-
-            <section
-                class="hero"
-                id="dashboard"
-            >
-
-                <div class="hero-content">
-
-
-                    <div class="eyebrow">
-
-                        <span></span>
-
-                        <span
-                            data-es="PLATAFORMA DE INTELIGENCIA GRÁFICA"
-                            data-en="GRAPH INTELLIGENCE PLATFORM"
-                        >
-                            PLATAFORMA DE INTELIGENCIA GRÁFICA
-                        </span>
-
-                    </div>
-
-
-                    <h1>
-
-                        <span
-                            data-es="Visualiza las conexiones."
-                            data-en="Visualize the connections."
-                        >
-                            Visualiza las conexiones.
-                        </span>
-
-                        <strong
-                            data-es="Descubre lo invisible."
-                            data-en="Discover the invisible."
-                        >
-                            Descubre lo invisible.
-                        </strong>
-
-                    </h1>
-
-
-                    <p
-                        data-es="Plataforma avanzada para explorar relaciones, detectar patrones y analizar redes complejas mediante inteligencia gráfica."
-                        data-en="Advanced platform for exploring relationships, detecting patterns and analyzing complex networks through graph intelligence."
-                    >
-                        Plataforma avanzada para explorar relaciones,
-                        detectar patrones y analizar redes complejas
-                        mediante inteligencia gráfica.
-                    </p>
-
-
-                    <div class="hero-actions">
-
-                        <button
-                            class="primary-button"
-                            id="exploreButton"
-                        >
-
-                            <span
-                                data-es="Explorar Network"
-                                data-en="Explore Network"
-                            >
-                                Explorar Network
-                            </span>
-
-                            <span>
-                                →
-                            </span>
-
-                        </button>
-
-
-                        <button
-                            class="secondary-button"
-                            id="analyticsButton"
-                        >
-
-                            <span
-                                data-es="Ver análisis"
-                                data-en="View analytics"
-                            >
-                                Ver análisis
-                            </span>
-
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <!-- ORBIT -->
-
-                <div class="hero-orbit">
-
-                    <div class="orbit orbit-one"></div>
-
-                    <div class="orbit orbit-two"></div>
-
-                    <div class="orbit orbit-three"></div>
-
-                    <div class="orbit-ring ring-glow"></div>
-
-
-                    <div class="core-node">
-
-                        <div class="core-inner">
-                            PS
-                        </div>
-
-                    </div>
-
-
-                    <div class="floating-node node-a">
-                        C
-                    </div>
-
-                    <div class="floating-node node-b">
-                        A
-                    </div>
-
-                    <div class="floating-node node-c">
-                        D
-                    </div>
-
-                    <div class="floating-node node-d">
-                        T
-                    </div>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- METRICS -->
-
-            <section class="metrics">
-
-
-                <div class="metric-card">
-
-                    <div class="metric-header">
-
-                        <span
-                            data-es="NODOS ACTIVOS"
-                            data-en="ACTIVE NODES"
-                        >
-                            NODOS ACTIVOS
-                        </span>
-
-                        <i>
-                            ◈
-                        </i>
-
-                    </div>
-
-
-                    <div class="metric-value">
-                        24,891
-                    </div>
-
-
-                    <div class="metric-footer positive">
-
-                        <span>
-                            ↑ 12.8%
-                        </span>
-
-                        <small
-                            data-es="vs. periodo anterior"
-                            data-en="vs. previous period"
-                        >
-                            vs. periodo anterior
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="metric-card">
-
-                    <div class="metric-header">
-
-                        <span
-                            data-es="CONEXIONES"
-                            data-en="CONNECTIONS"
-                        >
-                            CONEXIONES
-                        </span>
-
-                        <i>
-                            ⌁
-                        </i>
-
-                    </div>
-
-
-                    <div class="metric-value">
-                        81,492
-                    </div>
-
-
-                    <div class="metric-footer positive">
-
-                        <span>
-                            ↑ 8.4%
-                        </span>
-
-                        <small
-                            data-es="red expandiéndose"
-                            data-en="network expanding"
-                        >
-                            red expandiéndose
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    class="metric-card"
-                    id="risk"
-                >
-
-                    <div class="metric-header">
-
-                        <span
-                            data-es="RIESGO GLOBAL"
-                            data-en="GLOBAL RISK"
-                        >
-                            RIESGO GLOBAL
-                        </span>
-
-                        <i>
-                            ◉
-                        </i>
-
-                    </div>
-
-
-                    <div class="metric-value">
-                        18.7
-                        <small>
-                            /100
-                        </small>
-                    </div>
-
-
-                    <div class="risk-bar">
-                        <span></span>
-                    </div>
-
-
-                    <div class="metric-footer">
-
-                        <small
-                            data-es="Nivel moderado"
-                            data-en="Moderate level"
-                        >
-                            Nivel moderado
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="metric-card alert-metric">
-
-                    <div class="metric-header">
-
-                        <span
-                            data-es="ANOMALÍAS"
-                            data-en="ANOMALIES"
-                        >
-                            ANOMALÍAS
-                        </span>
-
-                        <i>
-                            !
-                        </i>
-
-                    </div>
-
-
-                    <div class="metric-value">
-                        137
-                    </div>
-
-
-                    <div class="metric-footer warning">
-
-                        <span>
-                            ● 7
-                        </span>
-
-                        <small
-                            data-es="críticas requieren atención"
-                            data-en="critical require attention"
-                        >
-                            críticas requieren atención
-                        </small>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- NETWORK + ALERTS -->
-
-            <div class="dashboard-grid">
-
-
-                <!-- GRAPH -->
-
-                <section
-                    class="panel graph-panel"
-                    id="network"
-                >
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <div class="panel-kicker">
-                                NETWORK TOPOLOGY
-                            </div>
-
-                            <h2
-                                data-es="Mapa de relaciones"
-                                data-en="Relationship Map"
-                            >
-                                Mapa de relaciones
-                            </h2>
-
-                        </div>
-
-
-                        <div class="panel-controls">
-
-                            <button class="control active">
-                                LIVE
-                            </button>
-
-                            <button class="control">
-                                24H
-                            </button>
-
-                            <button class="control">
-                                7D
-                            </button>
-
-                            <button
-                                class="expand"
-                                id="expandGraph"
-                            >
-                                ⛶
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="graph">
-
-                        <div class="graph-grid"></div>
-
-                        <div class="scan-line"></div>
-
-
-                        <svg
-                            class="connections"
-                            viewBox="0 0 900 520"
-                            preserveAspectRatio="none"
-                        >
-
-                            <line x1="450" y1="260" x2="220" y2="130"/>
-                            <line x1="450" y1="260" x2="690" y2="120"/>
-                            <line x1="450" y1="260" x2="180" y2="350"/>
-                            <line x1="450" y1="260" x2="710" y2="360"/>
-
-                            <line x1="220" y1="130" x2="120" y2="240"/>
-                            <line x1="690" y1="120" x2="790" y2="230"/>
-
-                            <line x1="180" y1="350" x2="320" y2="430"/>
-                            <line x1="710" y1="360" x2="590" y2="440"/>
-
-                            <line x1="220" y1="130" x2="690" y2="120"/>
-                            <line x1="180" y1="350" x2="710" y2="360"/>
-
-                        </svg>
-
-
-                        <div class="graph-node central">
-
-                            <div class="node-pulse"></div>
-
-                            <span>
-                                CORE
-                            </span>
-
-                        </div>
-
-
-                        <div class="graph-node client">
-
-                            <span class="node-symbol">
-                                C
-                            </span>
-
-                            <small
-                                data-es="CLIENTE"
-                                data-en="CLIENT"
-                            >
-                                CLIENTE
-                            </small>
-
-                        </div>
-
-
-                        <div class="graph-node account">
-
-                            <span class="node-symbol">
-                                A
-                            </span>
-
-                            <small
-                                data-es="CUENTA"
-                                data-en="ACCOUNT"
-                            >
-                                CUENTA
-                            </small>
-
-                        </div>
-
-
-                        <div class="graph-node device">
-
-                            <span class="node-symbol">
-                                D
-                            </span>
-
-                            <small
-                                data-es="DISPOSITIVO"
-                                data-en="DEVICE"
-                            >
-                                DISPOSITIVO
-                            </small>
-
-                        </div>
-
-
-                        <div class="graph-node location">
-
-                            <span class="node-symbol">
-                                L
-                            </span>
-
-                            <small
-                                data-es="UBICACIÓN"
-                                data-en="LOCATION"
-                            >
-                                UBICACIÓN
-                            </small>
-
-                        </div>
-
-
-                        <div class="graph-node transaction">
-
-                            <span class="node-symbol">
-                                T
-                            </span>
-
-                            <small
-                                data-es="TRANSACCIÓN"
-                                data-en="TRANSACTION"
-                            >
-                                TRANSACCIÓN
-                            </small>
-
-                        </div>
-
-
-                        <div class="graph-node small-node one">
-                            <span>●</span>
-                        </div>
-
-                        <div class="graph-node small-node two">
-                            <span>●</span>
-                        </div>
-
-                        <div class="graph-node small-node three">
-                            <span>●</span>
-                        </div>
-
-
-                        <div class="graph-legend">
-
-                            <div>
-                                <span class="legend-dot"></span>
-
-                                <span
-                                    data-es="Cliente"
-                                    data-en="Client"
-                                >
-                                    Cliente
-                                </span>
-                            </div>
-
-
-                            <div>
-                                <span class="legend-dot"></span>
-
-                                <span
-                                    data-es="Cuenta"
-                                    data-en="Account"
-                                >
-                                    Cuenta
-                                </span>
-                            </div>
-
-
-                            <div>
-                                <span class="legend-dot"></span>
-
-                                <span
-                                    data-es="Dispositivo"
-                                    data-en="Device"
-                                >
-                                    Dispositivo
-                                </span>
-                            </div>
-
-
-                            <div>
-                                <span class="legend-dot"></span>
-
-                                <span
-                                    data-es="Transacción"
-                                    data-en="Transaction"
-                                >
-                                    Transacción
-                                </span>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-
-                <!-- ALERTS -->
-
-                <section
-                    class="panel alerts-panel"
-                    id="alerts"
-                >
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <div class="panel-kicker">
-                                SECURITY MONITOR
-                            </div>
-
-                            <h2
-                                data-es="Alertas recientes"
-                                data-en="Recent Alerts"
-                            >
-                                Alertas recientes
-                            </h2>
-
-                        </div>
-
-
-                        <button
-                            class="view-all"
-                            id="viewAlerts"
-                            data-es="Ver todas →"
-                            data-en="View all →"
-                        >
-                            Ver todas →
-                        </button>
-
-                    </div>
-
-
-                    <div class="alerts-list">
-
-
-                        <div class="alert-item critical">
-
-                            <div class="alert-icon">
-                                !
-                            </div>
-
-                            <div class="alert-info">
-
-                                <strong
-                                    data-es="Actividad de alto riesgo"
-                                    data-en="High-risk activity"
-                                >
-                                    Actividad de alto riesgo
-                                </strong>
-
-                                <span>
-                                    Cliente #CL-28491
-                                </span>
-
-                                <small
-                                    data-es="Hace 2 minutos"
-                                    data-en="2 minutes ago"
-                                >
-                                    Hace 2 minutos
-                                </small>
-
-                            </div>
-
-                            <b>
-                                94
-                            </b>
-
-                        </div>
-
-
-                        <div class="alert-item warning">
-
-                            <div class="alert-icon">
-                                !
-                            </div>
-
-                            <div class="alert-info">
-
-                                <strong
-                                    data-es="Conexión inusual"
-                                    data-en="Unusual connection"
-                                >
-                                    Conexión inusual
-                                </strong>
-
-                                <span>
-                                    Dispositivo #DV-1093
-                                </span>
-
-                                <small
-                                    data-es="Hace 8 minutos"
-                                    data-en="8 minutes ago"
-                                >
-                                    Hace 8 minutos
-                                </small>
-
-                            </div>
-
-                            <b>
-                                72
-                            </b>
-
-                        </div>
-
-
-                        <div class="alert-item medium">
-
-                            <div class="alert-icon">
-                                !
-                            </div>
-
-                            <div class="alert-info">
-
-                                <strong
-                                    data-es="Patrón detectado"
-                                    data-en="Pattern detected"
-                                >
-                                    Patrón detectado
-                                </strong>
-
-                                <span>
-                                    Cuenta #AC-77321
-                                </span>
-
-                                <small
-                                    data-es="Hace 16 minutos"
-                                    data-en="16 minutes ago"
-                                >
-                                    Hace 16 minutos
-                                </small>
-
-                            </div>
-
-                            <b>
-                                58
-                            </b>
-
-                        </div>
-
-
-                        <div class="alert-item normal">
-
-                            <div class="alert-icon">
-                                ✓
-                            </div>
-
-                            <div class="alert-info">
-
-                                <strong
-                                    data-es="Riesgo controlado"
-                                    data-en="Risk controlled"
-                                >
-                                    Riesgo controlado
-                                </strong>
-
-                                <span>
-                                    Transacción #TX-98124
-                                </span>
-
-                                <small
-                                    data-es="Hace 24 minutos"
-                                    data-en="24 minutes ago"
-                                >
-                                    Hace 24 minutos
-                                </small>
-
-                            </div>
-
-                            <b>
-                                21
-                            </b>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-            </div>
-
-
-
-            <!-- ANALYTICS + ENTITIES -->
-
-            <div class="bottom-grid">
-
-
-                <!-- ACTIVITY -->
-
-                <section
-                    class="panel activity-panel"
-                    id="activity"
-                >
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <div class="panel-kicker">
-                                SYSTEM ACTIVITY
-                            </div>
-
-                            <h2
-                                data-es="Actividad de la red"
-                                data-en="Network Activity"
-                            >
-                                Actividad de la red
-                            </h2>
-
-                        </div>
-
-
-                        <button
-                            class="view-all"
-                            data-es="Historial →"
-                            data-en="History →"
-                        >
-                            Historial →
-                        </button>
-
-                    </div>
-
-
-                    <div class="activity-chart">
-
-                        <div class="chart-y">
-
-                            <span>100</span>
-                            <span>75</span>
-                            <span>50</span>
-                            <span>25</span>
-                            <span>0</span>
-
-                        </div>
-
-
-                        <div class="chart-area">
-
-                            <div class="chart-lines"></div>
-
-
-                            <svg
-                                viewBox="0 0 800 250"
-                                preserveAspectRatio="none"
-                            >
-
-                                <defs>
-
-                                    <linearGradient
-                                        id="chartGradient"
-                                        x1="0"
-                                        x2="0"
-                                        y1="0"
-                                        y2="1"
-                                    >
-
-                                        <stop
-                                            offset="0%"
-                                            stop-opacity=".35"
-                                        />
-
-                                        <stop
-                                            offset="100%"
-                                            stop-opacity="0"
-                                        />
-
-                                    </linearGradient>
-
-                                </defs>
-
-
-                                <path
-                                    d="M0,190 C50,175 70,190 110,155 S180,120 220,145 S280,170 320,110 S380,85 420,120 S470,145 510,90 S570,70 610,105 S680,135 720,65 S770,75 800,45 V250 H0 Z"
-                                    fill="url(#chartGradient)"
-                                />
-
-
-                                <path
-                                    d="M0,190 C50,175 70,190 110,155 S180,120 220,145 S280,170 320,110 S380,85 420,120 S470,145 510,90 S570,70 610,105 S680,135 720,65 S770,75 800,45"
-                                    fill="none"
-                                    stroke-width="3"
-                                />
-
-                            </svg>
-
-
-                            <div class="chart-labels">
-
-                                <span>00:00</span>
-                                <span>04:00</span>
-                                <span>08:00</span>
-                                <span>12:00</span>
-                                <span>16:00</span>
-                                <span>20:00</span>
-                                <span>24:00</span>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
-
-                <!-- ENTITIES -->
-
-                <section
-                    class="panel entities-panel"
-                    id="entities"
-                >
-
-                    <div class="panel-header">
-
-                        <div>
-
-                            <div class="panel-kicker">
-                                ENTITY EXPLORER
-                            </div>
-
-                            <h2
-                                data-es="Entidades principales"
-                                data-en="Main Entities"
-                            >
-                                Entidades principales
-                            </h2>
-
-                        </div>
-
-
-                        <button
-                            class="view-all"
-                            id="exploreEntities"
-                            data-es="Explorar →"
-                            data-en="Explore →"
-                        >
-                            Explorar →
-                        </button>
-
-                    </div>
-
-
-                    <div
-                        class="entity-list"
-                        id="entityList"
-                    >
-
-
-                        <div
-                            class="entity-row"
-                            data-search="clientes client cliente"
-                        >
-
-                            <div class="entity-icon cliente">
-                                C
-                            </div>
-
-                            <div>
-
-                                <strong
-                                    data-es="Clientes"
-                                    data-en="Clients"
-                                >
-                                    Clientes
-                                </strong>
-
-                                <small
-                                    data-es="8,492 entidades"
-                                    data-en="8,492 entities"
-                                >
-                                    8,492 entidades
-                                </small>
-
-                            </div>
-
-                            <div class="entity-number">
-                                34.1%
-                            </div>
-
-                            <div class="mini-bar">
-                                <span style="width:84%"></span>
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="entity-row"
-                            data-search="cuentas accounts cuenta"
-                        >
-
-                            <div class="entity-icon cuenta">
-                                A
-                            </div>
-
-                            <div>
-
-                                <strong
-                                    data-es="Cuentas"
-                                    data-en="Accounts"
-                                >
-                                    Cuentas
-                                </strong>
-
-                                <small
-                                    data-es="6,821 entidades"
-                                    data-en="6,821 entities"
-                                >
-                                    6,821 entidades
-                                </small>
-
-                            </div>
-
-                            <div class="entity-number">
-                                27.4%
-                            </div>
-
-                            <div class="mini-bar">
-                                <span style="width:68%"></span>
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="entity-row"
-                            data-search="dispositivos devices dispositivo"
-                        >
-
-                            <div class="entity-icon dispositivo">
-                                D
-                            </div>
-
-                            <div>
-
-                                <strong
-                                    data-es="Dispositivos"
-                                    data-en="Devices"
-                                >
-                                    Dispositivos
-                                </strong>
-
-                                <small
-                                    data-es="4,792 entidades"
-                                    data-en="4,792 entities"
-                                >
-                                    4,792 entidades
-                                </small>
-
-                            </div>
-
-                            <div class="entity-number">
-                                19.2%
-                            </div>
-
-                            <div class="mini-bar">
-                                <span style="width:54%"></span>
-                            </div>
-
-                        </div>
-
-
-                        <div
-                            class="entity-row"
-                            data-search="ubicaciones locations ubicación"
-                        >
-
-                            <div class="entity-icon ubicacion">
-                                L
-                            </div>
-
-                            <div>
-
-                                <strong
-                                    data-es="Ubicaciones"
-                                    data-en="Locations"
-                                >
-                                    Ubicaciones
-                                </strong>
-
-                                <small
-                                    data-es="2,941 entidades"
-                                    data-en="2,941 entities"
-                                >
-                                    2,941 entidades
-                                </small>
-
-                            </div>
-
-                            <div class="entity-number">
-                                11.8%
-                            </div>
-
-                            <div class="mini-bar">
-                                <span style="width:39%"></span>
-                            </div>
-
-                        </div>
-
-
-                    </div>
-
-                </section>
-
-            </div>
-
-
-
-            <!-- EXTRA SYSTEM SECTION -->
-
-            <section
-                class="system-panel"
-                id="analytics"
-            >
-
-                <div class="system-panel-header">
-
-                    <div>
-
-                        <div class="panel-kicker">
-                            INTELLIGENCE ENGINE
-                        </div>
-
-                        <h2
-                            data-es="Estado del ecosistema"
-                            data-en="Ecosystem Status"
-                        >
-                            Estado del ecosistema
-                        </h2>
-
-                    </div>
-
-                    <div class="system-live">
-                        <span></span>
-                        LIVE
-                    </div>
-
-                </div>
-
-
-                <div class="system-grid">
-
-
-                    <div class="system-module">
-
-                        <div class="module-icon">
-                            ◈
-                        </div>
-
-                        <div>
-
-                            <strong>
-                                GRAPH ENGINE
-                            </strong>
-
-                            <small
-                                data-es="Procesamiento de relaciones"
-                                data-en="Relationship processing"
-                            >
-                                Procesamiento de relaciones
-                            </small>
-
-                        </div>
-
-                        <b>
-                            ONLINE
-                        </b>
-
-                    </div>
-
-
-                    <div class="system-module">
-
-                        <div class="module-icon">
-                            ◉
-                        </div>
-
-                        <div>
-
-                            <strong>
-                                RISK ENGINE
-                            </strong>
-
-                            <small
-                                data-es="Análisis de riesgo"
-                                data-en="Risk analysis"
-                            >
-                                Análisis de riesgo
-                            </small>
-
-                        </div>
-
-                        <b>
-                            ONLINE
-                        </b>
-
-                    </div>
-
-
-                    <div class="system-module">
-
-                        <div class="module-icon">
-                            ⌁
-                        </div>
-
-                        <div>
-
-                            <strong>
-                                NEO4J INTERFACE
-                            </strong>
-
-                            <small
-                                data-es="Conector preparado"
-                                data-en="Connector ready"
-                            >
-                                Conector preparado
-                            </small>
-
-                        </div>
-
-                        <b>
-                            READY
-                        </b>
-
-                    </div>
-
-
-                    <div
-                        class="system-module"
-                        id="data"
-                    >
-
-                        <div class="module-icon">
-                            ▦
-                        </div>
-
-                        <div>
-
-                            <strong>
-                                DATA STREAM
-                            </strong>
-
-                            <small
-                                data-es="Flujo de datos"
-                                data-en="Data stream"
-                            >
-                                Flujo de datos
-                            </small>
-
-                        </div>
-
-                        <b>
-                            ACTIVE
-                        </b>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-
-            <!-- FOOTER -->
-
-            <footer>
-
-                <div>
-
-                    <strong>
-                        PROTECTA SOLUTIONS
-                    </strong>
-
-                    <span>
-                        Graph Intelligence & Risk Analytics
-                    </span>
-
-                </div>
-
-
-                <div class="footer-right">
-
-                    <span class="live-status">
-
-                        <i></i>
-
-                        <span
-                            data-es="TODOS LOS SISTEMAS OPERATIVOS"
-                            data-en="ALL SYSTEMS OPERATIONAL"
-                        >
-                            TODOS LOS SISTEMAS OPERATIVOS
-                        </span>
-
-                    </span>
-
-
-                    <span>
-                        v0.3.0
-                    </span>
-
-                </div>
-
-            </footer>
-
-            <!-- =====================================================
-                PRODUCTS
-            ====================================================== -->
-
-                        <section
-                class="products-section"
-                id="products"
-            >
-
-                <div class="products-header">
-
-                    <div>
-
-                        <div class="panel-kicker">
-                            PROTECTA SOLUTIONS
-                        </div>
-
-                        <h2
-                            data-es="Productos y soluciones"
-                            data-en="Products & Solutions"
-                        >
-                            Productos y soluciones
-                        </h2>
-
-                        <p
-                            data-es="Catálogo de soluciones Protecta. 9 líneas de producto con 100 artículos cada una."
-                            data-en="Protecta solutions catalog. 9 product lines with 100 items each."
-                        >
-                            Catálogo de soluciones Protecta. 9 líneas de producto
-                            con 100 artículos cada una.
-                        </p>
-
-                    </div>
-
-                    <div class="products-counter">
-
-                        <span>CATALOG</span>
-
-                        <strong id="productCount">
-                            09
-                        </strong>
-
-                        <small
-                            data-es="APARTADOS"
-                            data-en="CATEGORIES"
-                        >
-                            APARTADOS
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <!-- FILTERS -->
-
-                <div class="products-filters">
-
-                    <button
-                        class="product-filter active"
-                        data-filter="all"
-                        data-es="TODOS"
-                        data-en="ALL"
-                    >
-                        TODOS
-                    </button>
-
-                    <button
-                        class="product-filter"
-                        data-filter="security"
-                        data-es="SEGURIDAD"
-                        data-en="SECURITY"
-                    >
-                        SEGURIDAD
-                    </button>
-
-                    <button
-                        class="product-filter"
-                        data-filter="technology"
-                        data-es="TECNOLOGÍA"
-                        data-en="TECHNOLOGY"
-                    >
-                        TECNOLOGÍA
-                    </button>
-
-                    <button
-                        class="product-filter"
-                        data-filter="network"
-                        data-es="REDES"
-                        data-en="NETWORK"
-                    >
-                        REDES
-                    </button>
-
-                </div>
-
-
-                <!-- PRODUCT GRID — 9 apartados -->
-
-                <div class="products-grid">
-
-                    <!-- PRODUCT 01 -->
-
-                    <article
-                        class="product-card"
-                        data-category="security"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-ALM-001
-                                </span>
-
-                                <strong>
-                                    ALARM
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                ALARM SYSTEMS
-                            </div>
-
-                            <h3
-                                data-es="Control de Alarmas"
-                                data-en="Alarm Control"
-                            >
-                                Control de Alarmas
-                            </h3>
-
-                            <p
-                                data-es="Sistemas de control y monitoreo de alarmas para protección de instalaciones."
-                                data-en="Alarm control and monitoring systems for facility protection."
-                            >
-                                Sistemas de control y monitoreo de alarmas para protección de instalaciones.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-ALM-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 02 -->
-
-                    <article
-                        class="product-card"
-                        data-category="security"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-ACC-001
-                                </span>
-
-                                <strong>
-                                    ACCESS
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                ACCESS CONTROL
-                            </div>
-
-                            <h3
-                                data-es="Control de Acceso"
-                                data-en="Access Control"
-                            >
-                                Control de Acceso
-                            </h3>
-
-                            <p
-                                data-es="Sistemas de control y gestión de accesos para instalaciones empresariales."
-                                data-en="Access control and management systems for enterprise facilities."
-                            >
-                                Sistemas de control y gestión de accesos para instalaciones empresariales.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-ACC-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 03 -->
-
-                    <article
-                        class="product-card"
-                        data-category="security"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-FIR-001
-                                </span>
-
-                                <strong>
-                                    FIRE
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                FIRE DETECTION
-                            </div>
-
-                            <h3
-                                data-es="Detección de Incendios"
-                                data-en="Fire Detection"
-                            >
-                                Detección de Incendios
-                            </h3>
-
-                            <p
-                                data-es="Sistemas de detección temprana de incendios y alertas en tiempo real."
-                                data-en="Early fire detection systems and real-time alerts."
-                            >
-                                Sistemas de detección temprana de incendios y alertas en tiempo real.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-FIR-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 04 -->
-
-                    <article
-                        class="product-card"
-                        data-category="technology"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-AUT-001
-                                </span>
-
-                                <strong>
-                                    AUTO
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                AUTOMATION
-                            </div>
-
-                            <h3
-                                data-es="Automatizaciones"
-                                data-en="Automations"
-                            >
-                                Automatizaciones
-                            </h3>
-
-                            <p
-                                data-es="Soluciones de automatización inteligente para edificios e instalaciones."
-                                data-en="Intelligent automation solutions for buildings and facilities."
-                            >
-                                Soluciones de automatización inteligente para edificios e instalaciones.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-AUT-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 05 -->
-
-                    <article
-                        class="product-card"
-                        data-category="security"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-VID-001
-                                </span>
-
-                                <strong>
-                                    VIDEO
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                VIDEO SURVEILLANCE
-                            </div>
-
-                            <h3
-                                data-es="Videovigilancia"
-                                data-en="Video Surveillance"
-                            >
-                                Videovigilancia
-                            </h3>
-
-                            <p
-                                data-es="Sistema inteligente para monitoreo y análisis de espacios en tiempo real."
-                                data-en="Intelligent system for real-time space monitoring and analysis."
-                            >
-                                Sistema inteligente para monitoreo y análisis de espacios en tiempo real.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-VID-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 06 -->
-
-                    <article
-                        class="product-card"
-                        data-category="network"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-FIB-001
-                                </span>
-
-                                <strong>
-                                    FIBER
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                FIBER OPTICS
-                            </div>
-
-                            <h3
-                                data-es="Fibra Óptica"
-                                data-en="Fiber Optics"
-                            >
-                                Fibra Óptica
-                            </h3>
-
-                            <p
-                                data-es="Infraestructura de fibra óptica para conectividad de alta velocidad."
-                                data-en="Fiber optic infrastructure for high-speed connectivity."
-                            >
-                                Infraestructura de fibra óptica para conectividad de alta velocidad.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-FIB-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 07 -->
-
-                    <article
-                        class="product-card"
-                        data-category="technology"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-HVA-001
-                                </span>
-
-                                <strong>
-                                    HVAC
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                HVAC SYSTEMS
-                            </div>
-
-                            <h3
-                                data-es="(HVAC) Aire Acondicionado"
-                                data-en="(HVAC) Air Conditioning"
-                            >
-                                (HVAC) Aire Acondicionado
-                            </h3>
-
-                            <p
-                                data-es="Sistemas de climatización y control de aire acondicionado para espacios críticos."
-                                data-en="Climate control and air conditioning systems for critical spaces."
-                            >
-                                Sistemas de climatización y control de aire acondicionado para espacios críticos.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-HVA-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 08 -->
-
-                    <article
-                        class="product-card"
-                        data-category="security"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-PCI-001
-                                </span>
-
-                                <strong>
-                                    PCI
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                FIRE PROTECTION
-                            </div>
-
-                            <h3
-                                data-es="(PCI) Protección Contra Incendios"
-                                data-en="(PCI) Fire Protection Systems"
-                            >
-                                (PCI) Protección Contra Incendios
-                            </h3>
-
-                            <p
-                                data-es="Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva."
-                                data-en="Fire protection systems: suppression, sprinklers and passive safety."
-                            >
-                                Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-PCI-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                    <!-- PRODUCT 09 -->
-
-                    <article
-                        class="product-card"
-                        data-category="technology"
-                    >
-
-                        <div class="product-image">
-
-                            <div class="product-image-grid"></div>
-
-                            <div class="product-placeholder">
-
-                                <span class="product-code">
-                                    PS-ING-001
-                                </span>
-
-                                <strong>
-                                    ENG
-                                </strong>
-
-                                <span>
-                                    100 PRODUCTOS
-                                </span>
-
-                            </div>
-
-                            <div class="product-status">
-                                ● AVAILABLE
-                            </div>
-
-                        </div>
-
-
-                        <div class="product-info">
-
-                            <div class="product-category">
-                                SPECIAL ENGINEERING
-                            </div>
-
-                            <h3
-                                data-es="Ingenierías Especiales"
-                                data-en="Special Engineering"
-                            >
-                                Ingenierías Especiales
-                            </h3>
-
-                            <p
-                                data-es="Proyectos de ingeniería especializada adaptados a las necesidades del cliente."
-                                data-en="Specialized engineering projects tailored to client needs."
-                            >
-                                Proyectos de ingeniería especializada adaptados a las necesidades del cliente.
-                            </p>
-
-                            <div class="product-footer">
-
-                                <span class="product-id">
-                                    PS-ING-001 · 100 productos
-                                </span>
-
-                                <button class="product-detail">
-
-                                    <span
-                                        data-es="VER CATÁLOGO"
-                                        data-en="VIEW CATALOG"
-                                    >
-                                        VER CATÁLOGO
-                                    </span>
-
-                                    <b>→</b>
-
-                                </button>
-
-                            </div>
-
-                        </div>
-
-                    </article>
-
-                </div>
-
-            </section>
-
-        </section>
-
-    </main>
-
-</div>
-
-
-<div
-    class="toast-container"
-    id="toastContainer"
-></div>
-
-
-<script src="script.js"></script>
-
+<script>
+(function () {
+    const overlay = document.getElementById('bootOverlay');
+    const pctEl = document.getElementById('bootPct');
+    let p = 0;
+    const bootTimer = setInterval(() => {
+        p += Math.random() * 14 + 4;
+        if (p >= 100) {
+            p = 100;
+            clearInterval(bootTimer);
+            pctEl.textContent = '100%';
+            setTimeout(() => overlay.classList.add('done'), 280);
+        } else {
+            pctEl.textContent = Math.floor(p) + '%';
+        }
+    }, 80);
+
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles, burstParticles, mouse;
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    mouse = { x: w / 2, y: h / 2 };
+    window.addEventListener('mousemove', e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    function createParticle(x, y, burst) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = burst ? Math.random() * 3 + 1 : Math.random() * 0.4 + 0.1;
+        return {
+            x: x ?? Math.random() * w,
+            y: y ?? Math.random() * h,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            r: burst ? Math.random() * 2.2 + 0.6 : Math.random() * 1.6 + 0.4,
+            life: burst ? 1 : Math.random() * 0.5 + 0.5,
+            decay: burst ? Math.random() * 0.02 + 0.012 : 0,
+            hue: Math.random() > 0.3 ? 195 : 220
+        };
+    }
+
+    particles = Array.from({ length: 90 }, () => createParticle());
+    burstParticles = [];
+
+    setTimeout(() => spawnBurst(w * 0.3, h * 0.55, 40), 1700);
+    setTimeout(() => spawnBurst(w * 0.7, h * 0.55, 40), 2050);
+    setTimeout(() => spawnBurst(w * 0.5, h * 0.28, 28), 900);
+
+    function spawnBurst(x, y, n) {
+        for (let i = 0; i < n; i++) {
+            burstParticles.push(createParticle(x, y, true));
+        }
+    }
+
+    document.querySelectorAll('.choice').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            const rect = card.getBoundingClientRect();
+            spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 24);
+        });
+    });
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx += (mouse.x - p.x) * 0.00002;
+            p.vy += (mouse.y - p.y) * 0.00002;
+
+            if (p.x < 0) p.x = w;
+            if (p.x > w) p.x = 0;
+            if (p.y < 0) p.y = h;
+            if (p.y > h) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'hsla(' + p.hue + ', 100%, 60%, ' + (0.35 * p.life) + ')';
+            ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const a = particles[i];
+                const b = particles[j];
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.strokeStyle = 'rgba(0, 168, 255, ' + (0.08 * (1 - dist / 120)) + ')';
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        burstParticles = burstParticles.filter(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= 0.98;
+            p.vy *= 0.98;
+            p.life -= p.decay;
+            if (p.life <= 0) return false;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+            ctx.fillStyle = 'hsla(' + p.hue + ', 100%, 65%, ' + (p.life * 0.9) + ')';
+            ctx.shadowColor = 'hsla(' + p.hue + ', 100%, 60%, 0.8)';
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            return true;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+})();
+</script>
 </body>
-
 </html>
