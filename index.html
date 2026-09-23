@@ -543,6 +543,183 @@
             letter-spacing: 0.1em;
             font-variant-numeric: tabular-nums;
         }
+
+        /* ===== AUTH MODAL ===== */
+        .auth-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s;
+        }
+
+        .auth-modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .auth-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 7, 13, 0.82);
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-panel {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 380px;
+            background: rgba(11, 15, 24, 0.95);
+            border: 1px solid rgba(0, 168, 255, 0.28);
+            border-radius: 4px;
+            padding: 32px 28px;
+            box-shadow: 0 0 50px rgba(0, 168, 255, 0.12), 0 30px 60px rgba(0,0,0,0.5);
+            transform: translateY(16px) scale(0.96);
+            filter: blur(4px);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), filter 0.4s ease;
+        }
+
+        .auth-modal.open .auth-panel {
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        .auth-panel .ac {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-color: var(--electric);
+            border-style: solid;
+        }
+        .auth-panel .ac1 { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .auth-panel .ac2 { top: 0; right: 0; border-width: 2px 2px 0 0; }
+        .auth-panel .ac3 { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+        .auth-panel .ac4 { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+        .auth-kicker {
+            font-size: 9px;
+            letter-spacing: 0.22em;
+            color: var(--electric);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .auth-panel h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .auth-desc {
+            font-size: 12.5px;
+            color: var(--muted);
+            line-height: 1.5;
+            margin-bottom: 22px;
+        }
+
+        .auth-label {
+            display: block;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .auth-input-wrap input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(0, 168, 255, 0.25);
+            border-radius: 8px;
+            color: var(--white);
+            font-size: 15px;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .auth-input-wrap input:focus {
+            border-color: rgba(0, 168, 255, 0.6);
+            box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.12);
+        }
+
+        .auth-error {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #ff4d67;
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .auth-cancel,
+        .auth-submit {
+            flex: 1;
+            padding: 11px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            cursor: pointer;
+            font-family: inherit;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        .auth-cancel {
+            background: transparent;
+            border-color: rgba(200, 206, 216, 0.15);
+            color: var(--silver);
+        }
+
+        .auth-cancel:hover {
+            border-color: rgba(0, 168, 255, 0.35);
+            color: var(--white);
+        }
+
+        .auth-submit {
+            background: linear-gradient(135deg, #123bff, #00a8ff);
+            color: white;
+            border: none;
+        }
+
+        .auth-submit:hover {
+            filter: brightness(1.1);
+            box-shadow: 0 0 24px rgba(0, 168, 255, 0.35);
+        }
+
+        /* ===== LOGO WATERMARK ===== */
+        .logo-watermark {
+            position: fixed;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-watermark img {
+            width: min(88vw, 920px);
+            height: auto;
+            opacity: 0.14;
+            filter: grayscale(0.15);
+            user-select: none;
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -555,6 +732,10 @@
 
     <div class="bg-grid"></div>
     <div class="bg-glow"></div>
+    <div class="logo-watermark" aria-hidden="true">
+        <img src="protecta-logo-transparent.png" alt="">
+    </div>
+
     <div class="scan-beam"></div>
     <div class="scanlines"></div>
     <canvas id="particles"></canvas>
@@ -579,7 +760,7 @@
 
         <div class="choices">
 
-            <a href="empresa.html" class="choice empresa" id="cardEmpresa">
+            <a href="#" class="choice empresa" id="cardEmpresa" role="button">
                 <span class="c1"></span><span class="c2"></span>
                 <span class="c3"></span><span class="c4"></span>
                 <div class="choice-status"><i></i> ONLINE</div>
@@ -625,6 +806,33 @@
             <strong>PROTECTA SOLUTIONS</strong> · Graph Intelligence &amp; Risk Analytics
         </p>
 
+    </div>
+
+
+    <!-- PASSWORD MODAL EMPRESA -->
+    <div class="auth-modal" id="authModal" aria-hidden="true">
+        <div class="auth-backdrop" id="authBackdrop"></div>
+        <div class="auth-panel">
+            <div class="auth-corners">
+                <span class="ac ac1"></span><span class="ac ac2"></span>
+                <span class="ac ac3"></span><span class="ac ac4"></span>
+            </div>
+            <div class="auth-kicker">// secure channel</div>
+            <h2>Acceso Empresa</h2>
+            <p class="auth-desc">Ingresa la clave interna para abrir Protecta Core.</p>
+            <form id="authForm" autocomplete="off">
+                <label class="auth-label" for="authPass">Contraseña</label>
+                <div class="auth-input-wrap">
+                    <input type="password" id="authPass" name="password"
+                           placeholder="••••••••" required autofocus>
+                </div>
+                <p class="auth-error" id="authError" hidden>Clave incorrecta. Intenta de nuevo.</p>
+                <div class="auth-actions">
+                    <button type="button" class="auth-cancel" id="authCancel">Cancelar</button>
+                    <button type="submit" class="auth-submit">Entrar →</button>
+                </div>
+            </form>
+        </div>
     </div>
 
 <script>
@@ -752,6 +960,71 @@
         });
 
         requestAnimationFrame(draw);
+    }
+
+    /* ===== EMPRESA PASSWORD GATE ===== */
+    const EMPRESA_PASS = 'protecta2026';
+    const AUTH_KEY = 'protectaEmpresaAuth';
+
+    const cardEmpresa = document.getElementById('cardEmpresa');
+    const authModal = document.getElementById('authModal');
+    const authForm = document.getElementById('authForm');
+    const authPass = document.getElementById('authPass');
+    const authError = document.getElementById('authError');
+    const authCancel = document.getElementById('authCancel');
+    const authBackdrop = document.getElementById('authBackdrop');
+
+    function openAuth() {
+        if (!authModal) return;
+        authModal.classList.add('open');
+        authModal.setAttribute('aria-hidden', 'false');
+        if (authError) authError.hidden = true;
+        if (authPass) {
+            authPass.value = '';
+            setTimeout(() => authPass.focus(), 100);
+        }
+    }
+
+    function closeAuth() {
+        if (!authModal) return;
+        authModal.classList.remove('open');
+        authModal.setAttribute('aria-hidden', 'true');
+    }
+
+    if (cardEmpresa) {
+        cardEmpresa.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Already authenticated this session
+            if (sessionStorage.getItem(AUTH_KEY) === '1') {
+                window.location.href = 'empresa.html';
+                return;
+            }
+            openAuth();
+        });
+    }
+
+    if (authCancel) authCancel.addEventListener('click', closeAuth);
+    if (authBackdrop) authBackdrop.addEventListener('click', closeAuth);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAuth();
+    });
+
+    if (authForm) {
+        authForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const val = (authPass && authPass.value) ? authPass.value.trim() : '';
+            if (val === EMPRESA_PASS) {
+                sessionStorage.setItem(AUTH_KEY, '1');
+                window.location.href = 'empresa.html';
+            } else {
+                if (authError) authError.hidden = false;
+                if (authPass) {
+                    authPass.value = '';
+                    authPass.focus();
+                }
+            }
+        });
     }
 
     draw();

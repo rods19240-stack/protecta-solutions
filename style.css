@@ -74,6 +74,56 @@ body {
 
 }
 
+/* =========================================================
+   LOGO WATERMARK
+========================================================= */
+
+.logo-watermark {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 0;
+
+    pointer-events: none;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    overflow: hidden;
+
+}
+
+.logo-watermark img {
+
+    width: min(88vw, 900px);
+
+    height: auto;
+
+    opacity: 0.13;
+
+    filter: grayscale(0.2);
+
+    user-select: none;
+
+}
+
+.app,
+.main,
+.sidebar {
+
+    position: relative;
+
+    z-index: 1;
+
+}
+
+
+
 
 button,
 input {
@@ -1036,9 +1086,11 @@ button {
             circle at 80% 0%,
             rgba(18,59,255,.08),
             transparent 35%
-        ),
+        );
 
-        var(--black);
+    position: relative;
+
+    z-index: 1;
 
 }
 
@@ -1349,6 +1401,36 @@ button {
     transform: translateX(-3px);
 
 }
+
+
+.session-exit-top {
+
+    margin: 0 4px 0 0;
+
+    padding: 8px 12px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+
+}
+
+@media (max-width: 500px) {
+
+    .session-exit-top .session-exit-text {
+
+        display: none;
+
+    }
+
+    .search kbd {
+
+        display: none;
+
+    }
+
+}
+
 
 
 .sidebar-bottom {
@@ -4518,10 +4600,46 @@ footer strong {
     .notification,
     .connection-card,
     .user-box > div:not(.avatar),
-    .more {
+    .more,
+    .session-exit .session-exit-label,
+    .sidebar-bottom .session-exit span:not(.session-exit-arrow) {
 
         display:
             none;
+
+    }
+
+    .sidebar-bottom .session-exit {
+
+        display: flex !important;
+
+        justify-content: center;
+
+        padding: 10px 0;
+
+        margin: 0 0 8px;
+
+        min-width: 40px;
+
+    }
+
+    .session-exit-top {
+
+        display: inline-flex !important;
+
+        align-items: center;
+
+        gap: 6px;
+
+        padding: 8px 12px;
+
+        white-space: nowrap;
+
+    }
+
+    .session-exit-top .session-exit-text {
+
+        display: inline !important;
 
     }
 
@@ -4650,10 +4768,37 @@ footer strong {
 
 
     .system-label,
-    .sidebar-bottom {
+    .connection-card,
+    .user-box {
 
         display:
-            none;
+            none !important;
+
+    }
+
+    .sidebar-bottom {
+
+        display: flex !important;
+
+        justify-content: flex-start;
+
+        margin-top: 8px;
+
+        padding-top: 4px;
+
+    }
+
+    .session-exit {
+
+        display: inline-flex !important;
+
+        margin: 0;
+
+        padding: 8px 12px;
+
+        font-size: 11px;
+
+        width: auto;
 
     }
 
@@ -5865,4 +6010,11 @@ footer strong {
 
     }
 
+}
+
+@media (max-width: 850px) {
+    .session-exit-top {
+        order: -1;
+        flex-shrink: 0;
+    }
 }

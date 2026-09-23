@@ -1250,10 +1250,39 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ===== LOGO WATERMARK ===== */
+        .logo-watermark {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-watermark img {
+            width: min(88vw, 900px);
+            height: auto;
+            opacity: 0.13;
+            filter: grayscale(0.2);
+            user-select: none;
+        }
+
+        .portal {
+            position: relative;
+            z-index: 1;
+        }
     </style>
 </head>
 
 <body>
+
+    <div class="logo-watermark" aria-hidden="true">
+        <img src="protecta-logo-transparent.png" alt="">
+    </div>
 
 <div class="portal" id="portal">
 

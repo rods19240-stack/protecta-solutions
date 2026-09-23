@@ -2,6 +2,14 @@
 <html lang="es">
 
 <head>
+<script>
+(function () {
+    if (sessionStorage.getItem('protectaEmpresaAuth') !== '1') {
+        window.location.replace('index.html');
+    }
+})();
+</script>
+
 
     <meta charset="UTF-8">
 
@@ -28,6 +36,10 @@
 
 
 <body>
+    <div class="logo-watermark" aria-hidden="true">
+        <img src="protecta-logo-transparent.png" alt="">
+    </div>
+
 
 <!-- =========================================================
      BOOT / INTRO
@@ -387,9 +399,10 @@
 
         <div class="sidebar-bottom">
 
-            <a href="index.html" class="session-exit">
+            <a href="index.html" class="session-exit session-exit-side">
                 <span class="session-exit-arrow">←</span>
                 <span
+                    class="session-exit-text"
                     data-es="Cerrar sesión / Inicio"
                     data-en="Sign out / Home"
                 >
@@ -491,6 +504,17 @@
 
             <div class="top-actions">
 
+                <a href="index.html" class="session-exit session-exit-top"
+                   title="Cerrar sesión">
+                    <span class="session-exit-arrow">←</span>
+                    <span
+                        class="session-exit-text"
+                        data-es="Cerrar sesión"
+                        data-en="Sign out"
+                    >
+                        Cerrar sesión
+                    </span>
+                </a>
 
                 <div class="search">
 
@@ -2652,6 +2676,17 @@
 
 
 <script src="script.js"></script>
+
+
+<script>
+(function () {
+    document.querySelectorAll('a[href="index.html"]').forEach(function (a) {
+        a.addEventListener('click', function () {
+            sessionStorage.removeItem('protectaEmpresaAuth');
+        });
+    });
+})();
+</script>
 
 </body>
 
