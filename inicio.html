@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070d">
+    <title>Protecta Solutions | Acceso</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --black: #05070d;
+            --panel: #0b0f18;
+            --electric: #00a8ff;
+            --blue: #123bff;
+            --blue-light: #4d7cff;
+            --silver: #c8ced8;
+            --white: #f8fafc;
+            --muted: #737d91;
+            --green: #36e2a1;
+            --border: rgba(0, 168, 255, 0.15);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 168, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 168, 255, 0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black, transparent);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg-glow {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 50% 40% at 50% 30%, rgba(18, 59, 255, 0.22), transparent 60%),
+                radial-gradient(ellipse 40% 35% at 20% 80%, rgba(0, 168, 255, 0.08), transparent),
+                radial-gradient(ellipse 40% 35% at 80% 80%, rgba(18, 59, 255, 0.1), transparent);
+            pointer-events: none;
+            z-index: 0;
+            animation: glowPulse 8s ease-in-out infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            from { opacity: 0.7; }
+            to { opacity: 1; }
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 0, 0, 0.12) 2px,
+                rgba(0, 0, 0, 0.12) 4px
+            );
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.35;
+        }
+
+        .scan-beam {
+            position: fixed;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: linear-gradient(
+                180deg,
+                transparent,
+                rgba(0, 168, 255, 0.06),
+                transparent
+            );
+            pointer-events: none;
+            z-index: 4;
+            animation: scanMove 5s linear infinite;
+        }
+
+        @keyframes scanMove {
+            0% { top: -120px; }
+            100% { top: 100%; }
+        }
+
+        #particles {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .stage {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 980px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header-block {
+            text-align: center;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .logo-wrap {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 28px;
+            opacity: 0;
+            transform: scale(0.85) translateY(20px);
+            filter: blur(8px);
+            animation: holoMaterialize 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+        }
+
+        .logo-wrap img {
+            height: 52px;
+            width: auto;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(0, 168, 255, 0.45));
+        }
+
+        .logo-ring {
+            position: absolute;
+            inset: -18px;
+            border: 1px solid rgba(0, 168, 255, 0.25);
+            border-radius: 50%;
+            animation: ringSpin 12s linear infinite;
+        }
+
+        .logo-ring::after {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: 50%;
+            width: 6px;
+            height: 6px;
+            background: var(--electric);
+            border-radius: 50%;
+            box-shadow: 0 0 12px var(--electric);
+            transform: translateX(-50%);
+        }
+
+        @keyframes ringSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes holoMaterialize {
+            0% {
+                opacity: 0;
+                transform: scale(0.85) translateY(20px);
+                filter: blur(12px);
+            }
+            40% {
+                opacity: 0.6;
+                filter: blur(4px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        .sys-line {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.28em;
+            color: var(--electric);
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            opacity: 0;
+            animation: fadeSlide 0.9s ease 0.9s forwards;
+            text-shadow: 0 0 20px rgba(0, 168, 255, 0.5);
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(22px, 4.2vw, 34px);
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 12px;
+            opacity: 0;
+            animation: holoMaterialize 1.2s cubic-bezier(0.16, 1, 0.3, 1) 1.1s forwards;
+        }
+
+        h1 strong {
+            color: var(--electric);
+            text-shadow: 0 0 30px rgba(0, 168, 255, 0.4);
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+            max-width: 420px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: fadeSlide 1s ease 1.4s forwards;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            width: 100%;
+            position: relative;
+        }
+
+        @media (max-width: 720px) {
+            .choices {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+            html, body {
+                overflow-y: auto;
+            }
+            .stage {
+                padding: 40px 20px;
+            }
+        }
+
+        .choice {
+            position: relative;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: rgba(11, 15, 24, 0.75);
+            border: 1px solid rgba(0, 168, 255, 0.18);
+            border-radius: 4px;
+            padding: 36px 30px;
+            text-align: left;
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(40px) scale(0.92);
+            filter: blur(10px);
+            transition:
+                transform 0.35s ease,
+                border-color 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+
+        .choice.empresa {
+            animation: holoMaterialize 1.3s cubic-bezier(0.16, 1, 0.3, 1) 1.7s forwards;
+        }
+
+        .choice.cliente {
+            animation: holoMaterialize 1.3s cubic-bezier(0.16, 1, 0.3, 1) 2.05s forwards;
+        }
+
+        .choice::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(0, 168, 255, 0.06) 0%,
+                transparent 40%,
+                transparent 60%,
+                rgba(18, 59, 255, 0.06) 100%
+            );
+            opacity: 0;
+            transition: opacity 0.35s;
+        }
+
+        .choice::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(0, 168, 255, 0.08),
+                transparent
+            );
+        }
+
+        .choice:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(0, 168, 255, 0.55);
+            box-shadow:
+                0 0 40px rgba(0, 168, 255, 0.15),
+                0 25px 50px rgba(0, 0, 0, 0.4),
+                inset 0 0 30px rgba(0, 168, 255, 0.04);
+        }
+
+        .choice:hover::before {
+            opacity: 1;
+        }
+
+        .choice:hover::after {
+            animation: sweep 0.8s ease;
+        }
+
+        @keyframes sweep {
+            from { left: -100%; }
+            to { left: 120%; }
+        }
+
+        .choice .c1, .choice .c2, .choice .c3, .choice .c4 {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-color: var(--electric);
+            border-style: solid;
+            opacity: 0.6;
+            transition: opacity 0.3s;
+        }
+
+        .choice:hover .c1,
+        .choice:hover .c2,
+        .choice:hover .c3,
+        .choice:hover .c4 {
+            opacity: 1;
+        }
+
+        .choice .c1 { top: 0; left: 0; border-width: 2px 0 0 2px; }
+        .choice .c2 { top: 0; right: 0; border-width: 2px 2px 0 0; }
+        .choice .c3 { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+        .choice .c4 { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+        .choice-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            position: relative;
+            background: rgba(0, 168, 255, 0.08);
+            border: 1px solid rgba(0, 168, 255, 0.3);
+            color: var(--electric);
+            box-shadow: 0 0 24px rgba(0, 168, 255, 0.15);
+        }
+
+        .choice.empresa .choice-icon {
+            background: rgba(18, 59, 255, 0.12);
+            border-color: rgba(77, 124, 255, 0.4);
+            color: var(--blue-light);
+            box-shadow: 0 0 24px rgba(18, 59, 255, 0.2);
+        }
+
+        .choice-icon .pulse {
+            position: absolute;
+            inset: -6px;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            opacity: 0.3;
+            animation: iconPulse 2.5s ease-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0% { transform: scale(1); opacity: 0.4; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .choice-label {
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .choice h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .choice p {
+            font-size: 12.5px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 24px;
+            min-height: 60px;
+        }
+
+        .choice-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--electric);
+        }
+
+        .choice.empresa .choice-cta {
+            color: var(--blue-light);
+        }
+
+        .choice-cta .arrow {
+            display: inline-flex;
+            transition: transform 0.25s;
+        }
+
+        .choice:hover .choice-cta .arrow {
+            transform: translateX(6px);
+        }
+
+        .choice-status {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 8px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--green);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .choice-status i {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+            animation: statusBlink 2s ease infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .footer {
+            margin-top: 44px;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            opacity: 0;
+            animation: fadeSlide 1s ease 2.4s forwards;
+            text-transform: uppercase;
+        }
+
+        .footer strong {
+            color: var(--silver);
+            font-weight: 600;
+        }
+
+        .boot-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s;
+        }
+
+        .boot-overlay.done {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .boot-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 11px;
+            letter-spacing: 0.35em;
+            color: var(--electric);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(0, 168, 255, 0.6);
+        }
+
+        .boot-bar {
+            width: 180px;
+            height: 2px;
+            background: rgba(0, 168, 255, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .boot-bar span {
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--blue), var(--electric));
+            box-shadow: 0 0 12px var(--electric);
+            animation: bootLoad 1.6s ease forwards;
+        }
+
+        @keyframes bootLoad {
+            to { width: 100%; }
+        }
+
+        .boot-pct {
+            margin-top: 12px;
+            font-size: 10px;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="boot-overlay" id="bootOverlay">
+        <div class="boot-text">Initializing access gateway</div>
+        <div class="boot-bar"><span></span></div>
+        <div class="boot-pct" id="bootPct">0%</div>
+    </div>
+
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+    <div class="scan-beam"></div>
+    <div class="scanlines"></div>
+    <canvas id="particles"></canvas>
+
+    <div class="stage">
+
+        <div class="header-block">
+            <div class="logo-wrap">
+                <div class="logo-ring"></div>
+                <img src="protecta-logo-transparent.png" alt="Protecta Solutions"
+                     onerror="this.style.display='none'">
+            </div>
+            <div class="sys-line">// access · select interface</div>
+            <h1>
+                ¿Cómo deseas <strong>ingresar</strong>?
+            </h1>
+            <p class="subtitle">
+                Selecciona el canal holográfico de acceso.
+                Empresa activa Protecta Core · Cliente abre el Portal.
+            </p>
+        </div>
+
+        <div class="choices">
+
+            <a href="index.html" class="choice empresa" id="cardEmpresa">
+                <span class="c1"></span><span class="c2"></span>
+                <span class="c3"></span><span class="c4"></span>
+                <div class="choice-status"><i></i> ONLINE</div>
+                <div class="choice-icon">
+                    <span class="pulse"></span>
+                    ◈
+                </div>
+                <div class="choice-label">Canal interno</div>
+                <h2>Empresa</h2>
+                <p>
+                    Protecta Core completo: inteligencia de grafos,
+                    motor de riesgo, alertas, Neo4j y monitoreo en vivo.
+                </p>
+                <div class="choice-cta">
+                    <span>Inicializar Core</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+            <a href="portal.html" class="choice cliente" id="cardCliente">
+                <span class="c1"></span><span class="c2"></span>
+                <span class="c3"></span><span class="c4"></span>
+                <div class="choice-status"><i></i> ONLINE</div>
+                <div class="choice-icon">
+                    <span class="pulse"></span>
+                    ▣
+                </div>
+                <div class="choice-label">Canal cliente</div>
+                <h2>Cliente</h2>
+                <p>
+                    Portal de cliente: 9 líneas de producto, estado
+                    de servicios, soporte y documentos.
+                </p>
+                <div class="choice-cta">
+                    <span>Abrir Portal</span>
+                    <span class="arrow">→</span>
+                </div>
+            </a>
+
+        </div>
+
+        <p class="footer">
+            <strong>PROTECTA SOLUTIONS</strong> · Graph Intelligence &amp; Risk Analytics
+        </p>
+
+    </div>
+
+<script>
+(function () {
+    const overlay = document.getElementById('bootOverlay');
+    const pctEl = document.getElementById('bootPct');
+    let p = 0;
+    const bootTimer = setInterval(() => {
+        p += Math.random() * 14 + 4;
+        if (p >= 100) {
+            p = 100;
+            clearInterval(bootTimer);
+            pctEl.textContent = '100%';
+            setTimeout(() => overlay.classList.add('done'), 280);
+        } else {
+            pctEl.textContent = Math.floor(p) + '%';
+        }
+    }, 80);
+
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    let w, h, particles, burstParticles, mouse;
+
+    function resize() {
+        w = canvas.width = window.innerWidth;
+        h = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    mouse = { x: w / 2, y: h / 2 };
+    window.addEventListener('mousemove', e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+    });
+
+    function createParticle(x, y, burst) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = burst ? Math.random() * 3 + 1 : Math.random() * 0.4 + 0.1;
+        return {
+            x: x ?? Math.random() * w,
+            y: y ?? Math.random() * h,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            r: burst ? Math.random() * 2.2 + 0.6 : Math.random() * 1.6 + 0.4,
+            life: burst ? 1 : Math.random() * 0.5 + 0.5,
+            decay: burst ? Math.random() * 0.02 + 0.012 : 0,
+            hue: Math.random() > 0.3 ? 195 : 220
+        };
+    }
+
+    particles = Array.from({ length: 90 }, () => createParticle());
+    burstParticles = [];
+
+    setTimeout(() => spawnBurst(w * 0.3, h * 0.55, 40), 1700);
+    setTimeout(() => spawnBurst(w * 0.7, h * 0.55, 40), 2050);
+    setTimeout(() => spawnBurst(w * 0.5, h * 0.28, 28), 900);
+
+    function spawnBurst(x, y, n) {
+        for (let i = 0; i < n; i++) {
+            burstParticles.push(createParticle(x, y, true));
+        }
+    }
+
+    document.querySelectorAll('.choice').forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            const rect = card.getBoundingClientRect();
+            spawnBurst(rect.left + rect.width / 2, rect.top + rect.height / 2, 24);
+        });
+    });
+
+    function draw() {
+        ctx.clearRect(0, 0, w, h);
+
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx += (mouse.x - p.x) * 0.00002;
+            p.vy += (mouse.y - p.y) * 0.00002;
+
+            if (p.x < 0) p.x = w;
+            if (p.x > w) p.x = 0;
+            if (p.y < 0) p.y = h;
+            if (p.y > h) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'hsla(' + p.hue + ', 100%, 60%, ' + (0.35 * p.life) + ')';
+            ctx.fill();
+        });
+
+        for (let i = 0; i < particles.length; i++) {
+            for (let j = i + 1; j < particles.length; j++) {
+                const a = particles[i];
+                const b = particles[j];
+                const dx = a.x - b.x;
+                const dy = a.y - b.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 120) {
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a.y);
+                    ctx.lineTo(b.x, b.y);
+                    ctx.strokeStyle = 'rgba(0, 168, 255, ' + (0.08 * (1 - dist / 120)) + ')';
+                    ctx.lineWidth = 0.6;
+                    ctx.stroke();
+                }
+            }
+        }
+
+        burstParticles = burstParticles.filter(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vx *= 0.98;
+            p.vy *= 0.98;
+            p.life -= p.decay;
+            if (p.life <= 0) return false;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI * 2);
+            ctx.fillStyle = 'hsla(' + p.hue + ', 100%, 65%, ' + (p.life * 0.9) + ')';
+            ctx.shadowColor = 'hsla(' + p.hue + ', 100%, 60%, 0.8)';
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            return true;
+        });
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+})();
+</script>
+</body>
+</html>

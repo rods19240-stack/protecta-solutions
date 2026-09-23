@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070d">
+    <title>Protecta Solutions | Portal Cliente</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <style>
+        :root {
+            --black: #05070d;
+            --black-2: #080b13;
+            --panel: #0b0f18;
+            --panel-2: #0e131e;
+            --blue: #123bff;
+            --electric: #00a8ff;
+            --blue-light: #4d7cff;
+            --silver: #c8ced8;
+            --white: #f8fafc;
+            --muted: #737d91;
+            --border: rgba(200, 206, 216, 0.11);
+            --green: #36e2a1;
+            --yellow: #ffc857;
+            --red: #ff4d67;
+            --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--black);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        button, input, select, textarea {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ::selection {
+            background: var(--electric);
+            color: var(--black);
+        }
+
+        /* ========== LAYOUT ========== */
+        .portal {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 260px;
+            background: var(--panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            z-index: 100;
+            transition: transform 0.3s ease;
+        }
+
+        .brand {
+            padding: 28px 24px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            height: 36px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .brand-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 15px;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-text span {
+            display: block;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .system-label {
+            margin: 0 24px 16px;
+            padding: 6px 10px;
+            background: rgba(18, 59, 255, 0.12);
+            border: 1px solid rgba(18, 59, 255, 0.25);
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            color: var(--blue-light);
+            text-align: center;
+        }
+
+        .navigation {
+            flex: 1;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            color: var(--silver);
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--white);
+        }
+
+        .nav-item.active {
+            background: rgba(18, 59, 255, 0.15);
+            color: var(--white);
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 18px;
+            background: var(--electric);
+            border-radius: 0 3px 3px 0;
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+            opacity: 0.85;
+        }
+
+        .nav-item .badge {
+            margin-left: auto;
+            background: var(--red);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .sidebar-bottom {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .client-card {
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+
+        .client-card .label {
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .client-card .name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 2px;
+        }
+
+        .client-card .plan {
+            font-size: 11px;
+            color: var(--electric);
+        }
+
+        .user-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+
+        .user-box:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue), var(--electric));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .user-info strong {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-info small {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ========== MAIN ========== */
+        .main {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== TOPBAR ========== */
+        .topbar {
+            height: 64px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            background: rgba(5, 7, 13, 0.85);
+            backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .breadcrumb span {
+            color: var(--silver);
+            margin: 0 8px;
+        }
+
+        .breadcrumb strong {
+            color: var(--white);
+            font-weight: 600;
+        }
+
+        .top-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 14px;
+            width: 260px;
+        }
+
+        .search-box input {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--white);
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .search-box input::placeholder {
+            color: var(--muted);
+        }
+
+        .search-box kbd {
+            font-size: 10px;
+            color: var(--muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+        }
+
+        .icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--silver);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .icon-btn:hover {
+            border-color: rgba(0, 168, 255, 0.4);
+            color: var(--white);
+        }
+
+        .icon-btn .dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 7px;
+            height: 7px;
+            background: var(--red);
+            border-radius: 50%;
+            border: 2px solid var(--panel);
+        }
+
+        .lang-btn {
+            height: 38px;
+            padding: 0 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--silver);
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .lang-btn:hover {
+            border-color: rgba(0, 168, 255, 0.4);
+            color: var(--white);
+        }
+
+        /* ========== CONTENT ========== */
+        .content {
+            flex: 1;
+            padding: 28px;
+            max-width: 1400px;
+        }
+
+        .section {
+            display: none;
+            opacity: 0;
+            transform: translateY(28px) scale(0.97);
+            filter: blur(12px);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+            transition:
+                opacity 0.9s ease,
+                transform 1.05s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.95s ease;
+        }
+
+        .section.is-leaving {
+            opacity: 0;
+            transform: translateY(-18px) scale(0.98);
+            filter: blur(10px);
+            transition:
+                opacity 0.55s ease,
+                transform 0.6s ease,
+                filter 0.55s ease;
+        }
+
+        a.back-home {
+            text-decoration: none;
+        }
+
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 9px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--panel);
+            color: var(--silver);
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+
+        .back-home:hover {
+            border-color: rgba(0, 168, 255, 0.45);
+            color: var(--white);
+            background: rgba(0, 168, 255, 0.08);
+            transform: translateX(-3px);
+        }
+
+        .back-home .arrow {
+            color: var(--electric);
+            font-size: 14px;
+            transition: transform 0.2s;
+        }
+
+        .back-home:hover .arrow {
+            transform: translateX(-3px);
+        }
+
+        /* ========== HERO / WELCOME ========== */
+        .welcome {
+            margin-bottom: 28px;
+        }
+
+        .welcome .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--electric);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .welcome .eyebrow::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--green);
+        }
+
+        .welcome h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.25;
+            margin-bottom: 8px;
+        }
+
+        .welcome h1 strong {
+            color: var(--electric);
+        }
+
+        .welcome p {
+            color: var(--muted);
+            font-size: 14px;
+            max-width: 520px;
+        }
+
+        /* ========== METRIC CARDS ========== */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 28px;
+        }
+
+        .metric-card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .metric-card:hover {
+            border-color: rgba(0, 168, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .metric-card .label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .metric-card .value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .metric-card .sub {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .metric-card .sub.up {
+            color: var(--green);
+        }
+
+        .metric-card .sub.down {
+            color: var(--red);
+        }
+
+        .metric-card .icon {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(0, 168, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: var(--electric);
+        }
+
+        /* ========== PANEL ========== */
+        .panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 22px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .panel-header h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .panel-kicker {
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-light);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--silver);
+        }
+
+        .btn-ghost:hover {
+            border-color: rgba(0, 168, 255, 0.4);
+            color: var(--white);
+        }
+
+        .panel-body {
+            padding: 20px 22px;
+        }
+
+        /* ========== PRODUCTS (mismo estilo que Core) ========== */
+        .products-section {
+            margin-top: 8px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(255,255,255,.025), rgba(0,168,255,.012));
+            position: relative;
+            overflow: visible;
+            border-radius: 4px;
+        }
+
+        .products-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--electric), transparent);
+            box-shadow: 0 0 15px var(--electric);
+        }
+
+        .products-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            gap: 30px;
+            margin-bottom: 28px;
+        }
+
+        .products-header h2 {
+            margin: 8px 0;
+            font-size: 27px;
+            letter-spacing: -.5px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+        }
+
+        .products-header p {
+            max-width: 650px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .products-counter {
+            min-width: 110px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            text-align: center;
+            background: rgba(0,168,255,.025);
+        }
+
+        .products-counter span {
+            display: block;
+            color: var(--electric);
+            font-size: 8px;
+            letter-spacing: 2px;
+        }
+
+        .products-counter strong {
+            display: block;
+            margin: 4px 0;
+            font-size: 25px;
+            color: var(--white);
+        }
+
+        .products-counter small {
+            color: var(--muted);
+            font-size: 7px;
+            letter-spacing: 1px;
+        }
+
+        .products-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .product-filter {
+            padding: 9px 16px;
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,.018);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: 8px;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: .25s ease;
+        }
+
+        .product-filter:hover {
+            color: white;
+            border-color: rgba(0,168,255,.45);
+            background: rgba(0,168,255,.05);
+        }
+
+        .product-filter.active {
+            color: white;
+            border-color: var(--electric);
+            background: rgba(0,168,255,.10);
+            box-shadow: 0 0 18px rgba(0,168,255,.12);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .product-card {
+            border: 1px solid var(--border);
+            background: rgba(255,255,255,.015);
+            position: relative;
+            overflow: hidden;
+            transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(0,168,255,.42);
+            box-shadow: 0 18px 45px rgba(0,0,0,.28), 0 0 25px rgba(0,168,255,.08);
+        }
+
+        .product-card.product-hidden {
+            display: none;
+        }
+
+        .product-image {
+            height: 210px;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at center, rgba(0,168,255,.10), transparent 55%),
+                #080c15;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .product-image-grid {
+            position: absolute;
+            inset: 0;
+            opacity: .35;
+            background-image:
+                linear-gradient(rgba(0,168,255,.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,168,255,.08) 1px, transparent 1px);
+            background-size: 25px 25px;
+        }
+
+        .product-image::after {
+            content: "";
+            position: absolute;
+            left: -20%;
+            top: 50%;
+            width: 140%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--electric), transparent);
+            opacity: .5;
+            animation: productScan 4s linear infinite;
+        }
+
+        @keyframes productScan {
+            0% { transform: translateY(-100px); }
+            100% { transform: translateY(100px); }
+        }
+
+        .product-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        .product-placeholder strong {
+            font-size: 23px;
+            letter-spacing: 4px;
+            color: var(--white);
+            text-shadow: 0 0 20px rgba(0,168,255,.35);
+        }
+
+        .product-placeholder span:last-child {
+            color: var(--muted);
+            font-size: 7px;
+            letter-spacing: 2px;
+        }
+
+        .product-code {
+            color: var(--electric);
+            font-size: 7px;
+            letter-spacing: 2px;
+        }
+
+        .product-status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 5;
+            padding: 5px 8px;
+            border: 1px solid rgba(70,220,150,.25);
+            background: rgba(0,0,0,.55);
+            color: var(--green);
+            font-size: 7px;
+            letter-spacing: 1px;
+        }
+
+        .product-status.warning {
+            border-color: rgba(255,200,87,.35);
+            color: var(--yellow);
+        }
+
+        .product-status.offline {
+            border-color: rgba(255,77,103,.35);
+            color: var(--red);
+        }
+
+        .product-info {
+            padding: 19px;
+        }
+
+        .product-category {
+            color: var(--electric);
+            font-size: 7px;
+            letter-spacing: 1.8px;
+            margin-bottom: 9px;
+        }
+
+        .product-info h3 {
+            font-size: 15px;
+            margin: 0 0 9px;
+            color: white;
+            font-weight: 600;
+        }
+
+        .product-info p {
+            min-height: 42px;
+            color: var(--muted);
+            font-size: 10px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+            padding-top: 13px;
+            border-top: 1px solid var(--border);
+        }
+
+        .product-id {
+            color: #657083;
+            font-size: 7px;
+            letter-spacing: 1px;
+        }
+
+        .product-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            background: transparent;
+            color: var(--silver);
+            font-family: inherit;
+            font-size: 7px;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .product-detail b {
+            color: var(--electric);
+            font-size: 13px;
+            transition: .2s;
+        }
+
+        .product-detail:hover {
+            color: white;
+        }
+
+        .product-detail:hover b {
+            transform: translateX(4px);
+        }
+
+        @media (max-width: 1100px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 650px) {
+            .products-section {
+                padding: 20px;
+            }
+            .products-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========== STATUS TABLE ========== */
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .status-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-transform: uppercase;
+            padding: 0 0 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .status-table td {
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+        .status-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-dot.online {
+            background: var(--green);
+            box-shadow: 0 0 8px var(--green);
+        }
+
+        .status-dot.warning {
+            background: var(--yellow);
+            box-shadow: 0 0 8px var(--yellow);
+        }
+
+        .status-dot.offline {
+            background: var(--red);
+            box-shadow: 0 0 8px var(--red);
+        }
+
+        /* ========== SUPPORT ========== */
+        .ticket-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .ticket-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .ticket-item:hover {
+            border-color: rgba(0, 168, 255, 0.3);
+        }
+
+        .ticket-priority {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .ticket-priority.high { background: var(--red); }
+        .ticket-priority.medium { background: var(--yellow); }
+        .ticket-priority.low { background: var(--green); }
+
+        .ticket-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .ticket-info strong {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .ticket-info span {
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .ticket-status {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(0, 168, 255, 0.12);
+            color: var(--electric);
+        }
+
+        .ticket-status.closed {
+            background: rgba(115, 125, 145, 0.15);
+            color: var(--muted);
+        }
+
+        /* ========== DOCS ========== */
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+        }
+
+        .doc-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .doc-card:hover {
+            border-color: rgba(0, 168, 255, 0.35);
+        }
+
+        .doc-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(18, 59, 255, 0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--blue-light);
+            flex-shrink: 0;
+        }
+
+        .doc-info strong {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .doc-info span {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* ========== ACCOUNT ========== */
+        .account-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--white);
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: rgba(0, 168, 255, 0.5);
+        }
+
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ========== EMPTY / HELPERS ========== */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 20px;
+        }
+
+        /* ========== MOBILE ========== */
+        .menu-toggle {
+            display: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--silver);
+            font-size: 18px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 90;
+        }
+
+        @media (max-width: 1100px) {
+            .metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+            .account-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.open {
+                display: block;
+            }
+            .main {
+                margin-left: 0;
+            }
+            .menu-toggle {
+                display: flex;
+            }
+            .search-box {
+                display: none;
+            }
+            .content {
+                padding: 20px 16px;
+            }
+            .metrics {
+                grid-template-columns: 1fr 1fr;
+            }
+            .welcome h1 {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="portal" id="portal">
+
+    <!-- SIDEBAR OVERLAY (mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ========== SIDEBAR ========== -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <img src="protecta-logo-transparent.png" alt="Protecta Solutions" class="brand-logo"
+                 onerror="this.style.display='none'">
+            <div class="brand-text">
+                Protecta
+                <span data-es="Portal Cliente" data-en="Client Portal">Portal Cliente</span>
+            </div>
+        </div>
+
+        <div class="system-label">CLIENT PORTAL</div>
+
+        <nav class="navigation">
+
+            <a href="#inicio" class="nav-item active" data-section="inicio">
+                <span class="nav-icon">⌂</span>
+                <span data-es="Inicio" data-en="Home">Inicio</span>
+            </a>
+
+            <a href="#productos" class="nav-item" data-section="productos">
+                <span class="nav-icon">▣</span>
+                <span data-es="Mis Productos" data-en="My Products">Mis Productos</span>
+            </a>
+
+            <a href="#estado" class="nav-item" data-section="estado">
+                <span class="nav-icon">◌</span>
+                <span data-es="Estado" data-en="Status">Estado</span>
+            </a>
+
+            <a href="#soporte" class="nav-item" data-section="soporte">
+                <span class="nav-icon">!</span>
+                <span data-es="Soporte" data-en="Support">Soporte</span>
+                <b class="badge">2</b>
+            </a>
+
+            <a href="#documentos" class="nav-item" data-section="documentos">
+                <span class="nav-icon">▦</span>
+                <span data-es="Documentos" data-en="Documents">Documentos</span>
+            </a>
+
+            <a href="#cuenta" class="nav-item" data-section="cuenta">
+                <span class="nav-icon">⚙</span>
+                <span data-es="Mi Cuenta" data-en="My Account">Mi Cuenta</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="client-card">
+                <div class="label" data-es="Empresa" data-en="Company">Empresa</div>
+                <div class="name">Industrias Delta S.A.</div>
+                <div class="plan" data-es="Plan Empresarial" data-en="Enterprise Plan">Plan Empresarial</div>
+            </div>
+
+            <div class="user-box">
+                <div class="avatar">JD</div>
+                <div class="user-info">
+                    <strong>Juan Díaz</strong>
+                    <small data-es="Administrador" data-en="Administrator">Administrador</small>
+                </div>
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- ========== MAIN ========== -->
+    <div class="main">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="menu-toggle" id="menuToggle" aria-label="Menú">☰</button>
+                <div class="breadcrumb">
+                    PROTECTA
+                    <span>/</span>
+                    <strong data-es="PORTAL CLIENTE" data-en="CLIENT PORTAL">PORTAL CLIENTE</strong>
+                </div>
+            </div>
+
+            <div class="top-actions">
+
+                <div class="search-box">
+                    <span style="color:var(--muted);font-size:14px;">⌕</span>
+                    <input type="text"
+                           data-placeholder-es="Buscar productos, tickets..."
+                           data-placeholder-en="Search products, tickets..."
+                           placeholder="Buscar productos, tickets...">
+                    <kbd>⌘K</kbd>
+                </div>
+
+                <button class="lang-btn" id="langBtn">🇪🇸 ES</button>
+
+                <button class="icon-btn" title="Notificaciones">
+                    ◌
+                    <span class="dot"></span>
+                </button>
+
+                <button class="icon-btn" title="Ayuda">?</button>
+
+            </div>
+
+        </header>
+
+        <!-- CONTENT -->
+        <div class="content">
+
+            <!-- ===================== INICIO ===================== -->
+            <section class="section active" id="inicio">
+
+                <a href="inicio.html" class="back-home">
+                    <span class="arrow">←</span>
+                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
+                </a>
+
+                <div class="welcome">
+                    <div class="eyebrow" data-es="Sesión activa" data-en="Active session">Sesión activa</div>
+                    <h1>
+                        <span data-es="Bienvenido," data-en="Welcome,">Bienvenido,</span>
+                        <strong>Industrias Delta</strong>
+                    </h1>
+                    <p data-es="Aquí puedes consultar el estado de tus servicios Protecta, productos contratados y solicitar soporte."
+                       data-en="Here you can check the status of your Protecta services, contracted products and request support.">
+                        Aquí puedes consultar el estado de tus servicios Protecta, productos contratados y solicitar soporte.
+                    </p>
+                </div>
+
+                <div class="metrics">
+
+                    <div class="metric-card">
+                        <div class="icon">▣</div>
+                        <div class="label" data-es="Productos activos" data-en="Active products">Productos activos</div>
+                        <div class="value">09</div>
+                        <div class="sub up" data-es="Todos operativos" data-en="All operational">Todos operativos</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="icon">◌</div>
+                        <div class="label" data-es="Sistemas en línea" data-en="Systems online">Sistemas en línea</div>
+                        <div class="value">12</div>
+                        <div class="sub" data-es="de 13 sedes" data-en="of 13 sites">de 13 sedes</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="icon">!</div>
+                        <div class="label" data-es="Tickets abiertos" data-en="Open tickets">Tickets abiertos</div>
+                        <div class="value">02</div>
+                        <div class="sub" data-es="1 prioritario" data-en="1 high priority">1 prioritario</div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="icon">◈</div>
+                        <div class="label" data-es="Última sync" data-en="Last sync">Última sync</div>
+                        <div class="value" style="font-size:20px;">14:32</div>
+                        <div class="sub" data-es="Hoy · Sistema estable" data-en="Today · System stable">Hoy · Sistema estable</div>
+                    </div>
+
+                </div>
+
+                <div class="two-col">
+
+                    <!-- Servicios activos — solo 2 en resumen -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker" data-es="Resumen" data-en="Summary">Resumen</div>
+                                <h2 data-es="Servicios activos" data-en="Active services">Servicios activos</h2>
+                            </div>
+                            <button type="button" class="btn btn-ghost" id="btnVerTodos" onclick="window.portalGoTo && window.portalGoTo('productos')">
+                                <span data-es="Ver catálogo completo →" data-en="View full catalog →">Ver catálogo completo →</span>
+                            </button>
+                        </div>
+                        <div class="panel-body">
+                            <div class="products-grid" style="grid-template-columns: 1fr 1fr;">
+
+                                <article class="product-card">
+                                    <div class="product-image" style="height:160px;">
+                                        <div class="product-image-grid"></div>
+                                        <div class="product-placeholder">
+                                            <span class="product-code">PS-ALM-001</span>
+                                            <strong style="font-size:18px;">ALARM</strong>
+                                            <span>PRODUCT IMAGE</span>
+                                        </div>
+                                        <div class="product-status">● ACTIVO</div>
+                                    </div>
+                                    <div class="product-info" style="padding:14px;">
+                                        <div class="product-category">SECURITY SYSTEMS</div>
+                                        <h3 data-es="Control de Alarmas" data-en="Alarm Control">Control de Alarmas</h3>
+                                        <p data-es="100 productos · línea activa" data-en="8 cameras · 3 sites">8 cámaras · 3 sedes</p>
+                                    </div>
+                                </article>
+
+                                <article class="product-card">
+                                    <div class="product-image" style="height:160px;">
+                                        <div class="product-image-grid"></div>
+                                        <div class="product-placeholder">
+                                            <span class="product-code">PS-ACC-001</span>
+                                            <strong style="font-size:18px;">ACCESS</strong>
+                                            <span>PRODUCT IMAGE</span>
+                                        </div>
+                                        <div class="product-status">● ACTIVO</div>
+                                    </div>
+                                    <div class="product-info" style="padding:14px;">
+                                        <div class="product-category">ACCESS CONTROL</div>
+                                        <h3 data-es="Control de Acceso" data-en="Access Control">Control de Acceso</h3>
+                                        <p data-es="100 productos · línea activa" data-en="100 products · active line">100 productos · línea activa</p>
+                                    </div>
+                                </article>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tickets recientes -->
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker" data-es="Soporte" data-en="Support">Soporte</div>
+                                <h2 data-es="Tickets recientes" data-en="Recent tickets">Tickets recientes</h2>
+                            </div>
+                            <button type="button" class="btn btn-ghost" onclick="window.portalGoTo && window.portalGoTo('soporte')">
+                                <span data-es="Ver todos →" data-en="View all →">Ver todos →</span>
+                            </button>
+                        </div>
+                        <div class="panel-body">
+                            <div class="ticket-list">
+
+                                <div class="ticket-item">
+                                    <div class="ticket-priority high"></div>
+                                    <div class="ticket-info">
+                                        <strong data-es="Cámara offline — Sede Norte" data-en="Camera offline — North site">Cámara offline — Sede Norte</strong>
+                                        <span>#TK-2841 · hace 2 h</span>
+                                    </div>
+                                    <span class="ticket-status" data-es="Abierto" data-en="Open">Abierto</span>
+                                </div>
+
+                                <div class="ticket-item">
+                                    <div class="ticket-priority medium"></div>
+                                    <div class="ticket-info">
+                                        <strong data-es="Solicitud de usuario extra" data-en="Extra user request">Solicitud de usuario extra</strong>
+                                        <span>#TK-2830 · hace 1 d</span>
+                                    </div>
+                                    <span class="ticket-status" data-es="En proceso" data-en="In progress">En proceso</span>
+                                </div>
+
+                                <div class="ticket-item">
+                                    <div class="ticket-priority low"></div>
+                                    <div class="ticket-info">
+                                        <strong data-es="Actualización de firmware" data-en="Firmware update">Actualización de firmware</strong>
+                                        <span>#TK-2812 · hace 5 d</span>
+                                    </div>
+                                    <span class="ticket-status closed" data-es="Cerrado" data-en="Closed">Cerrado</span>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ===================== PRODUCTOS ===================== -->
+            <section class="section" id="productos">
+
+                <a href="inicio.html" class="back-home">
+                    <span class="arrow">←</span>
+                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
+                </a>
+
+                <div class="products-section">
+
+                    <div class="products-header">
+                        <div>
+                            <div class="panel-kicker">PROTECTA SOLUTIONS</div>
+                            <h2 data-es="Mis productos y soluciones" data-en="My products & solutions">
+                                Mis productos y soluciones
+                            </h2>
+                            <p data-es="Mismos apartados que el catálogo Protecta. 9 líneas con 100 productos cada una."
+                               data-en="Same categories as the Protecta catalog. 9 lines with 100 products each.">
+                                Mismos apartados que el catálogo Protecta. 9 líneas con 100 productos cada una.
+                            </p>
+                        </div>
+                        <div class="products-counter">
+                            <span>CATALOG</span>
+                            <strong id="productCount">09</strong>
+                            <small data-es="APARTADOS" data-en="CATEGORIES">APARTADOS</small>
+                        </div>
+                    </div>
+
+                    <div class="products-filters">
+                        <button class="product-filter active" data-filter="all" data-es="TODOS" data-en="ALL">TODOS</button>
+                        <button class="product-filter" data-filter="security" data-es="SEGURIDAD" data-en="SECURITY">SEGURIDAD</button>
+                        <button class="product-filter" data-filter="technology" data-es="TECNOLOGÍA" data-en="TECHNOLOGY">TECNOLOGÍA</button>
+                        <button class="product-filter" data-filter="network" data-es="REDES" data-en="NETWORK">REDES</button>
+                    </div>
+
+                    <div class="products-grid">
+
+                        <article class="product-card" data-category="security">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-ALM-001</span>
+                                    <strong>ALARM</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">ALARM SYSTEMS</div>
+                                <h3 data-es="Control de Alarmas" data-en="Alarm Control">Control de Alarmas</h3>
+                                <p data-es="Sistemas de control y monitoreo de alarmas para protección de instalaciones." data-en="Alarm control and monitoring systems for facility protection.">Sistemas de control y monitoreo de alarmas para protección de instalaciones.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-ALM-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="security">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-ACC-001</span>
+                                    <strong>ACCESS</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">ACCESS CONTROL</div>
+                                <h3 data-es="Control de Acceso" data-en="Access Control">Control de Acceso</h3>
+                                <p data-es="Sistemas de control y gestión de accesos para instalaciones empresariales." data-en="Access control and management systems for enterprise facilities.">Sistemas de control y gestión de accesos para instalaciones empresariales.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-ACC-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="security">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-FIR-001</span>
+                                    <strong>FIRE</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">FIRE DETECTION</div>
+                                <h3 data-es="Detección de Incendios" data-en="Fire Detection">Detección de Incendios</h3>
+                                <p data-es="Sistemas de detección temprana de incendios y alertas en tiempo real." data-en="Early fire detection systems and real-time alerts.">Sistemas de detección temprana de incendios y alertas en tiempo real.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-FIR-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="technology">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-AUT-001</span>
+                                    <strong>AUTO</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">AUTOMATION</div>
+                                <h3 data-es="Automatizaciones" data-en="Automations">Automatizaciones</h3>
+                                <p data-es="Soluciones de automatización inteligente para edificios e instalaciones." data-en="Intelligent automation solutions for buildings and facilities.">Soluciones de automatización inteligente para edificios e instalaciones.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-AUT-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="security">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-VID-001</span>
+                                    <strong>VIDEO</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">VIDEO SURVEILLANCE</div>
+                                <h3 data-es="Videovigilancia" data-en="Video Surveillance">Videovigilancia</h3>
+                                <p data-es="Sistema inteligente para monitoreo y análisis de espacios en tiempo real." data-en="Intelligent system for real-time space monitoring and analysis.">Sistema inteligente para monitoreo y análisis de espacios en tiempo real.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-VID-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="network">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-FIB-001</span>
+                                    <strong>FIBER</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">FIBER OPTICS</div>
+                                <h3 data-es="Fibra Óptica" data-en="Fiber Optics">Fibra Óptica</h3>
+                                <p data-es="Infraestructura de fibra óptica para conectividad de alta velocidad." data-en="Fiber optic infrastructure for high-speed connectivity.">Infraestructura de fibra óptica para conectividad de alta velocidad.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-FIB-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="technology">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-HVA-001</span>
+                                    <strong>HVAC</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">HVAC SYSTEMS</div>
+                                <h3 data-es="(HVAC) Aire Acondicionado" data-en="(HVAC) Air Conditioning">(HVAC) Aire Acondicionado</h3>
+                                <p data-es="Sistemas de climatización y control de aire acondicionado para espacios críticos." data-en="Climate control and air conditioning systems for critical spaces.">Sistemas de climatización y control de aire acondicionado para espacios críticos.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-HVA-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="security">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-PCI-001</span>
+                                    <strong>PCI</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">FIRE PROTECTION</div>
+                                <h3 data-es="(PCI) Protección Contra Incendios" data-en="(PCI) Fire Protection Systems">(PCI) Protección Contra Incendios</h3>
+                                <p data-es="Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva." data-en="Fire protection systems: suppression, sprinklers and passive safety.">Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-PCI-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="product-card" data-category="technology">
+                            <div class="product-image">
+                                <div class="product-image-grid"></div>
+                                <div class="product-placeholder">
+                                    <span class="product-code">PS-ING-001</span>
+                                    <strong>ENG</strong>
+                                    <span>100 PRODUCTOS</span>
+                                </div>
+                                <div class="product-status">● ACTIVO</div>
+                            </div>
+                            <div class="product-info">
+                                <div class="product-category">SPECIAL ENGINEERING</div>
+                                <h3 data-es="Ingenierías Especiales" data-en="Special Engineering">Ingenierías Especiales</h3>
+                                <p data-es="Proyectos de ingeniería especializada adaptados a las necesidades del cliente." data-en="Specialized engineering projects tailored to client needs.">Proyectos de ingeniería especializada adaptados a las necesidades del cliente.</p>
+                                <div class="product-footer">
+                                    <span class="product-id">PS-ING-001 · 100 productos</span>
+                                    <button class="product-detail">
+                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
+                                        <b>→</b>
+                                    </button>
+                                </div>
+                            </div>
+                        </article>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- ===================== ESTADO ===================== -->
+            <section class="section" id="estado">
+
+                <a href="inicio.html" class="back-home">
+                    <span class="arrow">←</span>
+                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
+                </a>
+
+                <div class="welcome" style="margin-bottom:22px;">
+                    <div class="eyebrow" data-es="Monitoreo" data-en="Monitoring">Monitoreo</div>
+                    <h1 data-es="Estado de sistemas" data-en="System status">Estado de sistemas</h1>
+                    <p data-es="Estado en tiempo real de tus sedes e instalaciones Protecta."
+                       data-en="Real-time status of your Protecta sites and facilities.">
+                        Estado en tiempo real de tus sedes e instalaciones Protecta.
+                    </p>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-kicker">LIVE STATUS</div>
+                            <h2 data-es="Sedes e instalaciones" data-en="Sites & facilities">Sedes e instalaciones</h2>
+                        </div>
+                        <div class="panel-actions">
+                            <button class="btn btn-ghost" data-es="Actualizar" data-en="Refresh">↻ Actualizar</button>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <table class="status-table">
+                            <thead>
+                                <tr>
+                                    <th data-es="Sede" data-en="Site">Sede</th>
+                                    <th data-es="Sistemas" data-en="Systems">Sistemas</th>
+                                    <th data-es="Estado" data-en="Status">Estado</th>
+                                    <th data-es="Última sync" data-en="Last sync">Última sync</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Sede Central</strong></td>
+                                    <td>Videovigilancia · Acceso · Sensores</td>
+                                    <td><span class="status-dot online"></span><span data-es="En línea" data-en="Online">En línea</span></td>
+                                    <td>14:32</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sede Norte</strong></td>
+                                    <td>Videovigilancia · Acceso</td>
+                                    <td><span class="status-dot warning"></span><span data-es="Alerta" data-en="Alert">Alerta</span></td>
+                                    <td>14:28</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Sede Sur</strong></td>
+                                    <td>Videovigilancia · Red</td>
+                                    <td><span class="status-dot online"></span><span data-es="En línea" data-en="Online">En línea</span></td>
+                                    <td>14:31</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Almacén Industrial</strong></td>
+                                    <td>Sensores · Red</td>
+                                    <td><span class="status-dot online"></span><span data-es="En línea" data-en="Online">En línea</span></td>
+                                    <td>14:30</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Oficinas Administrativas</strong></td>
+                                    <td>Acceso · Sensores</td>
+                                    <td><span class="status-dot offline"></span><span data-es="Offline" data-en="Offline">Offline</span></td>
+                                    <td>12:05</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ===================== SOPORTE ===================== -->
+            <section class="section" id="soporte">
+
+                <a href="inicio.html" class="back-home">
+                    <span class="arrow">←</span>
+                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
+                </a>
+
+                <div class="welcome" style="margin-bottom:22px;">
+                    <div class="eyebrow" data-es="Centro de ayuda" data-en="Help center">Centro de ayuda</div>
+                    <h1 data-es="Soporte" data-en="Support">Soporte</h1>
+                    <p data-es="Crea tickets, revisa el estado de tus solicitudes y contacta al equipo Protecta."
+                       data-en="Create tickets, check request status and contact the Protecta team.">
+                        Crea tickets, revisa el estado de tus solicitudes y contacta al equipo Protecta.
+                    </p>
+                </div>
+
+                <div style="margin-bottom:20px;">
+                    <button class="btn btn-primary" data-es="+ Nuevo ticket" data-en="+ New ticket">+ Nuevo ticket</button>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-kicker" data-es="Historial" data-en="History">Historial</div>
+                            <h2 data-es="Mis tickets" data-en="My tickets">Mis tickets</h2>
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="ticket-list">
+
+                            <div class="ticket-item">
+                                <div class="ticket-priority high"></div>
+                                <div class="ticket-info">
+                                    <strong data-es="Cámara offline — Sede Norte" data-en="Camera offline — North site">Cámara offline — Sede Norte</strong>
+                                    <span>#TK-2841 · 22 Sep 2026 · 12:18</span>
+                                </div>
+                                <span class="ticket-status" data-es="Abierto" data-en="Open">Abierto</span>
+                            </div>
+
+                            <div class="ticket-item">
+                                <div class="ticket-priority medium"></div>
+                                <div class="ticket-info">
+                                    <strong data-es="Solicitud de usuario extra" data-en="Extra user request">Solicitud de usuario extra</strong>
+                                    <span>#TK-2830 · 21 Sep 2026 · 09:40</span>
+                                </div>
+                                <span class="ticket-status" data-es="En proceso" data-en="In progress">En proceso</span>
+                            </div>
+
+                            <div class="ticket-item">
+                                <div class="ticket-priority low"></div>
+                                <div class="ticket-info">
+                                    <strong data-es="Actualización de firmware — Sede Sur" data-en="Firmware update — South site">Actualización de firmware — Sede Sur</strong>
+                                    <span>#TK-2812 · 17 Sep 2026 · 16:05</span>
+                                </div>
+                                <span class="ticket-status closed" data-es="Cerrado" data-en="Closed">Cerrado</span>
+                            </div>
+
+                            <div class="ticket-item">
+                                <div class="ticket-priority low"></div>
+                                <div class="ticket-info">
+                                    <strong data-es="Consulta de facturación Q3" data-en="Q3 billing inquiry">Consulta de facturación Q3</strong>
+                                    <span>#TK-2798 · 10 Sep 2026 · 11:22</span>
+                                </div>
+                                <span class="ticket-status closed" data-es="Cerrado" data-en="Closed">Cerrado</span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ===================== DOCUMENTOS ===================== -->
+            <section class="section" id="documentos">
+
+                <a href="inicio.html" class="back-home">
+                    <span class="arrow">←</span>
+                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
+                </a>
+
+                <div class="welcome" style="margin-bottom:22px;">
+                    <div class="eyebrow" data-es="Recursos" data-en="Resources">Recursos</div>
+                    <h1 data-es="Documentos" data-en="Documents">Documentos</h1>
+                    <p data-es="Manuales, guías, contratos y documentos de tus servicios Protecta."
+                       data-en="Manuals, guides, contracts and documents for your Protecta services.">
+                        Manuales, guías, contratos y documentos de tus servicios Protecta.
+                    </p>
+                </div>
+
+                <div class="docs-grid">
+
+                    <a href="#" class="doc-card">
+                        <div class="doc-icon">📄</div>
+                        <div class="doc-info">
+                            <strong data-es="Manual Videovigilancia" data-en="Video Surveillance Manual">Manual Videovigilancia</strong>
+                            <span>PDF · 2.4 MB</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="doc-card">
+                        <div class="doc-icon">📄</div>
+                        <div class="doc-info">
+                            <strong data-es="Guía Control de Acceso" data-en="Access Control Guide">Guía Control de Acceso</strong>
+                            <span>PDF · 1.8 MB</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="doc-card">
+                        <div class="doc-icon">📋</div>
+                        <div class="doc-info">
+                            <strong data-es="Contrato de servicio 2026" data-en="Service contract 2026">Contrato de servicio 2026</strong>
+                            <span>PDF · 890 KB</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="doc-card">
+                        <div class="doc-icon">🧾</div>
+                        <div class="doc-info">
+                            <strong data-es="Factura Sep 2026" data-en="Invoice Sep 2026">Factura Sep 2026</strong>
+                            <span>PDF · 320 KB</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="doc-card">
+                        <div class="doc-icon">⚙️</div>
+                        <div class="doc-info">
+                            <strong data-es="Guía de sensores" data-en="Sensors guide">Guía de sensores</strong>
+                            <span>PDF · 1.1 MB</span>
+                        </div>
+                    </a>
+
+                    <a href="#" class="doc-card">
+                        <div class="doc-icon">🔐</div>
+                        <div class="doc-info">
+                            <strong data-es="Política de privacidad" data-en="Privacy policy">Política de privacidad</strong>
+                            <span>PDF · 210 KB</span>
+                        </div>
+                    </a>
+
+                </div>
+
+            </section>
+
+            <!-- ===================== CUENTA ===================== -->
+            <section class="section" id="cuenta">
+
+                <a href="inicio.html" class="back-home">
+                    <span class="arrow">←</span>
+                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
+                </a>
+
+                <div class="welcome" style="margin-bottom:22px;">
+                    <div class="eyebrow" data-es="Configuración" data-en="Settings">Configuración</div>
+                    <h1 data-es="Mi Cuenta" data-en="My Account">Mi Cuenta</h1>
+                    <p data-es="Datos de la empresa, usuarios autorizados y preferencias."
+                       data-en="Company details, authorized users and preferences.">
+                        Datos de la empresa, usuarios autorizados y preferencias.
+                    </p>
+                </div>
+
+                <div class="account-grid">
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker" data-es="Empresa" data-en="Company">Empresa</div>
+                                <h2 data-es="Datos de la cuenta" data-en="Account details">Datos de la cuenta</h2>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label data-es="Razón social" data-en="Company name">Razón social</label>
+                                <input type="text" value="Industrias Delta S.A." disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-es="RFC / ID fiscal" data-en="Tax ID">RFC / ID fiscal</label>
+                                <input type="text" value="IDE850101XXX" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-es="Plan" data-en="Plan">Plan</label>
+                                <input type="text" value="Empresarial" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-es="Correo de contacto" data-en="Contact email">Correo de contacto</label>
+                                <input type="email" value="admin@industriasdelta.com">
+                            </div>
+                            <button class="btn btn-primary" style="margin-top:8px;"
+                                    data-es="Guardar cambios" data-en="Save changes">Guardar cambios</button>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <div class="panel-kicker" data-es="Seguridad" data-en="Security">Seguridad</div>
+                                <h2 data-es="Acceso y preferencias" data-en="Access & preferences">Acceso y preferencias</h2>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label data-es="Usuario actual" data-en="Current user">Usuario actual</label>
+                                <input type="text" value="Juan Díaz" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label data-es="Idioma" data-en="Language">Idioma</label>
+                                <select id="accountLang">
+                                    <option value="es">Español</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
+                                <input type="password" placeholder="••••••••">
+                            </div>
+                            <div class="form-group">
+                                <label data-es="Confirmar contraseña" data-en="Confirm password">Confirmar contraseña</label>
+                                <input type="password" placeholder="••••••••">
+                            </div>
+                            <button class="btn btn-primary" style="margin-top:8px;"
+                                    data-es="Actualizar contraseña" data-en="Update password">Actualizar contraseña</button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+(function () {
+    const portal = {
+        language: localStorage.getItem('protectaPortalLang') || 'es',
+
+        init() {
+            this.setupNavigation();
+            this.setupLanguage();
+            this.setupMobileMenu();
+            this.setupProducts();
+            this.applyLanguage();
+            // Animate initial section in
+            const first = document.querySelector('.section.active');
+            if (first) {
+                requestAnimationFrame(() => {
+                    first.classList.add('is-visible');
+                });
+            }
+        },
+
+        setupProducts() {
+            const filters = document.querySelectorAll('.product-filter');
+            const products = document.querySelectorAll('#productos .product-card');
+            const counter = document.getElementById('productCount');
+
+            if (!filters.length || !products.length) return;
+
+            filters.forEach(filter => {
+                filter.addEventListener('click', () => {
+                    filters.forEach(b => b.classList.remove('active'));
+                    filter.classList.add('active');
+
+                    const category = filter.dataset.filter;
+                    let visible = 0;
+
+                    products.forEach(product => {
+                        const show = category === 'all' || product.dataset.category === category;
+                        product.classList.toggle('product-hidden', !show);
+                        if (show) visible++;
+                    });
+
+                    if (counter) {
+                        counter.textContent = String(visible).padStart(2, '0');
+                    }
+                });
+            });
+        },
+
+        setupNavigation() {
+            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const section = item.dataset.section;
+                    this.showSection(section);
+                });
+            });
+
+            document.querySelectorAll('[data-section-link]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    this.showSection(btn.dataset.sectionLink);
+                });
+            });
+
+            const btnVerTodos = document.getElementById('btnVerTodos');
+            if (btnVerTodos) {
+                btnVerTodos.addEventListener('click', () => {
+                    this.showSection('productos');
+                });
+            }
+        },
+
+        showSection(id) {
+            const next = document.getElementById(id);
+            if (!next) return;
+
+            const current = document.querySelector('.section.active');
+            const nav = document.querySelector(`.nav-item[data-section="${id}"]`);
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (nav) nav.classList.add('active');
+
+            document.getElementById('sidebar')?.classList.remove('open');
+            document.getElementById('sidebarOverlay')?.classList.remove('open');
+
+            // Same section — no transition needed
+            if (current === next) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            const reveal = () => {
+                next.classList.add('active');
+                // force reflow so transition runs
+                void next.offsetWidth;
+                next.classList.add('is-visible');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            if (current) {
+                current.classList.remove('is-visible');
+                current.classList.add('is-leaving');
+                setTimeout(() => {
+                    current.classList.remove('active', 'is-leaving');
+                    reveal();
+                }, 580);
+            } else {
+                reveal();
+            }
+        },
+
+        setupLanguage() {
+            const btn = document.getElementById('langBtn');
+            if (!btn) return;
+
+            btn.addEventListener('click', () => {
+                this.language = this.language === 'es' ? 'en' : 'es';
+                localStorage.setItem('protectaPortalLang', this.language);
+                this.applyLanguage();
+            });
+
+            const accountLang = document.getElementById('accountLang');
+            if (accountLang) {
+                accountLang.value = this.language;
+                accountLang.addEventListener('change', () => {
+                    this.language = accountLang.value;
+                    localStorage.setItem('protectaPortalLang', this.language);
+                    this.applyLanguage();
+                });
+            }
+        },
+
+        applyLanguage() {
+            const lang = this.language;
+
+            document.querySelectorAll('[data-es]').forEach(el => {
+                const text = el.getAttribute(`data-${lang}`);
+                if (text !== null) el.textContent = text;
+            });
+
+            document.querySelectorAll('[data-placeholder-es]').forEach(el => {
+                const ph = el.getAttribute(`data-placeholder-${lang}`);
+                if (ph) el.placeholder = ph;
+            });
+
+            const btn = document.getElementById('langBtn');
+            if (btn) btn.textContent = lang === 'es' ? '🇪🇸 ES' : '🇺🇸 EN';
+
+            const accountLang = document.getElementById('accountLang');
+            if (accountLang) accountLang.value = lang;
+        },
+
+        setupMobileMenu() {
+            const toggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (!toggle || !sidebar) return;
+
+            toggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay?.classList.toggle('open');
+            });
+
+            overlay?.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('open');
+            });
+        }
+    };
+
+    // Función global para botones "Ver catálogo" / "Ver todos"
+    window.portalGoTo = function (sectionId) {
+        portal.showSection(sectionId);
+    };
+
+    document.addEventListener('DOMContentLoaded', () => portal.init());
+})();
+</script>
+
+</body>
+</html>
