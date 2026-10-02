@@ -2511,24 +2511,29 @@
                 setTimeout(() => catalogPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
             };
 
-            document.querySelectorAll('#productos .product-detail').forEach(button => {
-                button.addEventListener('click', (e) => {
+            // Event delegation so rebuilt cards keep working
+            const prodSection = document.querySelector('#productos .products-section');
+            if (prodSection && prodSection.dataset.boundDetail !== '1') {
+                prodSection.dataset.boundDetail = '1';
+                prodSection.addEventListener('click', (e) => {
+                    const button = e.target.closest('.products-grid > .product-card .product-detail');
+                    if (!button) return;
                     e.preventDefault();
                     e.stopPropagation();
                     const card = button.closest('.product-card');
                     if (!card) return;
-                    const codeEl = card.querySelector('.product-code');
-                    const code = codeEl ? codeEl.textContent.trim() : '';
+                    const code = card.dataset.code || (card.querySelector('.product-code') || {}).textContent.trim();
 
                     if (card.classList.contains('catalog-active') && catalogPanel && catalogPanel.classList.contains('open')) {
                         catalogPanel.classList.remove('open');
+                        prodSection.classList.remove('catalog-open');
                         card.classList.remove('catalog-active');
                         return;
                     }
 
                     openCatalog(code, card);
                 });
-            });
+            }
         },
 
         setupNavigation() {

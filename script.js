@@ -1786,21 +1786,574 @@ const ProtectaCore = {
     },
 
 
+
+    bindProductGridEvents() {
+
+        const section =
+            document.querySelector(
+                ".products-section"
+            );
+
+        if (!section || section.dataset.boundGrid === "1") {
+            // still rebind detail buttons after re-render
+        }
+
+        const catalogPanel =
+            document.getElementById(
+                "categoryCatalog"
+            ) ||
+            (function () {
+                const sec =
+                    document.querySelector(
+                        ".products-section"
+                    );
+                if (!sec) return null;
+                let p =
+                    document.getElementById(
+                        "categoryCatalog"
+                    );
+                if (!p) {
+                    p =
+                        document.createElement(
+                            "div"
+                        );
+                    p.id = "categoryCatalog";
+                    p.className =
+                        "catalog-panel";
+                    sec.appendChild(p);
+                }
+                return p;
+            })();
+
+        // Use event delegation on products section
+        if (section && section.dataset.boundGrid !== "1") {
+
+            section.dataset.boundGrid = "1";
+
+            section.addEventListener(
+                "click",
+                (e) => {
+
+                    const detail =
+                        e.target.closest(
+                            ".products-section > .products-grid > .product-card .product-detail"
+                        );
+
+                    if (detail) {
+
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const card =
+                            detail.closest(
+                                ".product-card"
+                            );
+
+                        const code =
+                            (card &&
+                                (card.dataset
+                                    .code ||
+                                    (card.querySelector(
+                                        ".product-code"
+                                    ) ||
+                                        {})
+                                        .textContent
+                                        .trim())) ||
+                            "";
+
+                        if (
+                            card &&
+                            card.classList.contains(
+                                "catalog-active"
+                            ) &&
+                            catalogPanel &&
+                            catalogPanel.classList.contains(
+                                "open"
+                            )
+                        ) {
+
+                            catalogPanel.classList.remove(
+                                "open"
+                            );
+
+                            section.classList.remove(
+                                "catalog-open"
+                            );
+
+                            card.classList.remove(
+                                "catalog-active"
+                            );
+
+                            return;
+
+                        }
+
+                        // open catalog via existing flow
+                        const fakeOpen =
+                            this._openCatalogFn;
+
+                        if (
+                            fakeOpen
+                        )
+                            fakeOpen(
+                                code,
+                                card
+                            );
+
+                        return;
+
+                    }
+
+                }
+            );
+
+        }
+
+        // filter buttons
+        document
+            .querySelectorAll(
+                ".product-filter"
+            )
+            .forEach((filter) => {
+
+                filter.onclick = () => {
+
+                    document
+                        .querySelectorAll(
+                            ".product-filter"
+                        )
+                        .forEach((b) =>
+                            b.classList.remove(
+                                "active"
+                            )
+                        );
+
+                    filter.classList.add(
+                        "active"
+                    );
+
+                    const category =
+                        filter.dataset
+                            .filter;
+
+                    let visible = 0;
+
+                    document
+                        .querySelectorAll(
+                            ".products-section > .products-grid > .product-card"
+                        )
+                        .forEach(
+                            (product) => {
+
+                                const show =
+                                    category ===
+                                        "all" ||
+                                    product
+                                        .dataset
+                                        .category ===
+                                        category;
+
+                                product.classList.toggle(
+                                    "product-hidden",
+                                    !show
+                                );
+
+                                if (
+                                    show
+                                )
+                                    visible++;
+
+                            }
+                        );
+
+                    const counter =
+                        document.getElementById(
+                            "productCount"
+                        );
+
+                    if (counter)
+                        counter.textContent =
+                            String(
+                                visible
+                            ).padStart(
+                                2,
+                                "0"
+                            );
+
+                };
+
+            });
+
+    },
+
+    setupGestion() {
+
+        const list =
+            document.getElementById(
+                "gestionList"
+            );
+
+        const search =
+            document.getElementById(
+                "gestionSearch"
+            );
+
+        const newBtn =
+            document.getElementById(
+                "gestionNewCat"
+            );
+
+        if (
+            !list ||
+            !window.ProtectaCatalog
+        )
+            return;
+
+        const refresh = (query) => {
+
+            const data =
+                query
+                    ? window.ProtectaCatalog.search(
+                          query
+                      )
+                    : window.ProtectaCatalog.load();
+
+            if (!data.length) {
+
+                list.innerHTML =
+                    '<p style="color:#737d91;padding:20px;">No hay resultados.</p>';
+
+                return;
+
+            }
+
+            list.innerHTML = data
+                .map((cat) => {
+
+                    const items =
+                        cat.items ||
+                        [];
+
+                    const itemsHtml =
+                        items
+                            .map(
+                                (it, i) =>
+                                    `<div class="gestion-item" data-code="${cat.code}" data-idx="${i}">` +
+                                    `<div class="gestion-item-info"><strong>${it[0]}</strong><span>${it[1]}</span></div>` +
+                                    `<div class="gestion-item-actions">` +
+                                    `<button type="button" data-act="edit-item" data-code="${cat.code}" data-idx="${i}">Editar</button>` +
+                                    `<button type="button" data-act="del-item" data-code="${cat.code}" data-idx="${i}">Borrar</button>` +
+                                    `</div></div>`
+                            )
+                            .join("");
+
+                    return (
+                        `<div class="gestion-card" data-code="${cat.code}">` +
+                        `<div class="gestion-card-head">` +
+                        `<div><div class="catalog-code">${cat.code}</div><h3>${cat.title}</h3><p>${cat.desc || ""}</p></div>` +
+                        `<div class="gestion-card-actions">` +
+                        `<button type="button" data-act="edit-cat" data-code="${cat.code}">Editar catálogo</button>` +
+                        `<button type="button" data-act="add-item" data-code="${cat.code}">+ Producto</button>` +
+                        `<button type="button" data-act="del-cat" data-code="${cat.code}">Borrar catálogo</button>` +
+                        `</div></div>` +
+                        `<div class="gestion-items">${itemsHtml || '<p style="color:#737d91;font-size:13px;">Sin productos</p>'}</div>` +
+                        `</div>`
+                    );
+
+                })
+                .join("");
+
+        };
+
+        refresh();
+
+        if (search) {
+
+            search.oninput = () =>
+                refresh(
+                    search.value
+                );
+
+        }
+
+        if (newBtn) {
+
+            newBtn.onclick = () => {
+
+                const code =
+                    "PS-NEW-" +
+                    String(
+                        Date.now()
+                    ).slice(-4);
+
+                const title =
+                    prompt(
+                        "Nombre del catálogo:",
+                        "Nuevo catálogo"
+                    );
+
+                if (!title) return;
+
+                const desc =
+                    prompt(
+                        "Descripción:",
+                        ""
+                    ) || "";
+
+                const filter =
+                    prompt(
+                        "Filtro (security / technology / network):",
+                        "technology"
+                    ) || "technology";
+
+                window.ProtectaCatalog.addCategory(
+                    {
+                        code: code,
+                        title: title,
+                        titleEn: title,
+                        desc: desc,
+                        descEn: desc,
+                        filter: filter,
+                        label: title
+                            .slice(
+                                0,
+                                6
+                            )
+                            .toUpperCase(),
+                        categoryLabel:
+                            title.toUpperCase(),
+                        items: []
+                    }
+                );
+
+                window.ProtectaCatalog.applyToDOM(
+                    this.language ||
+                        "es"
+                );
+
+                this.bindProductGridEvents();
+                this.setupProductEditors();
+                refresh(
+                    search
+                        ? search.value
+                        : ""
+                );
+
+            };
+
+        }
+
+        list.onclick = (e) => {
+
+            const btn =
+                e.target.closest(
+                    "[data-act]"
+                );
+
+            if (!btn) return;
+
+            const act =
+                btn.dataset.act;
+
+            const code =
+                btn.dataset.code;
+
+            const idx =
+                btn.dataset.idx !==
+                undefined
+                    ? parseInt(
+                          btn.dataset
+                              .idx,
+                          10
+                      )
+                    : null;
+
+            if (
+                act === "del-cat"
+            ) {
+
+                if (
+                    !confirm(
+                        "¿Borrar catálogo " +
+                            code +
+                            " y todos sus productos?"
+                    )
+                )
+                    return;
+
+                window.ProtectaCatalog.deleteCategory(
+                    code
+                );
+
+            } else if (
+                act === "edit-cat"
+            ) {
+
+                const cat =
+                    window.ProtectaCatalog.getByCode(
+                        code
+                    );
+
+                if (!cat) return;
+
+                const title =
+                    prompt(
+                        "Nombre:",
+                        cat.title
+                    );
+
+                if (
+                    title === null
+                )
+                    return;
+
+                const desc =
+                    prompt(
+                        "Descripción:",
+                        cat.desc ||
+                            ""
+                    );
+
+                if (
+                    desc === null
+                )
+                    return;
+
+                window.ProtectaCatalog.updateCategory(
+                    code,
+                    {
+                        title: title,
+                        titleEn: title,
+                        desc: desc,
+                        descEn: desc
+                    }
+                );
+
+            } else if (
+                act === "add-item"
+            ) {
+
+                const name =
+                    prompt(
+                        "Nombre del producto:",
+                        ""
+                    );
+
+                if (!name) return;
+
+                const desc =
+                    prompt(
+                        "Descripción:",
+                        ""
+                    ) || "";
+
+                window.ProtectaCatalog.addItem(
+                    code,
+                    name,
+                    desc
+                );
+
+            } else if (
+                act === "edit-item"
+            ) {
+
+                const cat =
+                    window.ProtectaCatalog.getByCode(
+                        code
+                    );
+
+                if (
+                    !cat ||
+                    !cat.items[
+                        idx
+                    ]
+                )
+                    return;
+
+                const name =
+                    prompt(
+                        "Nombre:",
+                        cat.items[
+                            idx
+                        ][0]
+                    );
+
+                if (
+                    name === null
+                )
+                    return;
+
+                const desc =
+                    prompt(
+                        "Descripción:",
+                        cat.items[
+                            idx
+                        ][1]
+                    );
+
+                if (
+                    desc === null
+                )
+                    return;
+
+                window.ProtectaCatalog.updateItem(
+                    code,
+                    idx,
+                    name,
+                    desc
+                );
+
+            } else if (
+                act === "del-item"
+            ) {
+
+                if (
+                    !confirm(
+                        "¿Borrar este producto?"
+                    )
+                )
+                    return;
+
+                window.ProtectaCatalog.deleteItem(
+                    code,
+                    idx
+                );
+
+            }
+
+            window.ProtectaCatalog.applyToDOM(
+                this.language ||
+                    "es"
+            );
+
+            this.bindProductGridEvents();
+            this.setupProductEditors();
+            refresh(
+                search
+                    ? search.value
+                    : ""
+            );
+
+        };
+
+    },
+
+
     setupProducts() {
 
-        // Sync from shared catalog (localStorage)
         if (window.ProtectaCatalog) {
-
-            this.categoryCatalogs =
-                window.ProtectaCatalog.toCatalogsMap();
 
             window.ProtectaCatalog.applyToDOM(
                 this.language || "es"
             );
 
-            this.setupProductEditors();
+            this.categoryCatalogs =
+                window.ProtectaCatalog.toCatalogsMap();
 
         }
+
+        this.setupProductEditors();
+        this.setupGestion();
 
         const filters =
             document.querySelectorAll(
@@ -1809,7 +2362,7 @@ const ProtectaCore = {
 
         const products =
             document.querySelectorAll(
-                ".product-card"
+                ".products-section > .products-grid > .product-card"
             );
 
         const counter =
@@ -1818,7 +2371,7 @@ const ProtectaCore = {
             );
 
 
-        if (!filters.length || !products.length)
+        if (!filters.length)
             return;
 
 
@@ -1933,6 +2486,7 @@ const ProtectaCore = {
 
 
         const openCatalog = (code, card) => {
+
 
             if (!catalogPanel) return;
 
@@ -2057,6 +2611,9 @@ const ProtectaCore = {
         };
 
 
+
+        this._openCatalogFn = openCatalog;
+        this.bindProductGridEvents();
 
         detailButtons.forEach(button => {
 

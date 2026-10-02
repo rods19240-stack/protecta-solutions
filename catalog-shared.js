@@ -268,6 +268,70 @@
         return save(data);
     }
 
+    function deleteCategory(code) {
+        const data = load().filter(function (c) {
+            return c.code !== code;
+        });
+        return save(data);
+    }
+
+    function addCategory(cat) {
+        const data = load();
+        if (data.some(function (c) { return c.code === cat.code; })) {
+            return false;
+        }
+        data.push({
+            code: cat.code,
+            filter: cat.filter || "technology",
+            label: cat.label || "NEW",
+            categoryLabel: cat.categoryLabel || "CATEGORY",
+            title: cat.title || "Nuevo catálogo",
+            titleEn: cat.titleEn || cat.title || "New catalog",
+            desc: cat.desc || "",
+            descEn: cat.descEn || cat.desc || "",
+            image: cat.image || null,
+            items: cat.items || []
+        });
+        return save(data);
+    }
+
+    function addItem(code, name, desc) {
+        const data = load();
+        const cat = data.find(function (c) {
+            return c.code === code;
+        });
+        if (!cat) return false;
+        if (!cat.items) cat.items = [];
+        cat.items.push([name, desc || ""]);
+        return save(data);
+    }
+
+    function deleteItem(code, itemIndex) {
+        const data = load();
+        const cat = data.find(function (c) {
+            return c.code === code;
+        });
+        if (!cat || !cat.items || !cat.items[itemIndex]) return false;
+        cat.items.splice(itemIndex, 1);
+        return save(data);
+    }
+
+    function search(query) {
+        query = (query || "").toLowerCase().trim();
+        const data = load();
+        if (!query) return data;
+        return data.filter(function (c) {
+            if ((c.title || "").toLowerCase().indexOf(query) !== -1) return true;
+            if ((c.code || "").toLowerCase().indexOf(query) !== -1) return true;
+            if ((c.desc || "").toLowerCase().indexOf(query) !== -1) return true;
+            if ((c.label || "").toLowerCase().indexOf(query) !== -1) return true;
+            return (c.items || []).some(function (it) {
+                return (it[0] || "").toLowerCase().indexOf(query) !== -1 ||
+                    (it[1] || "").toLowerCase().indexOf(query) !== -1;
+            });
+        });
+    }
+
     function toCatalogsMap(data) {
         const map = {};
         (data || load()).forEach(function (c) {
@@ -280,70 +344,101 @@
         return map;
     }
 
-    /**
-     * Aplica datos guardados a las tarjetas .product-card del DOM
-     */
-    function applyToDOM(lang) {
+    function buildCategoryCardHTML(cat, lang, options) {
         lang = lang || "es";
+        options = options || {};
+        const title = lang === "en" ? cat.titleEn : cat.title;
+        const desc = lang === "en" ? cat.descEn : cat.desc;
+        const count = (cat.items && cat.items.length) || 0;
+        const photo = cat.image
+            ? '<div class="product-photo" style="background-image:url(' + cat.image + ')"></div>'
+            : "";
+        const hasPhoto = cat.image ? " has-photo" : "";
+        const editBtn = options.editable
+            ? '<button type="button" class="product-edit-btn" data-edit-code="' + cat.code + '">EDITAR</button>'
+            : "";
+        const actionLabel = options.editable
+            ? (lang === "en" ? "VIEW CATALOG" : "VER CATÁLOGO")
+            : (lang === "en" ? "VIEW CATALOG" : "VER CATÁLOGO");
+
+        return (
+            '<article class="product-card' + hasPhoto + '" data-category="' + (cat.filter || "technology") + '" data-code="' + cat.code + '">' +
+            '<div class="product-image">' +
+            photo +
+            '<div class="product-image-grid"></div>' +
+            '<div class="product-placeholder">' +
+            '<span class="product-code">' + cat.code + '</span>' +
+            '<strong>' + (cat.label || "CAT") + '</strong>' +
+            '<span>' + count + ' PRODUCTOS</span>' +
+            '</div>' +
+            '<div class="product-status">● AVAILABLE</div>' +
+            editBtn +
+            '</div>' +
+            '<div class="product-info">' +
+            '<div class="product-category">' + (cat.categoryLabel || "") + '</div>' +
+            '<h3 data-es="' + (cat.title || "").replace(/"/g, "&quot;") + '" data-en="' + (cat.titleEn || "").replace(/"/g, "&quot;") + '">' + title + '</h3>' +
+            '<p data-es="' + (cat.desc || "").replace(/"/g, "&quot;") + '" data-en="' + (cat.descEn || "").replace(/"/g, "&quot;") + '">' + desc + '</p>' +
+            '<div class="product-footer">' +
+            '<span class="product-id">' + cat.code + " · " + count + " productos</span>" +
+            '<button type="button" class="product-detail">' +
+            "<span>" + actionLabel + "</span><b>→</b>" +
+            "</button>" +
+            "</div></div></article>"
+        );
+    }
+
+    /**
+     * Rebuilds the .products-grid from shared storage so Empresa and Clientes match.
+     */
+    function renderGrid(gridSelector, lang, options) {
+        lang = lang || "es";
+        options = options || {};
+        const grid = document.querySelector(gridSelector);
+        if (!grid) return;
         const data = load();
-        const cards = document.querySelectorAll(".product-card");
+        grid.innerHTML = data
+            .map(function (cat) {
+                return buildCategoryCardHTML(cat, lang, options);
+            })
+            .join("");
 
-        cards.forEach(function (card, i) {
-            const codeEl = card.querySelector(".product-code");
-            let code = codeEl ? codeEl.textContent.trim() : "";
-            let cat = data.find(function (c) {
-                return c.code === code;
-            });
-            // Fallback by order
-            if (!cat && data[i]) cat = data[i];
-            if (!cat) return;
+        const counter = document.getElementById("productCount");
+        if (counter) {
+            counter.textContent = String(data.length).padStart(2, "0");
+        }
+    }
 
-            if (codeEl) codeEl.textContent = cat.code;
-
-            const strong = card.querySelector(".product-placeholder strong");
-            if (strong) strong.textContent = cat.label;
-
-            const catLabel = card.querySelector(".product-category");
-            if (catLabel) catLabel.textContent = cat.categoryLabel;
-
-            const h3 = card.querySelector(".product-info h3");
-            if (h3) {
-                h3.textContent = lang === "en" ? cat.titleEn : cat.title;
-                h3.setAttribute("data-es", cat.title);
-                h3.setAttribute("data-en", cat.titleEn);
+    function applyToDOM(lang) {
+        // Prefer full rebuild if grid exists
+        const grid =
+            document.querySelector("#products .products-grid") ||
+            document.querySelector("#productos .products-grid") ||
+            document.querySelector(".products-section > .products-grid");
+        if (grid) {
+            renderGrid(
+                grid.id
+                    ? "#" + grid.id
+                    : grid.className
+                      ? "." + grid.className.split(" ")[0]
+                      : ".products-grid",
+                lang,
+                { editable: !!document.querySelector(".session-exit") }
+            );
+            // renderGrid with class may match multiple - do direct
+            const isEmpresa = !!document.querySelector(".session-exit") || !!document.getElementById("productEditModal");
+            grid.innerHTML = load()
+                .map(function (cat) {
+                    return buildCategoryCardHTML(cat, lang || "es", {
+                        editable: isEmpresa
+                    });
+                })
+                .join("");
+            const counter = document.getElementById("productCount");
+            if (counter) {
+                counter.textContent = String(load().length).padStart(2, "0");
             }
-
-            const p = card.querySelector(".product-info p");
-            if (p) {
-                p.textContent = lang === "en" ? cat.descEn : cat.desc;
-                p.setAttribute("data-es", cat.desc);
-                p.setAttribute("data-en", cat.descEn);
-            }
-
-            const idEl = card.querySelector(".product-id");
-            if (idEl) {
-                idEl.textContent = cat.code + " · 100 productos";
-            }
-
-            card.dataset.category = cat.filter;
-            card.dataset.code = cat.code;
-
-            // Imagen personalizada sin quitar animación (grid + scan)
-            let photo = card.querySelector(".product-photo");
-            if (cat.image) {
-                if (!photo) {
-                    photo = document.createElement("div");
-                    photo.className = "product-photo";
-                    const imgWrap = card.querySelector(".product-image");
-                    if (imgWrap) imgWrap.insertBefore(photo, imgWrap.firstChild);
-                }
-                photo.style.backgroundImage = "url(" + cat.image + ")";
-                card.classList.add("has-photo");
-            } else if (photo) {
-                photo.remove();
-                card.classList.remove("has-photo");
-            }
-        });
+            return;
+        }
     }
 
     global.ProtectaCatalog = {
@@ -353,7 +448,14 @@
         getByCode: getByCode,
         updateCategory: updateCategory,
         updateItem: updateItem,
+        deleteCategory: deleteCategory,
+        addCategory: addCategory,
+        addItem: addItem,
+        deleteItem: deleteItem,
+        search: search,
         toCatalogsMap: toCatalogsMap,
+        buildCategoryCardHTML: buildCategoryCardHTML,
+        renderGrid: renderGrid,
         applyToDOM: applyToDOM,
         defaults: DEFAULT_CATEGORIES
     };
