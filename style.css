@@ -1102,7 +1102,7 @@ button {
 .sidebar {
 
     width:
-        255px;
+        310px;
 
     min-height:
         100vh;
@@ -1148,7 +1148,7 @@ button {
 .brand {
 
     height:
-        68px;
+        160px;
 
     display:
         flex;
@@ -1159,13 +1159,19 @@ button {
     justify-content:
         center;
 
+    margin-bottom:
+        12px;
+
+    padding:
+        6px 0;
+
 }
 
 
 .brand-logo {
 
     width:
-        190px;
+        340px;
 
     max-width:
         100%;
@@ -1181,8 +1187,8 @@ button {
 
     filter:
         drop-shadow(
-            0 0 14px
-            rgba(0,168,255,.12)
+            0 0 26px
+            rgba(0,168,255,.4)
         );
 
 }
@@ -1622,10 +1628,10 @@ button {
 .main {
 
     width:
-        calc(100% - 255px);
+        calc(100% - 310px);
 
     margin-left:
-        255px;
+        310px;
 
     min-width:
         0;
@@ -4883,10 +4889,10 @@ footer strong {
     .brand-logo {
 
         width:
-            48px;
+            64px;
 
         height:
-            48px;
+            64px;
 
     }
 
@@ -5043,7 +5049,7 @@ footer strong {
     .brand {
 
         height:
-            50px;
+            110px;
 
         justify-content:
             flex-start;
@@ -5054,7 +5060,7 @@ footer strong {
     .brand-logo {
 
         width:
-            145px;
+            280px;
 
         height:
             auto;
@@ -5615,7 +5621,7 @@ footer strong {
     .brand-logo {
 
         width:
-            125px;
+            250px;
 
     }
 
@@ -5733,7 +5739,7 @@ footer strong {
 
     margin: 8px 0;
 
-    font-size: 34px;
+    font-size: 36px;
 
     letter-spacing: -.5px;
 
@@ -5978,7 +5984,9 @@ footer strong {
 
     width: 140%;
 
-    height: 1px;
+    height: 2px;
+
+    z-index: 5;
 
     background:
         linear-gradient(
@@ -5988,10 +5996,14 @@ footer strong {
             transparent
         );
 
-    opacity: .5;
+    opacity: .85;
+
+    box-shadow: 0 0 12px rgba(0,168,255,.75);
 
     animation:
         productScan 4s linear infinite;
+
+    pointer-events: none;
 
 }
 
@@ -6106,7 +6118,7 @@ footer strong {
 
     color: var(--electric);
 
-    font-size: 9px;
+    font-size: 11px;
 
     letter-spacing: 1.8px;
 
@@ -6117,9 +6129,9 @@ footer strong {
 
 .product-info h3 {
 
-    font-size: 19px;
+    font-size: 22px;
 
-    margin: 0 0 9px;
+    margin: 0 0 10px;
 
     color: white;
 
@@ -6128,11 +6140,11 @@ footer strong {
 
 .product-info p {
 
-    min-height: 52px;
+    min-height: 56px;
 
     color: var(--muted);
 
-    font-size: 13px;
+    font-size: 15px;
 
     line-height: 1.6;
 
@@ -6165,7 +6177,7 @@ footer strong {
 
     color: #657083;
 
-    font-size: 10px;
+    font-size: 12px;
 
     letter-spacing: 1px;
 
@@ -6188,7 +6200,7 @@ footer strong {
 
     font-family: inherit;
 
-    font-size: 12px;
+    font-size: 13px;
 
     letter-spacing: 1px;
 
@@ -6203,7 +6215,7 @@ footer strong {
 
     color: var(--electric);
 
-    font-size: 14px;
+    font-size: 16px;
 
     transition: .2s;
 
@@ -6372,9 +6384,19 @@ footer strong {
 
     margin-bottom: 18px;
 
-    padding-bottom: 14px;
+    padding: 14px 16px;
 
-    border-bottom: 1px solid var(--border);
+    border: 1px solid rgba(0,168,255,.25);
+
+    background: rgba(0,20,40,.55);
+
+    position: sticky;
+
+    top: 12px;
+
+    z-index: 20;
+
+    backdrop-filter: blur(8px);
 
 }
 
@@ -6382,7 +6404,7 @@ footer strong {
 
     font-family: 'Space Grotesk', sans-serif;
 
-    font-size: 22px;
+    font-size: 24px;
 
     font-weight: 600;
 
@@ -6390,7 +6412,7 @@ footer strong {
 
 .catalog-panel-header .catalog-code {
 
-    font-size: 12px;
+    font-size: 13px;
 
     letter-spacing: 1px;
 
@@ -6402,17 +6424,17 @@ footer strong {
 
 .catalog-close {
 
-    padding: 10px 16px;
+    padding: 12px 18px;
 
-    border: 1px solid var(--border);
+    border: 1px solid rgba(0,168,255,.45);
 
-    background: rgba(255,255,255,.03);
+    background: rgba(0,168,255,.12);
 
-    color: var(--silver);
+    color: var(--white);
 
-    font-size: 12px;
+    font-size: 13px;
 
-    font-weight: 600;
+    font-weight: 700;
 
     letter-spacing: .06em;
 
@@ -6420,13 +6442,19 @@ footer strong {
 
     transition: .2s;
 
+    white-space: nowrap;
+
 }
 
 .catalog-close:hover {
 
-    border-color: rgba(0,168,255,.45);
+    border-color: rgba(0,168,255,.8);
+
+    background: rgba(0,168,255,.25);
 
     color: var(--white);
+
+    box-shadow: 0 0 20px rgba(0,168,255,.2);
 
 }
 
@@ -6554,23 +6582,43 @@ footer strong {
 
 
 
-/* Product custom photo (keeps grid + scan animation) */
+/* Product custom photo (scan line ABOVE image) */
 .product-photo {
     position: absolute;
     inset: 0;
     background-size: cover;
     background-position: center;
-    opacity: 0.55;
+    opacity: 0.42;
     z-index: 1;
+    filter: brightness(0.9);
+}
+
+.product-image-grid {
+    z-index: 2;
+}
+
+.product-image::after {
+    z-index: 5 !important;
+    opacity: 0.85 !important;
+    height: 2px !important;
+    box-shadow: 0 0 12px rgba(0,168,255,.8);
+}
+
+.product-placeholder {
+    z-index: 4;
+}
+
+.product-status {
+    z-index: 6;
 }
 
 .product-card.has-photo .product-placeholder {
-    z-index: 3;
-    text-shadow: 0 2px 12px rgba(0,0,0,.85);
+    z-index: 4;
+    text-shadow: 0 2px 14px rgba(0,0,0,.9);
 }
 
 .product-card.has-photo .product-image-grid {
-    opacity: 0.25;
+    opacity: 0.45;
     z-index: 2;
 }
 
@@ -6578,12 +6626,12 @@ footer strong {
     position: absolute;
     top: 12px;
     left: 12px;
-    z-index: 6;
-    padding: 5px 10px;
-    border: 1px solid rgba(0,168,255,.35);
-    background: rgba(0,0,0,.65);
-    color: var(--electric);
-    font-size: 9px;
+    z-index: 8;
+    padding: 7px 12px;
+    border: 1px solid rgba(0,168,255,.55);
+    background: rgba(0,30,60,.85);
+    color: #7dd3ff;
+    font-size: 11px;
     font-weight: 700;
     letter-spacing: 1px;
     cursor: pointer;
@@ -6864,4 +6912,23 @@ footer strong {
 
 #gestion.gestion-section {
     display: block !important;
+}
+
+.product-photo-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.4;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.product-card.no-scan .product-image::after {
+    display: none !important;
+}
+
+.product-card.has-photo .product-photo-img {
+    opacity: 0.4;
 }

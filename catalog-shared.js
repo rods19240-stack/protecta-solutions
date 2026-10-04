@@ -16,7 +16,7 @@
             titleEn: "Alarm Control",
             desc: "Sistemas de control y monitoreo de alarmas para protección de instalaciones.",
             descEn: "Alarm control and monitoring systems for facility protection.",
-            image: null,
+            image: "img/producto-01.jpeg",
             items: [
                 ["Panel de alarma central PS-A100", "Central de monitoreo 32 zonas"],
                 ["Sensor magnético de puerta SM-12", "Contacto magnético cableado"],
@@ -39,7 +39,7 @@
             titleEn: "Access Control",
             desc: "Sistemas de control y gestión de accesos para instalaciones empresariales.",
             descEn: "Access control and management systems for enterprise facilities.",
-            image: null,
+            image: "img/producto-02.jpeg",
             items: [
                 ["Controlador de acceso CA-4", "Hasta 4 puertas"],
                 ["Lector de proximidad RFID RP-10", "Tarjetas y llaveros"],
@@ -62,7 +62,7 @@
             titleEn: "Fire Detection",
             desc: "Sistemas de detección temprana de incendios y alertas en tiempo real.",
             descEn: "Early fire detection systems and real-time alerts.",
-            image: null,
+            image: "img/producto-03.jpeg",
             items: [
                 ["Central de detección CD-64", "Hasta 64 detectores"],
                 ["Detector de humo fotoeléctrico DH-1", "Techo interior"],
@@ -85,7 +85,7 @@
             titleEn: "Automations",
             desc: "Soluciones de automatización inteligente para edificios e instalaciones.",
             descEn: "Intelligent automation solutions for buildings and facilities.",
-            image: null,
+            image: "img/producto-04.jpeg",
             items: [
                 ["PLC de automatización PLC-S1", "Control de escenarios"],
                 ["Módulo relé inteligente MR-8", "8 salidas conmutadas"],
@@ -108,7 +108,7 @@
             titleEn: "Video Surveillance",
             desc: "Sistema inteligente para monitoreo y análisis de espacios en tiempo real.",
             descEn: "Intelligent system for real-time space monitoring and analysis.",
-            image: null,
+            image: "img/producto-05.jpeg",
             items: [
                 ["Cámara IP dome 4MP CD-4", "Interior, IR 30 m"],
                 ["Cámara bullet 5MP CB-5", "Exterior IP67"],
@@ -131,7 +131,7 @@
             titleEn: "Fiber Optics",
             desc: "Infraestructura de fibra óptica para conectividad de alta velocidad.",
             descEn: "Fiber optic infrastructure for high-speed connectivity.",
-            image: null,
+            image: "img/producto-06.jpeg",
             items: [
                 ["Cable fibra monomodo FO-1K", "1 km bobina OS2"],
                 ["Cable fibra multimodo FO-MM", "OM3 300 m"],
@@ -154,7 +154,7 @@
             titleEn: "(HVAC) Air Conditioning",
             desc: "Sistemas de climatización y control de aire acondicionado para espacios críticos.",
             descEn: "Climate control and air conditioning systems for critical spaces.",
-            image: null,
+            image: "img/producto-07.jpeg",
             items: [
                 ["Unidad interior split UI-12", "12,000 BTU inverter"],
                 ["Unidad exterior UE-18", "18,000 BTU R32"],
@@ -177,7 +177,7 @@
             titleEn: "(PCI) Fire Protection Systems",
             desc: "Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva.",
             descEn: "Fire protection systems: suppression, sprinklers and passive safety.",
-            image: null,
+            image: "img/producto-08.jpeg",
             items: [
                 ["Rociador automático RA-68", "Temperatura 68 °C"],
                 ["Válvula de gobierno VG-4", "Sistema húmedo"],
@@ -200,7 +200,7 @@
             titleEn: "Special Engineering",
             desc: "Proyectos de ingeniería especializada adaptados a las necesidades del cliente.",
             descEn: "Specialized engineering projects tailored to client needs.",
-            image: null,
+            image: "img/producto-09.jpeg",
             items: [
                 ["Estudio de ingeniería de seguridad", "Diseño a medida"],
                 ["Proyecto de cableado estructurado", "Norma TIA/EIA"],
@@ -222,11 +222,36 @@
 
     function load() {
         try {
+            const defaults = cloneDefaults();
             const raw = localStorage.getItem(STORAGE_KEY);
-            if (!raw) return cloneDefaults();
+            if (!raw) return defaults;
             const parsed = JSON.parse(raw);
-            if (!Array.isArray(parsed) || parsed.length === 0) return cloneDefaults();
-            return parsed;
+            if (!Array.isArray(parsed) || parsed.length === 0) return defaults;
+
+            // Merge: keep user edits, fill missing images from defaults
+            const defaultByCode = {};
+            defaults.forEach(function (d) {
+                defaultByCode[d.code] = d;
+            });
+
+            return parsed.map(function (cat) {
+                const def = defaultByCode[cat.code];
+                if (def) {
+                    // Restore default image if missing or not a usable path
+                    if (!cat.image || cat.image === "null") {
+                        cat.image = def.image || null;
+                    }
+                    if (!cat.items || !cat.items.length) {
+                        cat.items = def.items ? def.items.slice() : [];
+                    }
+                    if (!cat.title) cat.title = def.title;
+                    if (!cat.desc) cat.desc = def.desc;
+                    if (!cat.label) cat.label = def.label;
+                    if (!cat.categoryLabel) cat.categoryLabel = def.categoryLabel;
+                    if (!cat.filter) cat.filter = def.filter;
+                }
+                return cat;
+            });
         } catch (e) {
             return cloneDefaults();
         }
@@ -351,9 +376,10 @@
         const desc = lang === "en" ? cat.descEn : cat.desc;
         const count = (cat.items && cat.items.length) || 0;
         const photo = cat.image
-            ? '<div class="product-photo" style="background-image:url(' + cat.image + ')"></div>'
+            ? '<img class="product-photo-img" src="' + cat.image + '" alt="">'
             : "";
         const hasPhoto = cat.image ? " has-photo" : "";
+        const noScanCls = cat.noScan ? " no-scan" : "";
         const editBtn = options.editable
             ? '<button type="button" class="product-edit-btn" data-edit-code="' + cat.code + '">EDITAR</button>'
             : "";
@@ -362,7 +388,7 @@
             : (lang === "en" ? "VIEW CATALOG" : "VER CATÁLOGO");
 
         return (
-            '<article class="product-card' + hasPhoto + '" data-category="' + (cat.filter || "technology") + '" data-code="' + cat.code + '">' +
+            '<article class="product-card' + hasPhoto + noScanCls + '" data-category="' + (cat.filter || "technology") + '" data-code="' + cat.code + '">' +
             '<div class="product-image">' +
             photo +
             '<div class="product-image-grid"></div>' +
@@ -409,35 +435,70 @@
     }
 
     function applyToDOM(lang) {
-        // Prefer full rebuild if grid exists
-        const grid =
-            document.querySelector("#products .products-grid") ||
-            document.querySelector("#productos .products-grid") ||
-            document.querySelector(".products-section > .products-grid");
-        if (grid) {
-            renderGrid(
-                grid.id
-                    ? "#" + grid.id
-                    : grid.className
-                      ? "." + grid.className.split(" ")[0]
-                      : ".products-grid",
-                lang,
-                { editable: !!document.querySelector(".session-exit") }
-            );
-            // renderGrid with class may match multiple - do direct
-            const isEmpresa = !!document.querySelector(".session-exit") || !!document.getElementById("productEditModal");
-            grid.innerHTML = load()
-                .map(function (cat) {
-                    return buildCategoryCardHTML(cat, lang || "es", {
-                        editable: isEmpresa
-                    });
-                })
-                .join("");
-            const counter = document.getElementById("productCount");
-            if (counter) {
-                counter.textContent = String(load().length).padStart(2, "0");
+        lang = lang || "es";
+        const data = load();
+        // Empresa: sidebar has "PROTECTA CORE" or #products section
+        const isEmpresa = !!(
+            document.getElementById("products") ||
+            document.querySelector(".nav-item[href=\"#gestion\"]") ||
+            document.body.querySelector("a[href=\"empresa.html\"]")
+        ) && !document.getElementById("productos");
+
+        // Detect by page
+        const onEmpresa = !!document.getElementById("products");
+        const onClientes = !!document.getElementById("productos");
+        const editable = onEmpresa;
+
+        const grids = [];
+        if (onEmpresa) {
+            const g = document.querySelector("#products .products-grid") ||
+                document.querySelector(".products-section .products-grid");
+            if (g) grids.push(g);
+        }
+        if (onClientes) {
+            // Main catalog grid inside #productos only (not home preview)
+            const g = document.querySelector("#productos .products-section .products-grid");
+            if (g) grids.push(g);
+            // Home preview (first two only)
+            const homeGrid = document.querySelector("#inicio .products-grid, .section#inicio .products-grid");
+            // also try without inicio id
+            const homeSection = document.getElementById("inicio");
+            if (homeSection) {
+                const hg = homeSection.querySelector(".products-grid");
+                if (hg) {
+                    hg.innerHTML = data.slice(0, 2).map(function (cat) {
+                        return buildCategoryCardHTML(cat, lang, { editable: false });
+                    }).join("");
+                }
             }
-            return;
+        }
+        // Fallback
+        if (!grids.length) {
+            document.querySelectorAll(".products-section > .products-grid").forEach(function (g) {
+                if (!g.closest("#categoryCatalog")) grids.push(g);
+            });
+        }
+
+        grids.forEach(function (grid) {
+            // Reset catalog-open state that hides the grid
+            const sec = grid.closest(".products-section");
+            if (sec) {
+                sec.classList.remove("catalog-open");
+            }
+            const panel = document.getElementById("categoryCatalog");
+            if (panel) {
+                panel.classList.remove("open");
+                panel.innerHTML = "";
+            }
+
+            grid.innerHTML = data.map(function (cat) {
+                return buildCategoryCardHTML(cat, lang, { editable: editable });
+            }).join("");
+        });
+
+        const counter = document.getElementById("productCount");
+        if (counter) {
+            counter.textContent = String(data.length).padStart(2, "0");
         }
     }
 

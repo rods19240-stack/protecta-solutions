@@ -1733,23 +1733,55 @@ const ProtectaCore = {
 
             modal.classList.remove("open");
 
+            // Refresh open catalog view if visible
+            const panel = document.getElementById("categoryCatalog");
+            const active = document.querySelector(".product-card.catalog-active");
+            if (panel && panel.classList.contains("open") && active && this._openCatalogFn) {
+                const code = active.dataset.code || "";
+                if (code) this._openCatalogFn(code, active);
+            }
+
         };
 
         this.bindCategoryEditButtons(openModal);
+
+        // Store openModal globally for delegation
+        window._protectaOpenEditModal = openModal;
 
         if (!window._protectaItemEditBound) {
 
             window._protectaItemEditBound = true;
 
             document.addEventListener("click", (e) => {
+                // Category EDITAR (main grid)
+                const catBtn = e.target.closest(".product-edit-btn[data-edit-code], .products-section > .products-grid .product-edit-btn");
+                if (catBtn && !catBtn.closest("#categoryCatalog") && !catBtn.hasAttribute("data-edit-item")) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const card = catBtn.closest(".product-card");
+                    const code = (catBtn.dataset.editCode || (card && card.dataset.code) || "").trim();
+                    if (code && window._protectaOpenEditModal) {
+                        window._protectaOpenEditModal(code, null);
+                    }
+                    return;
+                }
+
+                // Product EDITAR inside open catalog
                 const btn = e.target.closest("[data-edit-item]");
                 if (!btn) return;
-                const active = document.querySelector(".product-card.catalog-active");
-                if (!active) return;
-                const codeEl = active.querySelector(".product-code");
-                const code = active.dataset.code || (codeEl && codeEl.textContent.trim());
+                e.preventDefault();
+                e.stopPropagation();
+
+                const itemCard = btn.closest(".product-card");
+                const parentCode =
+                    (itemCard && itemCard.dataset.parentCode) ||
+                    (document.querySelector(".product-card.catalog-active") || {}).dataset.code ||
+                    "";
+                const code = String(parentCode).trim();
                 const idx = parseInt(btn.getAttribute("data-edit-item"), 10);
-                openModal(code, idx);
+                if (code && window._protectaOpenEditModal && !isNaN(idx)) {
+                    window._protectaOpenEditModal(code, idx);
+                }
             });
 
         }
@@ -1758,29 +1790,22 @@ const ProtectaCore = {
 
     bindCategoryEditButtons(openModal) {
 
-        document.querySelectorAll(".product-card").forEach((card) => {
+        window._protectaOpenEditModal = openModal;
 
+        document.querySelectorAll(".products-section > .products-grid > .product-card").forEach((card) => {
             let btn = card.querySelector(".product-edit-btn");
-
             if (!btn) {
-
                 btn = document.createElement("button");
                 btn.type = "button";
                 btn.className = "product-edit-btn";
                 btn.textContent = "EDITAR";
+                const code = card.dataset.code || "";
+                if (code) btn.setAttribute("data-edit-code", code);
                 const img = card.querySelector(".product-image");
                 if (img) img.appendChild(btn);
-
+            } else if (card.dataset.code) {
+                btn.setAttribute("data-edit-code", card.dataset.code);
             }
-
-            btn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                const codeEl = card.querySelector(".product-code");
-                const code = card.dataset.code || (codeEl && codeEl.textContent.trim());
-                openModal(code, null);
-            };
-
         });
 
     },
@@ -2340,340 +2365,325 @@ const ProtectaCore = {
 
 
     setupProducts() {
+        const self = this;
+        const lang = this.language || "es";
 
-        if (window.ProtectaCatalog) {
-
-            window.ProtectaCatalog.applyToDOM(
-                this.language || "es"
-            );
-
-            this.categoryCatalogs =
-                window.ProtectaCatalog.toCatalogsMap();
-
-        }
-
-        this.setupProductEditors();
-        this.setupGestion();
-
-        const filters =
-            document.querySelectorAll(
-                ".product-filter"
-            );
-
-        const products =
-            document.querySelectorAll(
-                ".products-section > .products-grid > .product-card"
-            );
-
-        const counter =
-            document.getElementById(
-                "productCount"
-            );
-
-
-        if (!filters.length)
-            return;
-
-
-        filters.forEach(filter => {
-
-            filter.addEventListener(
-                "click",
-                () => {
-
-                    filters.forEach(
-                        button => {
-
-                            button.classList.remove(
-                                "active"
-                            );
-
-                        }
-                    );
-
-
-                    filter.classList.add(
-                        "active"
-                    );
-
-
-                    const category =
-                        filter.dataset.filter;
-
-
-                    let visible = 0;
-
-
-                    products.forEach(product => {
-
-                        const productCategory =
-                            product.dataset.category;
-
-
-                        const show =
-                            category === "all" ||
-                            productCategory === category;
-
-
-                        if (show) {
-
-                            product.classList.remove(
-                                "product-hidden"
-                            );
-
-                            visible++;
-
-                        } else {
-
-                            product.classList.add(
-                                "product-hidden"
-                            );
-
-                        }
-
-                    });
-
-
-                    if (counter) {
-
-                        counter.textContent =
-                            String(visible)
-                                .padStart(2, "0");
-
-                    }
-
-                }
-            );
-
+        // Reset open state
+        document.querySelectorAll(".products-section").forEach((s) => {
+            s.classList.remove("catalog-open");
         });
 
-
-        const detailButtons =
-            document.querySelectorAll(
-                ".product-detail"
-            );
-
-
-        // Ensure catalog panel exists inside products-section
-        let catalogPanel =
-            document.getElementById(
-                "categoryCatalog"
-            );
-
-        const productsSection =
-            document.querySelector(
-                ".products-section"
-            );
-
-        if (!catalogPanel && productsSection) {
-
-            catalogPanel =
-                document.createElement(
-                    "div"
-                );
-
-            catalogPanel.id =
-                "categoryCatalog";
-
-            catalogPanel.className =
-                "catalog-panel";
-
-            productsSection.appendChild(
-                catalogPanel
-            );
-
+        // Build / refresh cards from shared catalog
+        if (window.ProtectaCatalog) {
+            window.ProtectaCatalog.applyToDOM(lang);
+            this.categoryCatalogs = window.ProtectaCatalog.toCatalogsMap();
+        } else {
+            console.warn("ProtectaCatalog no cargó (catalog-shared.js)");
         }
 
+        const section = document.querySelector("#products") ||
+            document.querySelector(".products-section");
+        if (!section) return;
 
+        // Catalog panel
+        let panel = document.getElementById("categoryCatalog");
+        if (!panel) {
+            panel = document.createElement("div");
+            panel.id = "categoryCatalog";
+            panel.className = "catalog-panel";
+            section.appendChild(panel);
+        } else {
+            panel.classList.remove("open");
+            panel.innerHTML = "";
+        }
+
+        // ---- Open catalog (10 products) ----
         const openCatalog = (code, card) => {
+            if (!window.ProtectaCatalog) return;
 
-
-            if (!catalogPanel) return;
-
-            if (window.ProtectaCatalog) {
-                this.categoryCatalogs =
-                    window.ProtectaCatalog.toCatalogsMap();
-            }
-
-            const fullCat = window.ProtectaCatalog
-                ? window.ProtectaCatalog.getByCode(code)
-                : null;
-
-            const catalog =
-                this.categoryCatalogs[code];
-
-            if (!catalog) {
-                catalogPanel.classList.remove("open");
+            const full = window.ProtectaCatalog.getByCode(code);
+            if (!full) {
+                console.warn("Catálogo no encontrado:", code);
                 return;
             }
 
-            document
-                .querySelectorAll(".product-card.catalog-active")
-                .forEach(c => c.classList.remove("catalog-active"));
+            const items = full.items || [];
+            const title = lang === "en" ? (full.titleEn || full.title) : full.title;
+            const closeLabel = lang === "en" ? "← BACK TO CATALOGS" : "← VOLVER A CATÁLOGOS";
+            const statusLabel = lang === "en" ? "AVAILABLE" : "DISPONIBLE";
+            const noScan = !!full.noScan;
 
+            document.querySelectorAll(".product-card.catalog-active").forEach((c) =>
+                c.classList.remove("catalog-active")
+            );
             if (card) card.classList.add("catalog-active");
-
-            const productsSection =
-                document.querySelector(".products-section");
-            if (productsSection)
-                productsSection.classList.add("catalog-open");
-
-            const lang = this.language || "es";
-            const title =
-                lang === "en" ? catalog.titleEn : catalog.title;
-            const closeLabel =
-                lang === "en" ? "← BACK TO CATALOGS" : "← VOLVER A CATÁLOGOS";
-            const statusLabel =
-                lang === "en" ? "AVAILABLE" : "DISPONIBLE";
-            const viewLabel =
-                lang === "en" ? "VIEW" : "VER";
-            const label =
-                (fullCat && fullCat.label) || "ITEM";
-            const categoryLabel =
-                (fullCat && fullCat.categoryLabel) || code;
-            const catImage =
-                (fullCat && fullCat.image) || null;
+            section.classList.add("catalog-open");
 
             let listHtml = "";
-
-            catalog.items.forEach((item, i) => {
+            items.forEach((item, i) => {
                 const n = String(i + 1).padStart(2, "0");
                 const itemCode = code + "-" + n;
-                const photoStyle = catImage
-                    ? ` style="background-image:url(${catImage})"`
+                const img = full.image
+                    ? `<img class="product-photo-img" src="${full.image}" alt="">`
                     : "";
-                const hasPhoto = catImage ? " has-photo" : "";
-                const editBtn =
-                    `<button type="button" class="product-edit-btn" data-edit-item="${i}">EDITAR</button>`;
+                const hasPhoto = full.image ? " has-photo" : "";
+                const noScanCls = noScan ? " no-scan" : "";
 
                 listHtml +=
-                    `<article class="product-card${hasPhoto}" data-item-index="${i}" data-parent-code="${code}">` +
+                    `<article class="product-card${hasPhoto}${noScanCls}" data-item-index="${i}" data-parent-code="${code}">` +
                     `<div class="product-image">` +
-                    (catImage
-                        ? `<div class="product-photo"${photoStyle}></div>`
-                        : "") +
+                    img +
                     `<div class="product-image-grid"></div>` +
                     `<div class="product-placeholder">` +
                     `<span class="product-code">${itemCode}</span>` +
-                    `<strong>${label}</strong>` +
+                    `<strong>${(full.label || "ITEM")}</strong>` +
                     `<span>PRODUCTO ${n}</span>` +
                     `</div>` +
                     `<div class="product-status">● ${statusLabel}</div>` +
-                    editBtn +
+                    `<button type="button" class="product-edit-btn" data-edit-item="${i}" data-parent-code="${code}">EDITAR</button>` +
                     `</div>` +
                     `<div class="product-info">` +
-                    `<div class="product-category">${categoryLabel}</div>` +
+                    `<div class="product-category">${full.categoryLabel || ""}</div>` +
                     `<h3>${item[0]}</h3>` +
-                    `<p>${item[1]}</p>` +
+                    `<p>${item[1] || ""}</p>` +
                     `<div class="product-footer">` +
                     `<span class="product-id">${itemCode}</span>` +
-                    `<button type="button" class="product-detail catalog-item-edit" data-edit-item="${i}">` +
-                    `<span>EDITAR</span><b>→</b>` +
-                    `</button>` +
+                    `<button type="button" class="product-detail" data-edit-item="${i}" data-parent-code="${code}">` +
+                    `<span>EDITAR</span><b>→</b></button>` +
                     `</div></div></article>`;
             });
 
-            catalogPanel.innerHTML =
+            if (!items.length) {
+                listHtml = `<p style="color:#737d91;padding:20px;">Este catálogo no tiene productos aún. Agrégalos en Gestión.</p>`;
+            }
+
+            panel.innerHTML =
                 `<div class="catalog-panel-header">` +
-                `<div>` +
-                `<div class="catalog-code">${code} · 10 productos</div>` +
-                `<h3>${title}</h3>` +
-                `</div>` +
+                `<div><div class="catalog-code">${code} · ${items.length} productos</div>` +
+                `<h3>${title}</h3></div>` +
                 `<button type="button" class="catalog-close" id="catalogCloseBtn">${closeLabel}</button>` +
                 `</div>` +
                 `<div class="catalog-list products-grid">${listHtml}</div>`;
 
-            catalogPanel.classList.add("open");
+            panel.classList.add("open");
 
-            const closeBtn =
-                document.getElementById("catalogCloseBtn");
-
+            const closeBtn = document.getElementById("catalogCloseBtn");
             if (closeBtn) {
-                closeBtn.addEventListener("click", () => {
-                    catalogPanel.classList.remove("open");
-                    if (productsSection)
-                        productsSection.classList.remove("catalog-open");
-                    document
-                        .querySelectorAll(".product-card.catalog-active")
-                        .forEach(c =>
-                            c.classList.remove("catalog-active")
-                        );
-                });
+                closeBtn.onclick = () => {
+                    panel.classList.remove("open");
+                    section.classList.remove("catalog-open");
+                    document.querySelectorAll(".product-card.catalog-active").forEach((c) =>
+                        c.classList.remove("catalog-active")
+                    );
+                    panel.innerHTML = "";
+                };
             }
 
             setTimeout(() => {
-                catalogPanel.scrollIntoView({
-                    behavior: "smooth",
-                    block: "start"
-                });
-            }, 80);
-
+                panel.scrollIntoView({ behavior: "smooth", block: "start" });
+            }, 60);
         };
 
-
-
         this._openCatalogFn = openCatalog;
-        this.bindProductGridEvents();
 
-        detailButtons.forEach(button => {
+        // ---- Edit modal ----
+        let modal = document.getElementById("productEditModal");
+        if (!modal) {
+            modal = document.createElement("div");
+            modal.id = "productEditModal";
+            modal.className = "edit-modal";
+            modal.innerHTML =
+                `<div class="edit-modal-panel">` +
+                `<h3 id="editModalTitle">Editar</h3>` +
+                `<div class="edit-field"><label>Nombre</label><input type="text" id="editTitle"></div>` +
+                `<div class="edit-field"><label>Descripción</label><textarea id="editDesc"></textarea></div>` +
+                `<div class="edit-field" id="editLabelField"><label>Texto en imagen (ej. ALARM)</label><input type="text" id="editLabel"></div>` +
+                `<div class="edit-field" id="editCatLabelField"><label>Etiqueta categoría (ej. ALARM SYSTEMS)</label><input type="text" id="editCatLabel"></div>` +
+                `<div class="edit-field" id="editImageField">` +
+                `<label>Imagen del producto</label>` +
+                `<div class="edit-preview" id="editPreview"></div>` +
+                `<input type="file" id="editImage" accept="image/*">` +
+                `</div>` +
+                `<div class="edit-field" id="editScanField">` +
+                `<label style="display:flex;align-items:center;gap:10px;text-transform:none;letter-spacing:0;font-size:13px;cursor:pointer;">` +
+                `<input type="checkbox" id="editNoScan" style="width:auto;"> Desactivar animación de la línea` +
+                `</label></div>` +
+                `<div class="edit-actions">` +
+                `<button type="button" class="edit-cancel" id="editCancel">Cancelar</button>` +
+                `<button type="button" class="edit-save" id="editSave">Guardar</button>` +
+                `</div></div>`;
+            document.body.appendChild(modal);
+        }
 
-            button.addEventListener(
-                "click",
-                (e) => {
+        let editingCode = null;
+        let editingItemIndex = null;
+        let pendingImage = null;
 
+        const openEdit = (code, itemIndex) => {
+            const cat = window.ProtectaCatalog && window.ProtectaCatalog.getByCode(code);
+            if (!cat) return;
+            editingCode = code;
+            editingItemIndex = itemIndex === undefined ? null : itemIndex;
+            pendingImage = null;
+
+            const titleEl = document.getElementById("editModalTitle");
+            const titleInput = document.getElementById("editTitle");
+            const descInput = document.getElementById("editDesc");
+            const labelInput = document.getElementById("editLabel");
+            const catLabelInput = document.getElementById("editCatLabel");
+            const preview = document.getElementById("editPreview");
+            const imageField = document.getElementById("editImageField");
+            const labelField = document.getElementById("editLabelField");
+            const catLabelField = document.getElementById("editCatLabelField");
+            const scanField = document.getElementById("editScanField");
+            const noScan = document.getElementById("editNoScan");
+            const fileInput = document.getElementById("editImage");
+
+            if (editingItemIndex === null) {
+                titleEl.textContent = "Editar catálogo";
+                titleInput.value = cat.title || "";
+                descInput.value = cat.desc || "";
+                labelInput.value = cat.label || "";
+                catLabelInput.value = cat.categoryLabel || "";
+                pendingImage = cat.image || null;
+                preview.style.backgroundImage = cat.image ? `url('${cat.image}')` : "none";
+                imageField.style.display = "";
+                labelField.style.display = "";
+                catLabelField.style.display = "";
+                scanField.style.display = "";
+                noScan.checked = !!cat.noScan;
+            } else {
+                titleEl.textContent = "Editar producto";
+                const item = cat.items[editingItemIndex] || ["", ""];
+                titleInput.value = item[0] || "";
+                descInput.value = item[1] || "";
+                imageField.style.display = "none";
+                labelField.style.display = "none";
+                catLabelField.style.display = "none";
+                scanField.style.display = "none";
+            }
+            fileInput.value = "";
+            modal.classList.add("open");
+        };
+
+        this._openEditModal = openEdit;
+        window._protectaOpenEditModal = openEdit;
+
+        document.getElementById("editCancel").onclick = () => modal.classList.remove("open");
+        modal.onclick = (e) => { if (e.target === modal) modal.classList.remove("open"); };
+
+        document.getElementById("editImage").onchange = () => {
+            const file = document.getElementById("editImage").files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = () => {
+                pendingImage = reader.result;
+                document.getElementById("editPreview").style.backgroundImage = `url('${pendingImage}')`;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        document.getElementById("editSave").onclick = () => {
+            if (!editingCode || !window.ProtectaCatalog) return;
+            const name = document.getElementById("editTitle").value.trim();
+            const desc = document.getElementById("editDesc").value.trim();
+
+            if (editingItemIndex === null) {
+                const patch = {
+                    title: name,
+                    titleEn: name,
+                    desc: desc,
+                    descEn: desc,
+                    label: document.getElementById("editLabel").value.trim() || "CAT",
+                    categoryLabel: document.getElementById("editCatLabel").value.trim() || "",
+                    noScan: document.getElementById("editNoScan").checked
+                };
+                if (pendingImage !== null) patch.image = pendingImage;
+                window.ProtectaCatalog.updateCategory(editingCode, patch);
+            } else {
+                window.ProtectaCatalog.updateItem(editingCode, editingItemIndex, name, desc);
+            }
+
+            modal.classList.remove("open");
+            window.ProtectaCatalog.applyToDOM(self.language || "es");
+            self.categoryCatalogs = window.ProtectaCatalog.toCatalogsMap();
+
+            // Re-open catalog if was open
+            const active = document.querySelector(".product-card.catalog-active");
+            if (active && section.classList.contains("catalog-open")) {
+                openCatalog(editingCode, active);
+            }
+        };
+
+        // ---- Single click delegation (open + edit) ----
+        if (section.dataset.protectaBound !== "1") {
+            section.dataset.protectaBound = "1";
+
+            section.addEventListener("click", (e) => {
+                // EDITAR product inside open catalog
+                const editItemBtn = e.target.closest("[data-edit-item]");
+                if (editItemBtn && editItemBtn.closest("#categoryCatalog")) {
                     e.preventDefault();
-
                     e.stopPropagation();
-
-                    const card =
-                        button.closest(
-                            ".product-card"
-                        );
-
-                    if (!card) return;
-
-                    const codeEl =
-                        card.querySelector(
-                            ".product-code"
-                        );
-
-                    const code =
-                        codeEl
-                            ? codeEl
-                                .textContent
-                                .trim()
-                            : "";
-
-                    // Toggle if same catalog open
-                    if (
-                        card.classList.contains(
-                            "catalog-active"
-                        ) &&
-                        catalogPanel &&
-                        catalogPanel.classList.contains(
-                            "open"
-                        )
-                    ) {
-
-                        catalogPanel.classList.remove(
-                            "open"
-                        );
-
-                        card.classList.remove(
-                            "catalog-active"
-                        );
-
-                        return;
-
-                    }
-
-                    openCatalog(code, card);
-
+                    const code = editItemBtn.getAttribute("data-parent-code") ||
+                        (editItemBtn.closest("[data-parent-code]") || {}).dataset.parentCode;
+                    const idx = parseInt(editItemBtn.getAttribute("data-edit-item"), 10);
+                    if (code && !isNaN(idx)) openEdit(code, idx);
+                    return;
                 }
-            );
 
+                // EDITAR category card
+                const editCatBtn = e.target.closest(".product-edit-btn");
+                if (editCatBtn && !editCatBtn.closest("#categoryCatalog") && !editCatBtn.hasAttribute("data-edit-item")) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const card = editCatBtn.closest(".product-card");
+                    const code = editCatBtn.dataset.editCode || (card && card.dataset.code);
+                    if (code) openEdit(code, null);
+                    return;
+                }
+
+                // Open catalog: VER CATÁLOGO or whole card
+                if (e.target.closest("#categoryCatalog")) return;
+                if (e.target.closest(".catalog-close")) return;
+
+                const card = e.target.closest(".products-grid > .product-card");
+                if (!card) return;
+                const mainGrid = section.querySelector(":scope > .products-grid") ||
+                    section.querySelector(".products-grid");
+                if (!mainGrid || !mainGrid.contains(card)) return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                const code = (card.dataset.code ||
+                    (card.querySelector(".product-code") || {}).textContent || "").trim();
+                if (!code) return;
+
+                openCatalog(code, card);
+            });
+        }
+
+        // Filters
+        document.querySelectorAll(".product-filter").forEach((filter) => {
+            filter.onclick = () => {
+                document.querySelectorAll(".product-filter").forEach((b) => b.classList.remove("active"));
+                filter.classList.add("active");
+                const category = filter.dataset.filter;
+                let visible = 0;
+                document.querySelectorAll("#products .products-grid > .product-card, .products-section > .products-grid > .product-card")
+                    .forEach((product) => {
+                        if (product.closest("#categoryCatalog")) return;
+                        const show = category === "all" || product.dataset.category === category;
+                        product.classList.toggle("product-hidden", !show);
+                        if (show) visible++;
+                    });
+                const counter = document.getElementById("productCount");
+                if (counter) counter.textContent = String(visible).padStart(2, "0");
+            };
         });
 
+        this.setupGestion();
     },
 
 
