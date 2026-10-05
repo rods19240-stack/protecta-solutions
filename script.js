@@ -2156,8 +2156,6 @@ const ProtectaCore = {
                         "es"
                 );
 
-                this.bindProductGridEvents();
-                this.setupProductEditors();
                 refresh(
                     search
                         ? search.value
@@ -2351,8 +2349,6 @@ const ProtectaCore = {
                     "es"
             );
 
-            this.bindProductGridEvents();
-            this.setupProductEditors();
             refresh(
                 search
                     ? search.value
@@ -2915,7 +2911,7 @@ document.addEventListener(
     () => {
 
         ProtectaCore.init();
-        this.setupProducts();
+        ProtectaCore.setupProducts();
 
     }
 );
