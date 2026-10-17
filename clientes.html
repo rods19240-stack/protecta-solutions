@@ -1,2722 +1,445 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#05070d">
+    <meta name="author" content="Estudiante de Programación — Proyecto Protecta Solutions">
+    <meta name="description" content="Portal cliente de Protecta Solutions. Catálogo de productos de seguridad y tecnología. Proyecto académico de programación a nivel secundaria.">
+    <meta name="keywords" content="Protecta, seguridad, alarmas, videovigilancia, catálogo, proyecto escolar">
     <title>Protecta Solutions | Portal Cliente</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="style.css">
     <style>
-        :root {
-            --black: #05070d;
-            --black-2: #080b13;
-            --panel: #0b0f18;
-            --panel-2: #0e131e;
-            --blue: #123bff;
-            --electric: #00a8ff;
-            --blue-light: #4d7cff;
-            --silver: #c8ced8;
-            --white: #f8fafc;
-            --muted: #737d91;
-            --border: rgba(200, 206, 216, 0.11);
-            --green: #36e2a1;
-            --yellow: #ffc857;
-            --red: #ff4d67;
-            --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
+        body { font-size: 16px; line-height: 1.55; }
+        .client-shell { display: flex; min-height: 100vh; background: #05070d; color: #e8eef7; }
+        .client-side {
+            width: 260px; background: linear-gradient(180deg,#080b13,#05070d);
+            border-right: 1px solid rgba(255,255,255,.08); padding: 22px 16px;
+            display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 20;
+        }
+        .client-side .brand-logo { width: 200px; max-width: 100%; height: auto; }
+        .client-nav a {
+            display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px;
+            color: #9aa6b8; text-decoration: none; font-size: 18px; margin-bottom: 4px;
+        }
+        .client-nav a.active, .client-nav a:hover { background: rgba(0,168,255,.15); color: #fff; }
+        .client-main { margin-left: 260px; flex: 1; padding: 18px 24px 40px; }
+        .client-top {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+            margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        .session-exit {
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px;
+            border: 1px solid rgba(0,168,255,.35); border-radius: 10px; color: #cfe9ff;
+            text-decoration: none; font-size: 17px; background: rgba(0,168,255,.08);
+        }
+        .social-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+        .social-btn {
+            display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px;
+            border-radius: 10px; text-decoration: none; font-size: 18px; font-weight: 600;
+            border: 1px solid rgba(255,255,255,.12); color: #fff; transition: .2s;
+        }
+        .social-btn.fb { background: #1877f2; }
+        .social-btn.ig { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+        .social-btn.wa { background: #25d366; color: #062; }
+        .social-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+        .section-block {
+            display: none; background: rgba(8,14,24,.85); border: 1px solid rgba(0,168,255,.15);
+            border-radius: 14px; padding: 22px; margin-bottom: 18px;
+        }
+        .section-block.active { display: block; }
+        .section-block h2 { font-size: 30px; margin: 0 0 10px; color: #fff; }
+        .section-block p, .section-block li { font-size: 20px; color: #b7c2d0; line-height: 1.6; }
+        .academic-box, .author-box, .refs-box, .download-box, .dates-box {
+            background: rgba(0,20,40,.45); border: 1px solid rgba(0,168,255,.2);
+            border-radius: 12px; padding: 16px 18px; margin: 14px 0; font-size: 18px;
+        }
+        .academic-box h3, .author-box h3, .refs-box h3, .download-box h3 { color: #7dd3ff; font-size: 20px; margin: 0 0 8px; }
+        .download-box a {
+            display: inline-block; margin: 6px 8px 6px 0; padding: 10px 14px;
+            background: rgba(0,168,255,.15); border: 1px solid rgba(0,168,255,.4);
+            border-radius: 8px; color: #cfe9ff; text-decoration: none; font-size: 18px;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            background: var(--black);
-            color: var(--white);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        button, input, select, textarea {
-            font-family: inherit;
-        }
-
-        button {
-            cursor: pointer;
-            border: none;
-            background: none;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        ::selection {
-            background: var(--electric);
-            color: var(--black);
-        }
-
-        /* ========== LAYOUT ========== */
-        .portal {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* ========== SIDEBAR ========== */
-        .sidebar {
-            width: 260px;
-            background: var(--panel);
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            z-index: 100;
-            transition: transform 0.3s ease;
-        }
-
-        .brand {
-            padding: 28px 24px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand-logo {
-            height: 36px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .brand-text {
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-            font-size: 15px;
-            letter-spacing: 0.02em;
-        }
-
-        .brand-text span {
-            display: block;
-            font-size: 10px;
-            font-weight: 500;
-            color: var(--muted);
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-top: 2px;
-        }
-
-        .system-label {
-            margin: 0 24px 16px;
-            padding: 6px 10px;
-            background: rgba(18, 59, 255, 0.12);
-            border: 1px solid rgba(18, 59, 255, 0.25);
-            border-radius: 6px;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.14em;
-            color: var(--blue-light);
-            text-align: center;
-        }
-
-        .navigation {
-            flex: 1;
-            padding: 8px 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 11px 14px;
-            border-radius: 10px;
-            color: var(--silver);
-            font-size: 13.5px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        .nav-item:hover {
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--white);
-        }
-
-        .nav-item.active {
-            background: rgba(18, 59, 255, 0.15);
-            color: var(--white);
-        }
-
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 3px;
-            height: 18px;
-            background: var(--electric);
-            border-radius: 0 3px 3px 0;
-        }
-
-        .nav-icon {
-            width: 20px;
-            text-align: center;
-            font-size: 15px;
-            opacity: 0.85;
-        }
-
-        .nav-item .badge {
-            margin-left: auto;
-            background: var(--red);
-            color: white;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 2px 7px;
-            border-radius: 10px;
-            min-width: 18px;
-            text-align: center;
-        }
-
-        .sidebar-bottom {
-            padding: 16px;
-            border-top: 1px solid var(--border);
-        }
-
-        .client-card {
-            background: var(--panel-2);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 14px;
-            margin-bottom: 12px;
-        }
-
-        .client-card .label {
-            font-size: 10px;
-            letter-spacing: 0.1em;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .client-card .name {
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 2px;
-        }
-
-        .client-card .plan {
-            font-size: 11px;
-            color: var(--electric);
-        }
-
-        .user-box {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px;
-            border-radius: 10px;
-            transition: background 0.2s;
-        }
-
-        .user-box:hover {
-            background: rgba(255, 255, 255, 0.03);
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--blue), var(--electric));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 12px;
-            flex-shrink: 0;
-        }
-
-        .user-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .user-info strong {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .user-info small {
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        /* ========== MAIN ========== */
-        .main {
-            flex: 1;
-            margin-left: 260px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ========== TOPBAR ========== */
-        .topbar {
-            height: 64px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 28px;
-            background: rgba(5, 7, 13, 0.85);
-            backdrop-filter: blur(12px);
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
-
-        .breadcrumb {
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 0.06em;
-            color: var(--muted);
-            text-transform: uppercase;
-        }
-
-        .breadcrumb span {
-            color: var(--silver);
-            margin: 0 8px;
-        }
-
-        .breadcrumb strong {
-            color: var(--white);
-            font-weight: 600;
-        }
-
-        .top-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .search-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 8px 14px;
-            width: 260px;
-        }
-
-        .search-box input {
-            background: none;
-            border: none;
-            outline: none;
-            color: var(--white);
-            font-size: 13px;
-            width: 100%;
-        }
-
-        .search-box input::placeholder {
-            color: var(--muted);
-        }
-
-        .search-box kbd {
-            font-size: 10px;
-            color: var(--muted);
-            background: rgba(255, 255, 255, 0.05);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-        }
-
-        .icon-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--panel);
-            color: var(--silver);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .icon-btn:hover {
-            border-color: rgba(0, 168, 255, 0.4);
-            color: var(--white);
-        }
-
-        .icon-btn .dot {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 7px;
-            height: 7px;
-            background: var(--red);
-            border-radius: 50%;
-            border: 2px solid var(--panel);
-        }
-
-        .lang-btn {
-            height: 38px;
-            padding: 0 12px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--panel);
-            color: var(--silver);
-            font-size: 12px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .lang-btn:hover {
-            border-color: rgba(0, 168, 255, 0.4);
-            color: var(--white);
-        }
-
-        /* ========== CONTENT ========== */
-        .content {
-            flex: 1;
-            padding: 28px;
-            max-width: 1400px;
-        }
-
-        .section {
-            display: none;
-            opacity: 0;
-            transform: translateY(28px) scale(0.97);
-            filter: blur(12px);
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        .section.is-visible {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            filter: blur(0);
-            transition:
-                opacity 0.9s ease,
-                transform 1.05s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.95s ease;
-        }
-
-        .section.is-leaving {
-            opacity: 0;
-            transform: translateY(-18px) scale(0.98);
-            filter: blur(10px);
-            transition:
-                opacity 0.55s ease,
-                transform 0.6s ease,
-                filter 0.55s ease;
-        }
-
-        a.back-home {
-            text-decoration: none;
-        }
-
-        .back-home {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-            padding: 9px 14px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: var(--panel);
-            color: var(--silver);
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            transition: border-color 0.2s, color 0.2s, background 0.2s, transform 0.2s;
-            cursor: pointer;
-        }
-
-        .back-home:hover {
-            border-color: rgba(0, 168, 255, 0.45);
-            color: var(--white);
-            background: rgba(0, 168, 255, 0.08);
-            transform: translateX(-3px);
-        }
-
-        .back-home .arrow {
-            color: var(--electric);
-            font-size: 14px;
-            transition: transform 0.2s;
-        }
-
-        .back-home:hover .arrow {
-            transform: translateX(-3px);
-        }
-
-        /* ========== HERO / WELCOME ========== */
-        .welcome {
-            margin-bottom: 28px;
-        }
-
-        .welcome .eyebrow {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            color: var(--electric);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .welcome .eyebrow::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: var(--green);
-            border-radius: 50%;
-            box-shadow: 0 0 10px var(--green);
-        }
-
-        .welcome h1 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 28px;
-            font-weight: 600;
-            line-height: 1.25;
-            margin-bottom: 8px;
-        }
-
-        .welcome h1 strong {
-            color: var(--electric);
-        }
-
-        .welcome p {
-            color: var(--muted);
-            font-size: 14px;
-            max-width: 520px;
-        }
-
-        /* ========== METRIC CARDS ========== */
-        .metrics {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-
-        .metric-card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            transition: border-color 0.2s, transform 0.2s;
-        }
-
-        .metric-card:hover {
-            border-color: rgba(0, 168, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .metric-card .label {
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.08em;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .metric-card .value {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .metric-card .sub {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .metric-card .sub.up {
-            color: var(--green);
-        }
-
-        .metric-card .sub.down {
-            color: var(--red);
-        }
-
-        .metric-card .icon {
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: rgba(0, 168, 255, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: var(--electric);
-        }
-
-        /* ========== PANEL ========== */
-        .panel {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            margin-bottom: 24px;
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 22px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .panel-header h2 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .panel-kicker {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.12em;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .panel-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--blue);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: var(--blue-light);
-        }
-
-        .btn-ghost {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--silver);
-        }
-
-        .btn-ghost:hover {
-            border-color: rgba(0, 168, 255, 0.4);
-            color: var(--white);
-        }
-
-        .panel-body {
-            padding: 20px 22px;
-        }
-
-        /* ========== PRODUCTS (mismo estilo que Core) ========== */
-        .products-section {
-            margin-top: 8px;
-            padding: 30px;
-            border: 1px solid var(--border);
-            background: linear-gradient(135deg, rgba(255,255,255,.025), rgba(0,168,255,.012));
-            position: relative;
-            overflow: visible;
-            border-radius: 4px;
-        }
-
-        .products-section::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--electric), transparent);
-            box-shadow: 0 0 15px var(--electric);
-        }
-
-        .products-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            gap: 30px;
-            margin-bottom: 28px;
-        }
-
-        .products-header h2 {
-            margin: 8px 0;
-            font-size: 34px;
-            letter-spacing: -.5px;
-            font-family: 'Space Grotesk', sans-serif;
-            font-weight: 600;
-        }
-
-        .products-header p {
-            max-width: 650px;
-            color: var(--muted);
-            font-size: 12px;
-            line-height: 1.7;
-        }
-
-        .products-counter {
-            min-width: 110px;
-            padding: 15px;
-            border: 1px solid var(--border);
-            text-align: center;
-            background: rgba(0,168,255,.025);
-        }
-
-        .products-counter span {
-            display: block;
-            color: var(--electric);
-            font-size: 8px;
-            letter-spacing: 2px;
-        }
-
-        .products-counter strong {
-            display: block;
-            margin: 4px 0;
-            font-size: 25px;
-            color: var(--white);
-        }
-
-        .products-counter small {
-            color: var(--muted);
-            font-size: 7px;
-            letter-spacing: 1px;
-        }
-
-        .products-filters {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 25px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 15px;
-            flex-wrap: wrap;
-        }
-
-        .product-filter {
-            padding: 9px 16px;
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,.018);
-            color: var(--muted);
-            font-family: inherit;
-            font-size: 8px;
-            letter-spacing: 1.5px;
-            cursor: pointer;
-            transition: .25s ease;
-        }
-
-        .product-filter:hover {
-            color: white;
-            border-color: rgba(0,168,255,.45);
-            background: rgba(0,168,255,.05);
-        }
-
-        .product-filter.active {
-            color: white;
-            border-color: var(--electric);
-            background: rgba(0,168,255,.10);
-            box-shadow: 0 0 18px rgba(0,168,255,.12);
-        }
-
-        .products-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-
-        .product-card {
-            border: 1px solid var(--border);
-            background: rgba(255,255,255,.015);
-            position: relative;
-            overflow: hidden;
-            transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0,168,255,.42);
-            box-shadow: 0 18px 45px rgba(0,0,0,.28), 0 0 25px rgba(0,168,255,.08);
-        }
-
-        .product-card.product-hidden {
-            display: none;
-        }
-
-        .product-image {
-            height: 210px;
-            position: relative;
-            overflow: hidden;
-            background:
-                radial-gradient(circle at center, rgba(0,168,255,.10), transparent 55%),
-                #080c15;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .product-image-grid {
-            position: absolute;
-            inset: 0;
-            opacity: .35;
-            background-image:
-                linear-gradient(rgba(0,168,255,.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,168,255,.08) 1px, transparent 1px);
-            background-size: 25px 25px;
-        }
-
-        .product-image::after {
-            content: "";
-            position: absolute;
-            left: -20%;
-            top: 50%;
-            width: 140%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--electric), transparent);
-            opacity: .5;
-            animation: productScan 4s linear infinite;
-        }
-
-        @keyframes productScan {
-            0% { transform: translateY(-100px); }
-            100% { transform: translateY(100px); }
-        }
-
-        .product-placeholder {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            z-index: 2;
-        }
-
-        .product-placeholder strong {
-            font-size: 23px;
-            letter-spacing: 4px;
-            color: var(--white);
-            text-shadow: 0 0 20px rgba(0,168,255,.35);
-        }
-
-        .product-placeholder span:last-child {
-            color: var(--muted);
-            font-size: 7px;
-            letter-spacing: 2px;
-        }
-
-        .product-code {
-            color: var(--electric);
-            font-size: 7px;
-            letter-spacing: 2px;
-        }
-
-        .product-status {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            z-index: 5;
-            padding: 5px 8px;
-            border: 1px solid rgba(70,220,150,.25);
-            background: rgba(0,0,0,.55);
-            color: var(--green);
-            font-size: 7px;
-            letter-spacing: 1px;
-        }
-
-        .product-status.warning {
-            border-color: rgba(255,200,87,.35);
-            color: var(--yellow);
-        }
-
-        .product-status.offline {
-            border-color: rgba(255,77,103,.35);
-            color: var(--red);
-        }
-
-        .product-info {
-            padding: 19px;
-        }
-
-        .product-category {
-            color: var(--electric);
-            font-size: 7px;
-            letter-spacing: 1.8px;
-            margin-bottom: 9px;
-        }
-
-        .product-info h3 {
-            font-size: 22px;
-            margin: 0 0 9px;
-            color: white;
-            font-weight: 600;
-        }
-
-        .product-info p {
-            min-height: 48px;
-            color: var(--muted);
-            font-size: 15px;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        .product-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            margin-top: 18px;
-            padding-top: 13px;
-            border-top: 1px solid var(--border);
-        }
-
-        .product-id {
-            color: #657083;
-            font-size: 10px;
-            letter-spacing: 1px;
-        }
-
-        .product-detail {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: none;
-            background: transparent;
-            color: var(--silver);
-            font-family: inherit;
-            font-size: 12px;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: .2s;
-        }
-
-        .product-detail b {
-            color: var(--electric);
-            font-size: 13px;
-            transition: .2s;
-        }
-
-        .product-detail:hover {
-            color: white;
-        }
-
-        .product-detail:hover b {
-            transform: translateX(4px);
-        }
-
-        @media (max-width: 1100px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 650px) {
-            .products-section {
-                padding: 20px;
-            }
-            .products-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .products-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ========== STATUS TABLE ========== */
-        .status-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .status-table th {
-            text-align: left;
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 0.1em;
-            color: var(--muted);
-            text-transform: uppercase;
-            padding: 0 0 12px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .status-table td {
-            padding: 14px 0;
-            border-bottom: 1px solid var(--border);
-            font-size: 13px;
-        }
-
-        .status-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .status-dot.online {
-            background: var(--green);
-            box-shadow: 0 0 8px var(--green);
-        }
-
-        .status-dot.warning {
-            background: var(--yellow);
-            box-shadow: 0 0 8px var(--yellow);
-        }
-
-        .status-dot.offline {
-            background: var(--red);
-            box-shadow: 0 0 8px var(--red);
-        }
-
-        /* ========== SUPPORT ========== */
-        .ticket-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .ticket-item {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            padding: 14px 16px;
-            background: var(--panel-2);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: border-color 0.2s;
-        }
-
-        .ticket-item:hover {
-            border-color: rgba(0, 168, 255, 0.3);
-        }
-
-        .ticket-priority {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .ticket-priority.high { background: var(--red); }
-        .ticket-priority.medium { background: var(--yellow); }
-        .ticket-priority.low { background: var(--green); }
-
-        .ticket-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .ticket-info strong {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .ticket-info span {
-            font-size: 12px;
-            color: var(--muted);
-        }
-
-        .ticket-status {
-            font-size: 11px;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 6px;
-            background: rgba(0, 168, 255, 0.12);
-            color: var(--electric);
-        }
-
-        .ticket-status.closed {
-            background: rgba(115, 125, 145, 0.15);
-            color: var(--muted);
-        }
-
-        /* ========== DOCS ========== */
-        .docs-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 12px;
-        }
-
-        .doc-card {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: var(--panel-2);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            transition: border-color 0.2s;
-        }
-
-        .doc-card:hover {
-            border-color: rgba(0, 168, 255, 0.35);
-        }
-
-        .doc-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: rgba(18, 59, 255, 0.12);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: var(--blue-light);
-            flex-shrink: 0;
-        }
-
-        .doc-info strong {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .doc-info span {
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        /* ========== ACCOUNT ========== */
-        .account-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.06em;
-            color: var(--muted);
-            text-transform: uppercase;
-            margin-bottom: 6px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 11px 14px;
-            background: var(--panel-2);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            color: var(--white);
-            font-size: 13px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            border-color: rgba(0, 168, 255, 0.5);
-        }
-
-        .form-group input:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* ========== EMPTY / HELPERS ========== */
-        .two-col {
-            display: grid;
-            grid-template-columns: 1.4fr 1fr;
-            gap: 20px;
-        }
-
-        /* ========== MOBILE ========== */
-        .menu-toggle {
-            display: none;
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--panel);
-            color: var(--silver);
-            font-size: 18px;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            z-index: 90;
-        }
-
-        @media (max-width: 1100px) {
-            .metrics {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .two-col {
-                grid-template-columns: 1fr;
-            }
-            .account-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
-            }
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            .sidebar-overlay.open {
-                display: block;
-            }
-            .main {
-                margin-left: 0;
-            }
-            .menu-toggle {
-                display: flex;
-            }
-            .search-box {
-                display: none;
-            }
-            .content {
-                padding: 20px 16px;
-            }
-            .metrics {
-                grid-template-columns: 1fr 1fr;
-            }
-            .welcome h1 {
-                font-size: 22px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .metrics {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== LOGO WATERMARK ===== */
-        .logo-watermark {
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .logo-watermark img {
-            width: min(88vw, 900px);
-            height: auto;
-            opacity: 0.13;
-            filter: grayscale(0.2);
-            user-select: none;
-        }
-
-        .portal {
-            position: relative;
-            z-index: 1;
-        }
-
-        .catalog-panel {
-            display: none;
-            margin-top: 22px;
-            padding: 22px;
-            border: 1px solid var(--border);
-            background: linear-gradient(135deg, rgba(0,168,255,.04), rgba(255,255,255,.02));
-            animation: catalogIn .45s ease;
-        }
-        .catalog-panel.open { display: block; }
-        @keyframes catalogIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .catalog-panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-        .catalog-panel-header h3 {
-            font-family: 'Space Grotesk', sans-serif;
-            font-size: 18px;
-            font-weight: 600;
-        }
-        .catalog-panel-header .catalog-code {
-            font-size: 11px;
-            letter-spacing: 1px;
-            color: var(--electric);
-            margin-bottom: 4px;
-        }
-        .catalog-close {
-            padding: 12px 18px;
-            border: 1px solid rgba(0,168,255,.45);
-            background: rgba(0,168,255,.12);
-            color: var(--white);
-            font-size: 13px;
-            font-weight: 700;
-            letter-spacing: .06em;
-            cursor: pointer;
-            transition: .2s;
-            white-space: nowrap;
-        }
-        .catalog-close:hover {
-            border-color: rgba(0,168,255,.8);
-            background: rgba(0,168,255,.25);
-            color: var(--white);
-        }
-        .catalog-panel-header {
-            position: sticky;
-            top: 12px;
-            z-index: 20;
-            background: rgba(0,20,40,.55);
-            backdrop-filter: blur(8px);
-            padding: 14px 16px;
-            border: 1px solid rgba(0,168,255,.25);
-        }
-        .catalog-list {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-        @media (max-width: 700px) {
-            .catalog-list { grid-template-columns: 1fr; }
-        }
-        .catalog-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 14px;
-            border: 1px solid var(--border);
-            background: rgba(0,0,0,.25);
-            transition: border-color .2s, background .2s;
-        }
-        .catalog-item:hover {
-            border-color: rgba(0,168,255,.35);
-            background: rgba(0,168,255,.05);
-        }
-        .catalog-item-num {
-            width: 28px;
-            height: 28px;
-            border-radius: 6px;
-            background: rgba(0,168,255,.12);
-            color: var(--electric);
-            font-size: 11px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .catalog-item-info { flex: 1; min-width: 0; }
-        .catalog-item-info strong {
-            display: block;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-        .catalog-item-info span { font-size: 11px; color: var(--muted); }
-        .catalog-item-status {
-            font-size: 9px;
-            font-weight: 700;
-            letter-spacing: .08em;
-            color: var(--green);
-            flex-shrink: 0;
-        }
-        .product-card.catalog-active {
-            border-color: rgba(0,168,255,.5);
-            box-shadow: 0 0 30px rgba(0,168,255,.12);
-        }
-
-        .product-photo {
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            opacity: 0.42;
-            z-index: 1;
-            filter: brightness(0.9);
-        }
-        .product-image-grid { z-index: 2; }
-        .product-image::after {
-            z-index: 5 !important;
-            opacity: 0.85 !important;
-            height: 2px !important;
-            box-shadow: 0 0 12px rgba(0,168,255,.8);
-        }
-        .product-placeholder { z-index: 4; }
-        .product-status { z-index: 6; }
-        .product-card.has-photo .product-placeholder {
-            z-index: 4;
-            text-shadow: 0 2px 14px rgba(0,0,0,.9);
-        }
-        .product-card.has-photo .product-image-grid {
-            opacity: 0.45;
-            z-index: 2;
-        }
-
-        .products-section.catalog-open > .products-grid,
-        .products-section.catalog-open > .products-filters {
-            display: none;
-        }
-        .catalog-list.products-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 18px;
-        }
-        @media (max-width: 1100px) {
-            .catalog-list.products-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (max-width: 700px) {
-            .catalog-list.products-grid { grid-template-columns: 1fr; }
-        }
-        .catalog-panel-header h3 { font-size: 22px !important; }
-        .product-placeholder strong { font-size: 18px !important; }
-        .product-code { font-size: 11px !important; }
-
         .product-photo-img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            opacity: 0.4;
-            z-index: 1;
-            pointer-events: none;
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0.42; z-index: 1; pointer-events: none;
         }
-        .product-card.no-scan .product-image::after { display: none !important; }
-    </style>
+        .product-image::after { z-index: 5 !important; opacity: .85 !important; height: 2px !important; }
+        .product-info h3 { font-size: 24px !important; }
+        .product-info p { font-size: 18px !important; }
+        .catalog-panel { display: none; margin-top: 18px; }
+        .catalog-panel.open { display: block !important; }
+        .products-section.catalog-open > .products-grid,
+        .products-section.catalog-open > .products-filters { display: none; }
+        .catalog-close {
+            padding: 12px 18px; border: 1px solid rgba(0,168,255,.45);
+            background: rgba(0,168,255,.12); color: #fff; font-size: 17px;
+            font-weight: 700; cursor: pointer; border-radius: 8px;
+        }
+        @media (max-width: 850px) {
+            .client-side { position: relative; width: 100%; height: auto; }
+            .client-main { margin-left: 0; }
+            .client-shell { flex-direction: column; }
+        }
+    
+        /* Tipografía clientes: PC normal, cel un poco más grande */
+        body { font-size: 16px; line-height: 1.55; }
+        .client-nav a, .nav-link { font-size: 15px; }
+        .section-block h2 { font-size: 24px; }
+        .section-block p, .section-block li { font-size: 16px; }
+        .product-info h3 { font-size: 18px; }
+        .product-info p { font-size: 15px; }
+        .social-btn { font-size: 15px; padding: 12px 16px; white-space: normal; overflow-wrap: anywhere; }
+        button, .btn, input, textarea {
+            box-sizing: border-box; max-width: 100%;
+            white-space: normal; overflow-wrap: anywhere; word-break: break-word;
+        }
+        @media (max-width: 850px) {
+            body, .client-shell, .client-main, .section-block {
+                font-size: 18px !important;
+                line-height: 1.6 !important;
+            }
+            .client-nav a, .nav-link { font-size: 17px !important; }
+            .section-block h2 { font-size: 18px !important; }
+            .section-block p, .section-block li, .academic-box p, .author-box p {
+                font-size: 18px !important;
+            }
+            .product-info h3 { font-size: 20px !important; }
+            .product-info p { font-size: 17px !important; }
+            .social-btn { font-size: 16px !important; }
+            small, .panel-kicker { font-size: 15px !important; }
+            input, textarea, button, .btn {
+                width: 100%; max-width: 100%;
+                font-size: 17px !important;
+                padding: 0.7em 0.9em !important;
+            }
+        }
+</style>
 </head>
-
 <body>
-
-    <div class="logo-watermark" aria-hidden="true">
-        <img src="img/protecta-logo-transparent.png" alt="">
-    </div>
-
-<div class="portal" id="portal">
-
-    <!-- SIDEBAR OVERLAY (mobile) -->
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <!-- ========== SIDEBAR ========== -->
-    <aside class="sidebar" id="sidebar">
-
-        <div class="brand">
+<div class="client-shell">
+    <aside class="client-side">
+        <div class="brand" style="margin-bottom:16px;">
             <img src="img/protecta-logo-transparent.png" alt="Protecta Solutions" class="brand-logo"
-                 onerror="this.style.display='none'">
-            <div class="brand-text">
-                Protecta
-                <span data-es="Portal Cliente" data-en="Client Portal">Portal Cliente</span>
-            </div>
+                 onerror="this.src='protecta-logo-transparent.png'">
+            <div style="font-size:16px;color:#7dd3ff;margin-top:6px;letter-spacing:1px;">PORTAL CLIENTE</div>
         </div>
-
-        <div class="system-label">CLIENT PORTAL</div>
-
-        <nav class="navigation">
-
-            <a href="#inicio" class="nav-item active" data-section="inicio">
-                <span class="nav-icon">⌂</span>
-                <span data-es="Inicio" data-en="Home">Inicio</span>
-            </a>
-
-            <a href="#productos" class="nav-item" data-section="productos">
-                <span class="nav-icon">▣</span>
-                <span data-es="Mis Productos" data-en="My Products">Mis Productos</span>
-            </a>
-
-            <a href="#estado" class="nav-item" data-section="estado">
-                <span class="nav-icon">◌</span>
-                <span data-es="Estado" data-en="Status">Estado</span>
-            </a>
-
-            <a href="#soporte" class="nav-item" data-section="soporte">
-                <span class="nav-icon">!</span>
-                <span data-es="Soporte" data-en="Support">Soporte</span>
-                <b class="badge">2</b>
-            </a>
-
-            <a href="#documentos" class="nav-item" data-section="documentos">
-                <span class="nav-icon">▦</span>
-                <span data-es="Documentos" data-en="Documents">Documentos</span>
-            </a>
-
-            <a href="#cuenta" class="nav-item" data-section="cuenta">
-                <span class="nav-icon">⚙</span>
-                <span data-es="Mi Cuenta" data-en="My Account">Mi Cuenta</span>
-            </a>
-
+        <nav class="client-nav">
+            <a href="#inicio" class="nav-link active" data-section="inicio">⌂ Inicio</a>
+            <a href="#productos" class="nav-link" data-section="productos">▣ Mis Productos</a>
+            <a href="#autor" class="nav-link" data-section="autor">👤 Autoría</a>
+            <a href="#objetivo" class="nav-link" data-section="objetivo">◎ Objetivo</a>
+            <a href="#referencias" class="nav-link" data-section="referencias">▦ Referencias</a>
+            <a href="#descargas" class="nav-link" data-section="descargas">↓ Descargas</a>
+            <a href="#contacto" class="nav-link" data-section="contacto">✉ Contacto</a>
         </nav>
-
-        <div class="sidebar-bottom">
-
-            <div class="client-card">
-                <div class="label" data-es="Empresa" data-en="Company">Empresa</div>
-                <div class="name">Industrias Delta S.A.</div>
-                <div class="plan" data-es="Plan Empresarial" data-en="Enterprise Plan">Plan Empresarial</div>
+        <div style="margin-top:auto;padding-top:16px;">
+            <div class="dates-box" style="font-size:16px;color:#8b97a8;">
+                <div><strong style="color:#7dd3ff;">Creación:</strong> 02/10/2026</div>
+                <div><strong style="color:#7dd3ff;">Última actualización:</strong> 14/10/2026</div>
+                <div style="margin-top:6px;">Nivel educativo: <strong style="color:#fff;">Secundaria</strong></div>
             </div>
-
-            <div class="user-box">
-                <div class="avatar">JD</div>
-                <div class="user-info">
-                    <strong>Juan Díaz</strong>
-                    <small data-es="Administrador" data-en="Administrator">Administrador</small>
-                </div>
-            </div>
-
+            <a href="index.html" class="session-exit" style="margin-top:12px;width:100%;justify-content:center;">← Cerrar sesión / Inicio</a>
         </div>
-
     </aside>
 
-    <!-- ========== MAIN ========== -->
-    <div class="main">
-
-        <!-- TOPBAR -->
-        <header class="topbar">
-
-            <div style="display:flex;align-items:center;gap:12px;">
-                <button class="menu-toggle" id="menuToggle" aria-label="Menú">☰</button>
-                <div class="breadcrumb">
-                    PROTECTA
-                    <span>/</span>
-                    <strong data-es="PORTAL CLIENTE" data-en="CLIENT PORTAL">PORTAL CLIENTE</strong>
-                </div>
+    <main class="client-main">
+        <div class="client-top">
+            <div style="font-size:18px;letter-spacing:1px;color:#7dd3ff;">PROTECTA / PORTAL CLIENTE</div>
+            <div class="social-bar" style="margin:0;">
+                <a class="social-btn fb" href="https://www.facebook.com/share/1C7NciZYQc/?mibextid=wwXIfr" target="_blank" rel="noopener" title="Facebook de Protecta">f Facebook</a>
+                <a class="social-btn ig" href="https://www.instagram.com/protecta.solutionsmx?obrf=MXRsY296Z20wYng5Ng==" target="_blank" rel="noopener" title="Instagram de Protecta">Instagram</a>
+                <a class="social-btn wa" href="https://wa.me/qr/2MJRS5OEYLBPH1" target="_blank" rel="noopener" title="WhatsApp de Protecta">WhatsApp</a>
             </div>
-
-            <div class="top-actions">
-
-                <div class="search-box">
-                    <span style="color:var(--muted);font-size:14px;">⌕</span>
-                    <input type="text"
-                           data-placeholder-es="Buscar productos, tickets..."
-                           data-placeholder-en="Search products, tickets..."
-                           placeholder="Buscar productos, tickets...">
-                    <kbd>⌘K</kbd>
-                </div>
-
-                <button class="lang-btn" id="langBtn">🇪🇸 ES</button>
-
-                <button class="icon-btn" title="Notificaciones">
-                    ◌
-                    <span class="dot"></span>
-                </button>
-
-                <button class="icon-btn" title="Ayuda">?</button>
-
-            </div>
-
-        </header>
-
-        <!-- CONTENT -->
-        <div class="content">
-
-            <!-- ===================== INICIO ===================== -->
-            <section class="section active" id="inicio">
-
-                <a href="index.html" class="back-home">
-                    <span class="arrow">←</span>
-                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
-                </a>
-
-                <div class="welcome">
-                    <div class="eyebrow" data-es="Sesión activa" data-en="Active session">Sesión activa</div>
-                    <h1>
-                        <span data-es="Bienvenido," data-en="Welcome,">Bienvenido,</span>
-                        <strong>Industrias Delta</strong>
-                    </h1>
-                    <p data-es="Aquí puedes consultar el estado de tus servicios Protecta, productos contratados y solicitar soporte."
-                       data-en="Here you can check the status of your Protecta services, contracted products and request support.">
-                        Aquí puedes consultar el estado de tus servicios Protecta, productos contratados y solicitar soporte.
-                    </p>
-                </div>
-
-                <div class="metrics">
-
-                    <div class="metric-card">
-                        <div class="icon">▣</div>
-                        <div class="label" data-es="Productos activos" data-en="Active products">Productos activos</div>
-                        <div class="value">09</div>
-                        <div class="sub up" data-es="Todos operativos" data-en="All operational">Todos operativos</div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="icon">◌</div>
-                        <div class="label" data-es="Sistemas en línea" data-en="Systems online">Sistemas en línea</div>
-                        <div class="value">12</div>
-                        <div class="sub" data-es="de 13 sedes" data-en="of 13 sites">de 13 sedes</div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="icon">!</div>
-                        <div class="label" data-es="Tickets abiertos" data-en="Open tickets">Tickets abiertos</div>
-                        <div class="value">02</div>
-                        <div class="sub" data-es="1 prioritario" data-en="1 high priority">1 prioritario</div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="icon">◈</div>
-                        <div class="label" data-es="Última sync" data-en="Last sync">Última sync</div>
-                        <div class="value" style="font-size:20px;">14:32</div>
-                        <div class="sub" data-es="Hoy · Sistema estable" data-en="Today · System stable">Hoy · Sistema estable</div>
-                    </div>
-
-                </div>
-
-                <div class="two-col">
-
-                    <!-- Servicios activos — solo 2 en resumen -->
-                    <div class="panel">
-                        <div class="panel-header">
-                            <div>
-                                <div class="panel-kicker" data-es="Resumen" data-en="Summary">Resumen</div>
-                                <h2 data-es="Servicios activos" data-en="Active services">Servicios activos</h2>
-                            </div>
-                            <button type="button" class="btn btn-ghost" id="btnVerTodos" onclick="window.portalGoTo && window.portalGoTo('productos')">
-                                <span data-es="Ver catálogo completo →" data-en="View full catalog →">Ver catálogo completo →</span>
-                            </button>
-                        </div>
-                        <div class="panel-body">
-                            <div class="products-grid" style="grid-template-columns: 1fr 1fr;">
-
-                                <article class="product-card">
-                                    <div class="product-image" style="height:160px;">
-                                        <div class="product-image-grid"></div>
-                                        <div class="product-placeholder">
-                                            <span class="product-code">PS-ALM-001</span>
-                                            <strong style="font-size:18px;">ALARM</strong>
-                                            <span>PRODUCT IMAGE</span>
-                                        </div>
-                                        <div class="product-status">● ACTIVO</div>
-                                    </div>
-                                    <div class="product-info" style="padding:14px;">
-                                        <div class="product-category">SECURITY SYSTEMS</div>
-                                        <h3 data-es="Control de Alarmas" data-en="Alarm Control">Control de Alarmas</h3>
-                                        <p data-es="100 productos · línea activa" data-en="8 cameras · 3 sites">8 cámaras · 3 sedes</p>
-                                    </div>
-                                </article>
-
-                                <article class="product-card">
-                                    <div class="product-image" style="height:160px;">
-                                        <div class="product-image-grid"></div>
-                                        <div class="product-placeholder">
-                                            <span class="product-code">PS-ACC-001</span>
-                                            <strong style="font-size:18px;">ACCESS</strong>
-                                            <span>PRODUCT IMAGE</span>
-                                        </div>
-                                        <div class="product-status">● ACTIVO</div>
-                                    </div>
-                                    <div class="product-info" style="padding:14px;">
-                                        <div class="product-category">ACCESS CONTROL</div>
-                                        <h3 data-es="Control de Acceso" data-en="Access Control">Control de Acceso</h3>
-                                        <p data-es="100 productos · línea activa" data-en="100 products · active line">100 productos · línea activa</p>
-                                    </div>
-                                </article>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Tickets recientes -->
-                    <div class="panel">
-                        <div class="panel-header">
-                            <div>
-                                <div class="panel-kicker" data-es="Soporte" data-en="Support">Soporte</div>
-                                <h2 data-es="Tickets recientes" data-en="Recent tickets">Tickets recientes</h2>
-                            </div>
-                            <button type="button" class="btn btn-ghost" onclick="window.portalGoTo && window.portalGoTo('soporte')">
-                                <span data-es="Ver todos →" data-en="View all →">Ver todos →</span>
-                            </button>
-                        </div>
-                        <div class="panel-body">
-                            <div class="ticket-list">
-
-                                <div class="ticket-item">
-                                    <div class="ticket-priority high"></div>
-                                    <div class="ticket-info">
-                                        <strong data-es="Cámara offline — Sede Norte" data-en="Camera offline — North site">Cámara offline — Sede Norte</strong>
-                                        <span>#TK-2841 · hace 2 h</span>
-                                    </div>
-                                    <span class="ticket-status" data-es="Abierto" data-en="Open">Abierto</span>
-                                </div>
-
-                                <div class="ticket-item">
-                                    <div class="ticket-priority medium"></div>
-                                    <div class="ticket-info">
-                                        <strong data-es="Solicitud de usuario extra" data-en="Extra user request">Solicitud de usuario extra</strong>
-                                        <span>#TK-2830 · hace 1 d</span>
-                                    </div>
-                                    <span class="ticket-status" data-es="En proceso" data-en="In progress">En proceso</span>
-                                </div>
-
-                                <div class="ticket-item">
-                                    <div class="ticket-priority low"></div>
-                                    <div class="ticket-info">
-                                        <strong data-es="Actualización de firmware" data-en="Firmware update">Actualización de firmware</strong>
-                                        <span>#TK-2812 · hace 5 d</span>
-                                    </div>
-                                    <span class="ticket-status closed" data-es="Cerrado" data-en="Closed">Cerrado</span>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </section>
-
-            <!-- ===================== PRODUCTOS ===================== -->
-            <section class="section" id="productos">
-
-                <a href="index.html" class="back-home">
-                    <span class="arrow">←</span>
-                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
-                </a>
-
-                <div class="products-section">
-
-                    <div class="products-header">
-                        <div>
-                            <div class="panel-kicker">PROTECTA SOLUTIONS</div>
-                            <h2 data-es="Mis productos y soluciones" data-en="My products & solutions">
-                                Mis productos y soluciones
-                            </h2>
-                            <p data-es="Mismos apartados que el catálogo Protecta. 9 líneas con 100 productos cada una."
-                               data-en="Same categories as the Protecta catalog. 9 lines with 100 products each.">
-                                Mismos apartados que el catálogo Protecta. 9 líneas con 100 productos cada una.
-                            </p>
-                        </div>
-                        <div class="products-counter">
-                            <span>CATALOG</span>
-                            <strong id="productCount">09</strong>
-                            <small data-es="APARTADOS" data-en="CATEGORIES">APARTADOS</small>
-                        </div>
-                    </div>
-
-                    <div class="products-filters">
-                        <button class="product-filter active" data-filter="all" data-es="TODOS" data-en="ALL">TODOS</button>
-                        <button class="product-filter" data-filter="security" data-es="SEGURIDAD" data-en="SECURITY">SEGURIDAD</button>
-                        <button class="product-filter" data-filter="technology" data-es="TECNOLOGÍA" data-en="TECHNOLOGY">TECNOLOGÍA</button>
-                        <button class="product-filter" data-filter="network" data-es="REDES" data-en="NETWORK">REDES</button>
-                    </div>
-
-                    <div class="products-grid">
-
-                        <article class="product-card" data-category="security">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-ALM-001</span>
-                                    <strong>ALARM</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">ALARM SYSTEMS</div>
-                                <h3 data-es="Control de Alarmas" data-en="Alarm Control">Control de Alarmas</h3>
-                                <p data-es="Sistemas de control y monitoreo de alarmas para protección de instalaciones." data-en="Alarm control and monitoring systems for facility protection.">Sistemas de control y monitoreo de alarmas para protección de instalaciones.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-ALM-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="security">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-ACC-001</span>
-                                    <strong>ACCESS</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">ACCESS CONTROL</div>
-                                <h3 data-es="Control de Acceso" data-en="Access Control">Control de Acceso</h3>
-                                <p data-es="Sistemas de control y gestión de accesos para instalaciones empresariales." data-en="Access control and management systems for enterprise facilities.">Sistemas de control y gestión de accesos para instalaciones empresariales.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-ACC-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="security">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-FIR-001</span>
-                                    <strong>FIRE</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">FIRE DETECTION</div>
-                                <h3 data-es="Detección de Incendios" data-en="Fire Detection">Detección de Incendios</h3>
-                                <p data-es="Sistemas de detección temprana de incendios y alertas en tiempo real." data-en="Early fire detection systems and real-time alerts.">Sistemas de detección temprana de incendios y alertas en tiempo real.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-FIR-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="technology">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-AUT-001</span>
-                                    <strong>AUTO</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">AUTOMATION</div>
-                                <h3 data-es="Automatizaciones" data-en="Automations">Automatizaciones</h3>
-                                <p data-es="Soluciones de automatización inteligente para edificios e instalaciones." data-en="Intelligent automation solutions for buildings and facilities.">Soluciones de automatización inteligente para edificios e instalaciones.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-AUT-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="security">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-VID-001</span>
-                                    <strong>VIDEO</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">VIDEO SURVEILLANCE</div>
-                                <h3 data-es="Videovigilancia" data-en="Video Surveillance">Videovigilancia</h3>
-                                <p data-es="Sistema inteligente para monitoreo y análisis de espacios en tiempo real." data-en="Intelligent system for real-time space monitoring and analysis.">Sistema inteligente para monitoreo y análisis de espacios en tiempo real.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-VID-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="network">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-FIB-001</span>
-                                    <strong>FIBER</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">FIBER OPTICS</div>
-                                <h3 data-es="Fibra Óptica" data-en="Fiber Optics">Fibra Óptica</h3>
-                                <p data-es="Infraestructura de fibra óptica para conectividad de alta velocidad." data-en="Fiber optic infrastructure for high-speed connectivity.">Infraestructura de fibra óptica para conectividad de alta velocidad.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-FIB-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="technology">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-HVA-001</span>
-                                    <strong>HVAC</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">HVAC SYSTEMS</div>
-                                <h3 data-es="(HVAC) Aire Acondicionado" data-en="(HVAC) Air Conditioning">(HVAC) Aire Acondicionado</h3>
-                                <p data-es="Sistemas de climatización y control de aire acondicionado para espacios críticos." data-en="Climate control and air conditioning systems for critical spaces.">Sistemas de climatización y control de aire acondicionado para espacios críticos.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-HVA-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="security">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-PCI-001</span>
-                                    <strong>PCI</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">FIRE PROTECTION</div>
-                                <h3 data-es="(PCI) Protección Contra Incendios" data-en="(PCI) Fire Protection Systems">(PCI) Protección Contra Incendios</h3>
-                                <p data-es="Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva." data-en="Fire protection systems: suppression, sprinklers and passive safety.">Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-PCI-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                        <article class="product-card" data-category="technology">
-                            <div class="product-image">
-                                <div class="product-image-grid"></div>
-                                <div class="product-placeholder">
-                                    <span class="product-code">PS-ING-001</span>
-                                    <strong>ENG</strong>
-                                    <span>100 PRODUCTOS</span>
-                                </div>
-                                <div class="product-status">● ACTIVO</div>
-                            </div>
-                            <div class="product-info">
-                                <div class="product-category">SPECIAL ENGINEERING</div>
-                                <h3 data-es="Ingenierías Especiales" data-en="Special Engineering">Ingenierías Especiales</h3>
-                                <p data-es="Proyectos de ingeniería especializada adaptados a las necesidades del cliente." data-en="Specialized engineering projects tailored to client needs.">Proyectos de ingeniería especializada adaptados a las necesidades del cliente.</p>
-                                <div class="product-footer">
-                                    <span class="product-id">PS-ING-001 · 100 productos</span>
-                                    <button class="product-detail">
-                                        <span data-es="VER CATÁLOGO" data-en="VIEW CATALOG">VER CATÁLOGO</span>
-                                        <b>→</b>
-                                    </button>
-                                </div>
-                            </div>
-                        </article>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-            <!-- ===================== ESTADO ===================== -->
-            <section class="section" id="estado">
-
-                <a href="index.html" class="back-home">
-                    <span class="arrow">←</span>
-                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
-                </a>
-
-                <div class="welcome" style="margin-bottom:22px;">
-                    <div class="eyebrow" data-es="Monitoreo" data-en="Monitoring">Monitoreo</div>
-                    <h1 data-es="Estado de sistemas" data-en="System status">Estado de sistemas</h1>
-                    <p data-es="Estado en tiempo real de tus sedes e instalaciones Protecta."
-                       data-en="Real-time status of your Protecta sites and facilities.">
-                        Estado en tiempo real de tus sedes e instalaciones Protecta.
-                    </p>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-kicker">LIVE STATUS</div>
-                            <h2 data-es="Sedes e instalaciones" data-en="Sites & facilities">Sedes e instalaciones</h2>
-                        </div>
-                        <div class="panel-actions">
-                            <button class="btn btn-ghost" data-es="Actualizar" data-en="Refresh">↻ Actualizar</button>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <table class="status-table">
-                            <thead>
-                                <tr>
-                                    <th data-es="Sede" data-en="Site">Sede</th>
-                                    <th data-es="Sistemas" data-en="Systems">Sistemas</th>
-                                    <th data-es="Estado" data-en="Status">Estado</th>
-                                    <th data-es="Última sync" data-en="Last sync">Última sync</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Sede Central</strong></td>
-                                    <td>Videovigilancia · Acceso · Sensores</td>
-                                    <td><span class="status-dot online"></span><span data-es="En línea" data-en="Online">En línea</span></td>
-                                    <td>14:32</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Sede Norte</strong></td>
-                                    <td>Videovigilancia · Acceso</td>
-                                    <td><span class="status-dot warning"></span><span data-es="Alerta" data-en="Alert">Alerta</span></td>
-                                    <td>14:28</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Sede Sur</strong></td>
-                                    <td>Videovigilancia · Red</td>
-                                    <td><span class="status-dot online"></span><span data-es="En línea" data-en="Online">En línea</span></td>
-                                    <td>14:31</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Almacén Industrial</strong></td>
-                                    <td>Sensores · Red</td>
-                                    <td><span class="status-dot online"></span><span data-es="En línea" data-en="Online">En línea</span></td>
-                                    <td>14:30</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Oficinas Administrativas</strong></td>
-                                    <td>Acceso · Sensores</td>
-                                    <td><span class="status-dot offline"></span><span data-es="Offline" data-en="Offline">Offline</span></td>
-                                    <td>12:05</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- ===================== SOPORTE ===================== -->
-            <section class="section" id="soporte">
-
-                <a href="index.html" class="back-home">
-                    <span class="arrow">←</span>
-                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
-                </a>
-
-                <div class="welcome" style="margin-bottom:22px;">
-                    <div class="eyebrow" data-es="Centro de ayuda" data-en="Help center">Centro de ayuda</div>
-                    <h1 data-es="Soporte" data-en="Support">Soporte</h1>
-                    <p data-es="Crea tickets, revisa el estado de tus solicitudes y contacta al equipo Protecta."
-                       data-en="Create tickets, check request status and contact the Protecta team.">
-                        Crea tickets, revisa el estado de tus solicitudes y contacta al equipo Protecta.
-                    </p>
-                </div>
-
-                <div style="margin-bottom:20px;">
-                    <button class="btn btn-primary" data-es="+ Nuevo ticket" data-en="+ New ticket">+ Nuevo ticket</button>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-header">
-                        <div>
-                            <div class="panel-kicker" data-es="Historial" data-en="History">Historial</div>
-                            <h2 data-es="Mis tickets" data-en="My tickets">Mis tickets</h2>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div class="ticket-list">
-
-                            <div class="ticket-item">
-                                <div class="ticket-priority high"></div>
-                                <div class="ticket-info">
-                                    <strong data-es="Cámara offline — Sede Norte" data-en="Camera offline — North site">Cámara offline — Sede Norte</strong>
-                                    <span>#TK-2841 · 22 Sep 2026 · 12:18</span>
-                                </div>
-                                <span class="ticket-status" data-es="Abierto" data-en="Open">Abierto</span>
-                            </div>
-
-                            <div class="ticket-item">
-                                <div class="ticket-priority medium"></div>
-                                <div class="ticket-info">
-                                    <strong data-es="Solicitud de usuario extra" data-en="Extra user request">Solicitud de usuario extra</strong>
-                                    <span>#TK-2830 · 21 Sep 2026 · 09:40</span>
-                                </div>
-                                <span class="ticket-status" data-es="En proceso" data-en="In progress">En proceso</span>
-                            </div>
-
-                            <div class="ticket-item">
-                                <div class="ticket-priority low"></div>
-                                <div class="ticket-info">
-                                    <strong data-es="Actualización de firmware — Sede Sur" data-en="Firmware update — South site">Actualización de firmware — Sede Sur</strong>
-                                    <span>#TK-2812 · 17 Sep 2026 · 16:05</span>
-                                </div>
-                                <span class="ticket-status closed" data-es="Cerrado" data-en="Closed">Cerrado</span>
-                            </div>
-
-                            <div class="ticket-item">
-                                <div class="ticket-priority low"></div>
-                                <div class="ticket-info">
-                                    <strong data-es="Consulta de facturación Q3" data-en="Q3 billing inquiry">Consulta de facturación Q3</strong>
-                                    <span>#TK-2798 · 10 Sep 2026 · 11:22</span>
-                                </div>
-                                <span class="ticket-status closed" data-es="Cerrado" data-en="Closed">Cerrado</span>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-
-            </section>
-
-            <!-- ===================== DOCUMENTOS ===================== -->
-            <section class="section" id="documentos">
-
-                <a href="index.html" class="back-home">
-                    <span class="arrow">←</span>
-                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
-                </a>
-
-                <div class="welcome" style="margin-bottom:22px;">
-                    <div class="eyebrow" data-es="Recursos" data-en="Resources">Recursos</div>
-                    <h1 data-es="Documentos" data-en="Documents">Documentos</h1>
-                    <p data-es="Manuales, guías, contratos y documentos de tus servicios Protecta."
-                       data-en="Manuals, guides, contracts and documents for your Protecta services.">
-                        Manuales, guías, contratos y documentos de tus servicios Protecta.
-                    </p>
-                </div>
-
-                <div class="docs-grid">
-
-                    <a href="#" class="doc-card">
-                        <div class="doc-icon">📄</div>
-                        <div class="doc-info">
-                            <strong data-es="Manual Videovigilancia" data-en="Video Surveillance Manual">Manual Videovigilancia</strong>
-                            <span>PDF · 2.4 MB</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="doc-card">
-                        <div class="doc-icon">📄</div>
-                        <div class="doc-info">
-                            <strong data-es="Guía Control de Acceso" data-en="Access Control Guide">Guía Control de Acceso</strong>
-                            <span>PDF · 1.8 MB</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="doc-card">
-                        <div class="doc-icon">📋</div>
-                        <div class="doc-info">
-                            <strong data-es="Contrato de servicio 2026" data-en="Service contract 2026">Contrato de servicio 2026</strong>
-                            <span>PDF · 890 KB</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="doc-card">
-                        <div class="doc-icon">🧾</div>
-                        <div class="doc-info">
-                            <strong data-es="Factura Sep 2026" data-en="Invoice Sep 2026">Factura Sep 2026</strong>
-                            <span>PDF · 320 KB</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="doc-card">
-                        <div class="doc-icon">⚙️</div>
-                        <div class="doc-info">
-                            <strong data-es="Guía de sensores" data-en="Sensors guide">Guía de sensores</strong>
-                            <span>PDF · 1.1 MB</span>
-                        </div>
-                    </a>
-
-                    <a href="#" class="doc-card">
-                        <div class="doc-icon">🔐</div>
-                        <div class="doc-info">
-                            <strong data-es="Política de privacidad" data-en="Privacy policy">Política de privacidad</strong>
-                            <span>PDF · 210 KB</span>
-                        </div>
-                    </a>
-
-                </div>
-
-            </section>
-
-            <!-- ===================== CUENTA ===================== -->
-            <section class="section" id="cuenta">
-
-                <a href="index.html" class="back-home">
-                    <span class="arrow">←</span>
-                    <span data-es="Cerrar sesión / Inicio" data-en="Sign out / Home">Cerrar sesión / Inicio</span>
-                </a>
-
-                <div class="welcome" style="margin-bottom:22px;">
-                    <div class="eyebrow" data-es="Configuración" data-en="Settings">Configuración</div>
-                    <h1 data-es="Mi Cuenta" data-en="My Account">Mi Cuenta</h1>
-                    <p data-es="Datos de la empresa, usuarios autorizados y preferencias."
-                       data-en="Company details, authorized users and preferences.">
-                        Datos de la empresa, usuarios autorizados y preferencias.
-                    </p>
-                </div>
-
-                <div class="account-grid">
-
-                    <div class="panel">
-                        <div class="panel-header">
-                            <div>
-                                <div class="panel-kicker" data-es="Empresa" data-en="Company">Empresa</div>
-                                <h2 data-es="Datos de la cuenta" data-en="Account details">Datos de la cuenta</h2>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label data-es="Razón social" data-en="Company name">Razón social</label>
-                                <input type="text" value="Industrias Delta S.A." disabled>
-                            </div>
-                            <div class="form-group">
-                                <label data-es="RFC / ID fiscal" data-en="Tax ID">RFC / ID fiscal</label>
-                                <input type="text" value="IDE850101XXX" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label data-es="Plan" data-en="Plan">Plan</label>
-                                <input type="text" value="Empresarial" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label data-es="Correo de contacto" data-en="Contact email">Correo de contacto</label>
-                                <input type="email" value="admin@industriasdelta.com">
-                            </div>
-                            <button class="btn btn-primary" style="margin-top:8px;"
-                                    data-es="Guardar cambios" data-en="Save changes">Guardar cambios</button>
-                        </div>
-                    </div>
-
-                    <div class="panel">
-                        <div class="panel-header">
-                            <div>
-                                <div class="panel-kicker" data-es="Seguridad" data-en="Security">Seguridad</div>
-                                <h2 data-es="Acceso y preferencias" data-en="Access & preferences">Acceso y preferencias</h2>
-                            </div>
-                        </div>
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label data-es="Usuario actual" data-en="Current user">Usuario actual</label>
-                                <input type="text" value="Juan Díaz" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label data-es="Idioma" data-en="Language">Idioma</label>
-                                <select id="accountLang">
-                                    <option value="es">Español</option>
-                                    <option value="en">English</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label data-es="Nueva contraseña" data-en="New password">Nueva contraseña</label>
-                                <input type="password" placeholder="••••••••">
-                            </div>
-                            <div class="form-group">
-                                <label data-es="Confirmar contraseña" data-en="Confirm password">Confirmar contraseña</label>
-                                <input type="password" placeholder="••••••••">
-                            </div>
-                            <button class="btn btn-primary" style="margin-top:8px;"
-                                    data-es="Actualizar contraseña" data-en="Update password">Actualizar contraseña</button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </section>
-
         </div>
 
-    </div>
+        <!-- INICIO -->
+        <section id="inicio" class="section-block active">
+            <h2>Bienvenido al Portal Cliente</h2>
+            <p>
+                Esta página web forma parte del <strong>proyecto académico Protecta Solutions</strong>,
+                desarrollado como trabajo final del curso de <strong>Programación de nivel secundaria</strong>.
+            </p>
+            <div class="academic-box">
+                <h3>¿Por qué se elaboró esta página?</h3>
+                <p style="margin:0;color:#c5d0de;">
+                    Se elaboró para demostrar de forma práctica el uso de HTML, CSS y JavaScript en un sistema real:
+                    un catálogo de productos de seguridad electrónica (alarmas, acceso, videovigilancia, fibra óptica, etc.),
+                    con vista para clientes y panel de administración para la empresa. El objetivo es aplicar lo aprendido
+                    en clase a un caso cercano a la industria.
+                </p>
+            </div>
+            <div class="academic-box">
+                <h3>Audiencia</h3>
+                <p style="margin:0;color:#c5d0de;">
+                    Está dirigida a <strong>estudiantes de secundaria</strong>, docentes evaluadores y, de forma simulada,
+                    a clientes de una empresa de soluciones de seguridad y tecnología.
+                </p>
+            </div>
+            <p>Usa el menú para ver productos, autoría, referencias, descargas y contacto. Síguenos en redes con los botones de arriba.</p>
+        </section>
 
+        <!-- PRODUCTOS -->
+        <section id="productos" class="section-block">
+            <div class="products-section" id="productosSection">
+                <div class="products-header" style="margin-bottom:16px;">
+                    <div>
+                        <div class="panel-kicker" style="color:#7dd3ff;font-size:16px;letter-spacing:1px;">PROTECTA SOLUTIONS</div>
+                        <h2 style="margin:6px 0;">Mis productos y soluciones</h2>
+                        <p style="color:#9aa6b8;font-size:20px;">9 líneas de producto. Haz clic en un catálogo para ver 10 artículos.</p>
+                    </div>
+                    <div class="products-counter" style="text-align:center;border:1px solid rgba(0,168,255,.25);padding:12px 18px;border-radius:10px;">
+                        <span style="font-size:16px;color:#7dd3ff;">CATALOG</span>
+                        <strong id="productCount" style="display:block;font-size:28px;">09</strong>
+                        <small style="font-size:16px;color:#8b97a8;">APARTADOS</small>
+                    </div>
+                </div>
+                <div class="products-filters" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+                    <button class="product-filter active" data-filter="all" style="padding:8px 14px;cursor:pointer;">TODOS</button>
+                    <button class="product-filter" data-filter="security" style="padding:8px 14px;cursor:pointer;">SEGURIDAD</button>
+                    <button class="product-filter" data-filter="technology" style="padding:8px 14px;cursor:pointer;">TECNOLOGÍA</button>
+                    <button class="product-filter" data-filter="network" style="padding:8px 14px;cursor:pointer;">REDES</button>
+                </div>
+                <div class="products-grid"></div>
+            </div>
+        </section>
+
+        <!-- AUTORÍA -->
+        <section id="autor" class="section-block">
+            <h2>Autoría del sitio</h2>
+            <div class="author-box">
+                <h3>Autor de la página web</h3>
+                <p style="margin:0 0 8px;color:#e8eef7;font-size:15px;">
+                    <strong>Estudiante de Programación — Proyecto Protecta Solutions</strong>
+                </p>
+                <p style="margin:0;color:#b7c2d0;">
+                    <strong>Estudios:</strong> Educación secundaria, curso de Programación.<br>
+                    <strong>Cargo / rol en el proyecto:</strong> Desarrollador del portal web (HTML, CSS y JavaScript).<br>
+                    <strong>Ocupación actual:</strong> Estudiante.<br>
+                    <strong>Institución:</strong> Proyecto escolar evaluado por la Mtra. Adilene Franco Biñuelo.
+                </p>
+            </div>
+            <div class="author-box">
+                <h3>Información de contacto</h3>
+                <p style="margin:0;color:#b7c2d0;">
+                    Correo académico: <a href="mailto:protecta.proyecto@escuela.edu" style="color:#7dd3ff;">protecta.proyecto@escuela.edu</a><br>
+                    WhatsApp escolar / demo: <a href="https://wa.me/qr/2MJRS5OEYLBPH1" style="color:#7dd3ff;" target="_blank" rel="noopener">+52 1 000 000 0000</a><br>
+                    Redes: usa los botones de Facebook, Instagram y WhatsApp en la barra superior.
+                </p>
+            </div>
+        </section>
+
+        <!-- OBJETIVO -->
+        <section id="objetivo" class="section-block">
+            <h2>Objetividad y propósito</h2>
+            <div class="academic-box">
+                <h3>Motivos de elaboración</h3>
+                <ul style="margin:0;padding-left:18px;color:#c5d0de;">
+                    <li>Aplicar HTML, CSS y JavaScript en un proyecto integral.</li>
+                    <li>Simular un portal real de empresa de seguridad electrónica (Protecta).</li>
+                    <li>Separar roles: vista de cliente (solo consulta) y vista de empresa (edición).</li>
+                    <li>Cumplir criterios de evaluación de página web académica.</li>
+                </ul>
+            </div>
+            <div class="academic-box">
+                <h3>Nivel educativo</h3>
+                <p style="margin:0;color:#c5d0de;">
+                    Contenido dirigido a <strong>nivel secundaria</strong>. Lenguaje accesible, enfoque práctico y demostración de habilidades de programación básica a intermedia.
+                </p>
+            </div>
+            <p style="color:#9aa6b8;">Este sitio <strong>no tiene fines comerciales ni publicidad pagada</strong>; es un trabajo escolar de demostración.</p>
+        </section>
+
+        <!-- REFERENCIAS -->
+        <section id="referencias" class="section-block">
+            <h2>Referencias y fuentes</h2>
+            <div class="refs-box">
+                <h3>Fuentes de información (citadas correctamente)</h3>
+                <ol style="margin:0;padding-left:18px;color:#c5d0de;font-size:18px;">
+                    <li>
+                        MDN Web Docs. (s. f.). <em>HTML: HyperText Markup Language</em>.
+                        Mozilla. <a href="https://developer.mozilla.org/es/docs/Web/HTML" target="_blank" rel="noopener" style="color:#7dd3ff;">https://developer.mozilla.org/es/docs/Web/HTML</a>
+                    </li>
+                    <li>
+                        MDN Web Docs. (s. f.). <em>CSS: Cascading Style Sheets</em>.
+                        Mozilla. <a href="https://developer.mozilla.org/es/docs/Web/CSS" target="_blank" rel="noopener" style="color:#7dd3ff;">https://developer.mozilla.org/es/docs/Web/CSS</a>
+                    </li>
+                    <li>
+                        MDN Web Docs. (s. f.). <em>JavaScript</em>.
+                        Mozilla. <a href="https://developer.mozilla.org/es/docs/Web/JavaScript" target="_blank" rel="noopener" style="color:#7dd3ff;">https://developer.mozilla.org/es/docs/Web/JavaScript</a>
+                    </li>
+                    <li>
+                        W3C. (s. f.). <em>Standards</em>. World Wide Web Consortium.
+                        <a href="https://www.w3.org/standards/" target="_blank" rel="noopener" style="color:#7dd3ff;">https://www.w3.org/standards/</a>
+                    </li>
+                    <li>
+                        Protecta Solutions — material interno del proyecto escolar (catálogo de productos de seguridad electrónica, 2026).
+                    </li>
+                </ol>
+            </div>
+            <p style="color:#9aa6b8;font-size:18px;">La misma información técnica general puede consultarse en otras páginas educativas (MDN, W3C). El diseño y el catálogo Protecta son de elaboración propia del estudiante.</p>
+        </section>
+
+        <!-- DESCARGAS -->
+        <section id="descargas" class="section-block">
+            <h2>Materiales para descargar</h2>
+            <div class="download-box">
+                <h3>Archivos del proyecto</h3>
+                <p style="color:#b7c2d0;margin:0 0 10px;">Puedes descargar materiales de apoyo del proyecto:</p>
+                <a href="catalog-shared.js" download>Descargar catálogo (JS)</a>
+                <a href="style.css" download>Descargar estilos (CSS)</a>
+                <a id="dlFicha" href="#" download="ficha-protecta.txt">Descargar ficha del proyecto (TXT)</a>
+            </div>
+            <p style="color:#9aa6b8;font-size:18px;">La ficha TXT se genera al hacer clic y resume autor, fechas y objetivo del sitio.</p>
+        </section>
+
+        <!-- CONTACTO -->
+        <section id="contacto" class="section-block">
+            <h2>Contacto y redes</h2>
+            <p>Para dudas sobre el proyecto escolar o la demo de Protecta:</p>
+            <div class="social-bar">
+                <a class="social-btn fb" href="https://www.facebook.com/share/1C7NciZYQc/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook</a>
+                <a class="social-btn ig" href="https://www.instagram.com/protecta.solutionsmx?obrf=MXRsY296Z20wYng5Ng==" target="_blank" rel="noopener">Instagram</a>
+                <a class="social-btn wa" href="https://wa.me/qr/2MJRS5OEYLBPH1" target="_blank" rel="noopener">WhatsApp</a>
+            </div>
+            <div class="author-box">
+                <p style="margin:0;color:#b7c2d0;">
+                    Correo: <a href="mailto:protecta.proyecto@escuela.edu" style="color:#7dd3ff;">protecta.proyecto@escuela.edu</a><br>
+                    Fecha de creación: <strong>02 de octubre de 2026</strong><br>
+                    Última actualización: <strong>14 de octubre de 2026</strong>
+                </p>
+            </div>
+        </section>
+    </main>
 </div>
 
 <script src="catalog-shared.js"></script>
 <script>
 (function () {
-    const portal = {
-        language: localStorage.getItem('protectaPortalLang') || 'es',
+    function showSection(id) {
+        document.querySelectorAll('.section-block').forEach(function (s) { s.classList.remove('active'); });
+        document.querySelectorAll('.nav-link').forEach(function (a) { a.classList.remove('active'); });
+        var sec = document.getElementById(id);
+        if (sec) sec.classList.add('active');
+        var link = document.querySelector('.nav-link[data-section="' + id + '"]');
+        if (link) link.classList.add('active');
+        if (id === 'productos') renderProducts();
+    }
 
-        init() {
-            this.setupNavigation();
-            this.setupLanguage();
-            this.setupMobileMenu();
-            this.setupProducts();
-            this.applyLanguage();
-            // Animate initial section in
-            const first = document.querySelector('.section.active');
-            if (first) {
-                requestAnimationFrame(() => {
-                    first.classList.add('is-visible');
-                });
+    document.querySelectorAll('.nav-link').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            e.preventDefault();
+            showSection(a.getAttribute('data-section'));
+        });
+    });
+
+    // Ficha descargable
+    document.getElementById('dlFicha').addEventListener('click', function (e) {
+        e.preventDefault();
+        var txt =
+            'PROYECTO PROTECTA SOLUTIONS\n' +
+            '============================\n' +
+            'Autor: Estudiante de Programación (secundaria)\n' +
+            'Curso: Programación — Examen / proyecto final\n' +
+            'Docente: Mtra. Adilene Franco Biñuelo\n' +
+            'Fecha de creación: 02/10/2026\n' +
+            'Última actualización: 14/10/2026\n' +
+            'Nivel educativo: Secundaria\n' +
+            'Objetivo: Demostrar HTML, CSS y JavaScript con un portal de catálogo\n' +
+            'de productos de seguridad (empresa + clientes).\n' +
+            'Sin fines comerciales ni publicidad pagada.\n';
+        var blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'ficha-protecta.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    function renderProducts() {
+        if (!window.ProtectaCatalog) return;
+        var section = document.getElementById('productosSection');
+        var grid = section.querySelector('.products-grid');
+        window.ProtectaCatalog.applyToDOM('es');
+        // Force fill this grid
+        var data = window.ProtectaCatalog.load();
+        grid.innerHTML = data.map(function (cat) {
+            return window.ProtectaCatalog.buildCategoryCardHTML(cat, 'es', { editable: false });
+        }).join('');
+        var counter = document.getElementById('productCount');
+        if (counter) counter.textContent = String(data.length).padStart(2, '0');
+
+        // Open catalog
+        if (section.dataset.bound !== '1') {
+            section.dataset.bound = '1';
+            var panel = document.getElementById('categoryCatalog');
+            if (!panel) {
+                panel = document.createElement('div');
+                panel.id = 'categoryCatalog';
+                panel.className = 'catalog-panel';
+                section.appendChild(panel);
             }
-        },
-
-        categoryCatalogs: {
-            "PS-ALM-001": { title: "Control de Alarmas", titleEn: "Alarm Control", items: [
-                ["Panel de alarma central PS-A100", "Central de monitoreo 32 zonas"],
-                ["Sensor magnético de puerta SM-12", "Contacto magnético cableado"],
-                ["Detector de movimiento PIR-90", "Infrarrojo pasivo interior"],
-                ["Sirena exterior SR-200", "120 dB con strobe LED"],
-                ["Teclado LED TK-45", "Armado/desarmado local"],
-                ["Módulo GSM/4G MG-8", "Aviso por celular y app"],
-                ["Sensor de rotura de cristal RG-3", "Acústico de alta sensibilidad"],
-                ["Botón de pánico BP-1", "Activación silenciosa"],
-                ["Fuente respaldada FR-5A", "Batería 12V incluida"],
-                ["Software de monitoreo SoftAlarm", "Supervisión multi-sitio"]
-            ]},
-            "PS-ACC-001": { title: "Control de Acceso", titleEn: "Access Control", items: [
-                ["Controlador de acceso CA-4", "Hasta 4 puertas"],
-                ["Lector de proximidad RFID RP-10", "Tarjetas y llaveros"],
-                ["Lector biométrico huella BF-2", "1:N hasta 3000 usuarios"],
-                ["Cerradura magnética CM-280", "Fuerza 280 kg"],
-                ["Torniquete de acceso TR-1", "Paso controlado peatonal"],
-                ["Tarjetas de proximidad pack 50", "MIFARE 13.56 MHz"],
-                ["Software Access Manager", "Usuarios, horarios y reportes"],
-                ["Botón de salida BE-01", "Liberación de puerta"],
-                ["Fuente de acceso FA-3A", "12V / 3A regulada"],
-                ["Videoportero IP VP-5", "Llamada y apertura remota"]
-            ]},
-            "PS-FIR-001": { title: "Detección de Incendios", titleEn: "Fire Detection", items: [
-                ["Central de detección CD-64", "Hasta 64 detectores"],
-                ["Detector de humo fotoeléctrico DH-1", "Techo interior"],
-                ["Detector de calor termovelocimétrico DT-2", "Ambientes industriales"],
-                ["Detector combinado humo/calor DC-3", "Doble tecnología"],
-                ["Estación manual de alarma EM-1", "Ruptura de vidrio"],
-                ["Módulo de supervisión MS-4", "Líneas y dispositivos"],
-                ["Sirena visual-auditiva SVA-10", "Estroboscópica roja"],
-                ["Cable resistente al fuego RF-2x1.5", "100 m bobina"],
-                ["Repetidor de señal RS-F", "Amplificación de lazo"],
-                ["Software FireView", "Mapa y eventos en tiempo real"]
-            ]},
-            "PS-AUT-001": { title: "Automatizaciones", titleEn: "Automations", items: [
-                ["PLC de automatización PLC-S1", "Control de escenarios"],
-                ["Módulo relé inteligente MR-8", "8 salidas conmutadas"],
-                ["Sensor de ocupación SO-PIR", "Encendido automático"],
-                ["Actuador de persianas AP-24", "Motor 24V silencioso"],
-                ["Termostato inteligente TI-7", "Programación semanal"],
-                ["Gateway IoT GW-Pro", "Integración multi-protocolo"],
-                ["Dimmer LED DM-4C", "4 canales 0-10V"],
-                ["Contacto de ventana CV-WiFi", "Estado abierto/cerrado"],
-                ["App Control Center", "Escenas y automatismos"],
-                ["Hub de automatización HA-Core", "Orquestación local"]
-            ]},
-            "PS-VID-001": { title: "Videovigilancia", titleEn: "Video Surveillance", items: [
-                ["Cámara IP dome 4MP CD-4", "Interior, IR 30 m"],
-                ["Cámara bullet 5MP CB-5", "Exterior IP67"],
-                ["Cámara PTZ 20x CPTZ-20", "Zoom óptico y tracking"],
-                ["NVR 16 canales NVR-16", "Hasta 8TB × 2"],
-                ["Disco HDD vigilancia 4TB", "Escritura 24/7"],
-                ["Switch PoE 8 puertos SW-8", "Alimentación de cámaras"],
-                ["Analítica de video AI-V", "Personas, vehículos, intrusión"],
-                ["Monitor 27'' videowall", "Visualización multipantalla"],
-                ["Fuente UPS cámara UPS-C", "Respaldo 30 min"],
-                ["Cliente móvil ProtectaCam", "Vista remota segura"]
-            ]},
-            "PS-FIB-001": { title: "Fibra Óptica", titleEn: "Fiber Optics", items: [
-                ["Cable fibra monomodo FO-1K", "1 km bobina OS2"],
-                ["Cable fibra multimodo FO-MM", "OM3 300 m"],
-                ["Switch fibra 8 SFP SW-F8", "Gigabit óptico"],
-                ["Conversor media fibra-cobre MC-1", "RJ45 a SC"],
-                ["Patch cord SC/APC 3 m", "Conectorizado"],
-                ["Caja de empalme CE-24", "Hasta 24 fibras"],
-                ["ODF rack 1U ODF-12", "Distribución óptica"],
-                ["Fusionadora de fibra FF-Pro", "Empalme de precisión"],
-                ["Medidor OTDR OT-1", "Certificación de tendido"],
-                ["Transceiver SFP 1G SX", "Multimodo 850 nm"]
-            ]},
-            "PS-HVA-001": { title: "(HVAC) Aire Acondicionado", titleEn: "(HVAC) Air Conditioning", items: [
-                ["Unidad interior split UI-12", "12,000 BTU inverter"],
-                ["Unidad exterior UE-18", "18,000 BTU R32"],
-                ["Cassette de techo CT-24", "24,000 BTU 4 vías"],
-                ["Termostato de zona TZ-WiFi", "Control por app"],
-                ["Sensor de CO2 ambiental SC-2", "Calidad de aire"],
-                ["Válvula modulante VM-3", "Control de caudal"],
-                ["Filtro HEPA repuesto FH-1", "Alta eficiencia"],
-                ["Control central HVAC-Core", "Multi-zona BMS"],
-                ["Detector de fugas de gas DF-G", "Seguridad de equipo"],
-                ["Mantenimiento programado pack", "Plan anual preventivo"]
-            ]},
-            "PS-PCI-001": { title: "(PCI) Protección Contra Incendios", titleEn: "(PCI) Fire Protection Systems", items: [
-                ["Rociador automático RA-68", "Temperatura 68 °C"],
-                ["Válvula de gobierno VG-4", "Sistema húmedo"],
-                ["Extintor PQS 6 kg EX-6", "ABC multipropósito"],
-                ["Extintor CO2 5 kg EX-CO2", "Equipos eléctricos"],
-                ["Gabinete para manguera GM-1", "Carrete 30 m"],
-                ["Sistema de gas FM-200", "Salas técnicas"],
-                ["Bombas contra incendio BI-50", "50 HP diésel/eléctrica"],
-                ["Señalética fotoluminiscente SF-10", "Kit de evacuación"],
-                ["Detector de flujo de agua DF-A", "Supervisión de red"],
-                ["Central de bombeo CB-PCI", "Arranque automático"]
-            ]},
-            "PS-ING-001": { title: "Ingenierías Especiales", titleEn: "Special Engineering", items: [
-                ["Estudio de ingeniería de seguridad", "Diseño a medida"],
-                ["Proyecto de cableado estructurado", "Norma TIA/EIA"],
-                ["Integración BMS / SCADA", "Sistemas centralizados"],
-                ["Diseño de cuarto de control", "Layout y ergonomía"],
-                ["Auditoría de infraestructura", "Diagnóstico técnico"],
-                ["Plan de continuidad operativa", "Resiliencia del sitio"],
-                ["Comisionamiento de sistemas", "Pruebas y entrega"],
-                ["Capacitación técnica in-situ", "Operadores y mantenedores"],
-                ["Documentación as-built", "Planos y manuales"],
-                ["Soporte de ingeniería especializada", "Acompañamiento de obra"]
-            ]}
-        },
-
-        setupProducts() {
-            // Always reset open-catalog state so grid is visible
-            document.querySelectorAll('.products-section').forEach(function (s) {
-                s.classList.remove('catalog-open');
-            });
-            const oldPanel = document.getElementById('categoryCatalog');
-            if (oldPanel) {
-                oldPanel.classList.remove('open');
-            }
-
-            if (window.ProtectaCatalog) {
-                this.categoryCatalogs = window.ProtectaCatalog.toCatalogsMap();
-                window.ProtectaCatalog.applyToDOM(this.language || 'es');
-            } else {
-                console.warn('ProtectaCatalog no cargó — revisa catalog-shared.js');
-            }
-
-            const filters = document.querySelectorAll('.product-filter');
-            const products = document.querySelectorAll('#productos .product-card');
-            const counter = document.getElementById('productCount');
-
-            if (!filters.length || !products.length) return;
-
-            filters.forEach(filter => {
-                filter.addEventListener('click', () => {
-                    filters.forEach(b => b.classList.remove('active'));
-                    filter.classList.add('active');
-
-                    const category = filter.dataset.filter;
-                    let visible = 0;
-
-                    products.forEach(product => {
-                        const show = category === 'all' || product.dataset.category === category;
-                        product.classList.toggle('product-hidden', !show);
-                        if (show) visible++;
-                    });
-
-                    if (counter) {
-                        counter.textContent = String(visible).padStart(2, '0');
-                    }
-
-                    const panel = document.getElementById('categoryCatalog');
-                    if (panel) panel.classList.remove('open');
-                });
-            });
-
-            let catalogPanel = document.getElementById('categoryCatalog');
-            const productsSection = document.querySelector('#productos .products-section');
-            if (!catalogPanel && productsSection) {
-                catalogPanel = document.createElement('div');
-                catalogPanel.id = 'categoryCatalog';
-                catalogPanel.className = 'catalog-panel';
-                productsSection.appendChild(catalogPanel);
-            }
-
-            const openCatalog = (code, card) => {
-                if (!catalogPanel) return;
-                if (window.ProtectaCatalog) this.categoryCatalogs = window.ProtectaCatalog.toCatalogsMap();
-                const fullCat = window.ProtectaCatalog ? window.ProtectaCatalog.getByCode(code) : null;
-                const catalog = this.categoryCatalogs[code];
-                if (!catalog) {
-                    catalogPanel.classList.remove('open');
-                    return;
-                }
-
-                document.querySelectorAll('.product-card.catalog-active').forEach(c => c.classList.remove('catalog-active'));
-                if (card) card.classList.add('catalog-active');
-
-                const productsSection = document.querySelector('#productos .products-section');
-                if (productsSection) productsSection.classList.add('catalog-open');
-
-                const lang = this.language || 'es';
-                const title = lang === 'en' ? catalog.titleEn : catalog.title;
-                const closeLabel = lang === 'en' ? '← BACK TO CATALOGS' : '← VOLVER A CATÁLOGOS';
-                const statusLabel = lang === 'en' ? 'AVAILABLE' : 'DISPONIBLE';
-                const label = (fullCat && fullCat.label) || 'ITEM';
-                const categoryLabel = (fullCat && fullCat.categoryLabel) || code;
-                const catImage = (fullCat && fullCat.image) || null;
-
-                let listHtml = '';
-                catalog.items.forEach((item, i) => {
-                    const n = String(i + 1).padStart(2, '0');
-                    const itemCode = code + '-' + n;
-                    const photoHtml = catImage
-                        ? `<img class="product-photo-img" src="${catImage}" alt="">`
-                        : '';
-                    const hasPhoto = catImage ? ' has-photo' : '';
-
-                    listHtml +=
-                        `<article class="product-card${hasPhoto}" data-item-index="${i}">` +
-                        `<div class="product-image">` +
-                        photoHtml +
-                        `<div class="product-image-grid"></div>` +
-                        `<div class="product-placeholder">` +
-                        `<span class="product-code">${itemCode}</span>` +
-                        `<strong>${label}</strong>` +
-                        `<span>PRODUCTO ${n}</span>` +
-                        `</div>` +
-                        `<div class="product-status">● ${statusLabel}</div>` +
-                        `</div>` +
-                        `<div class="product-info">` +
-                        `<div class="product-category">${categoryLabel}</div>` +
-                        `<h3>${item[0]}</h3>` +
-                        `<p>${item[1]}</p>` +
-                        `<div class="product-footer">` +
-                        `<span class="product-id">${itemCode}</span>` +
-                        `<span class="product-detail"><span>${lang === 'en' ? 'VIEW' : 'VER'}</span><b>→</b></span>` +
-                        `</div></div></article>`;
-                });
-
-                catalogPanel.innerHTML =
-                    `<div class="catalog-panel-header"><div><div class="catalog-code">${code} · 10 productos</div><h3>${title}</h3></div>` +
-                    `<button type="button" class="catalog-close" id="catalogCloseBtn">${closeLabel}</button></div>` +
-                    `<div class="catalog-list products-grid">${listHtml}</div>`;
-
-                catalogPanel.classList.add('open');
-
-                const closeBtn = document.getElementById('catalogCloseBtn');
-                if (closeBtn) {
-                    closeBtn.addEventListener('click', () => {
-                        catalogPanel.classList.remove('open');
-                        if (productsSection) productsSection.classList.remove('catalog-open');
-                        document.querySelectorAll('.product-card.catalog-active').forEach(c => c.classList.remove('catalog-active'));
-                    });
-                }
-
-                setTimeout(() => catalogPanel.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
-            };
-
-            // Event delegation so rebuilt cards keep working
-            const prodSection = document.querySelector('#productos .products-section');
-            if (prodSection && prodSection.dataset.boundDetail !== '1') {
-                prodSection.dataset.boundDetail = '1';
-                prodSection.addEventListener('click', (e) => {
-                    const button = e.target.closest('.products-grid > .product-card .product-detail');
-                    if (!button) return;
-                    e.preventDefault();
-                    e.stopPropagation();
-                    const card = button.closest('.product-card');
-                    if (!card) return;
-                    const code = card.dataset.code || (card.querySelector('.product-code') || {}).textContent.trim();
-
-                    if (card.classList.contains('catalog-active') && catalogPanel && catalogPanel.classList.contains('open')) {
-                        catalogPanel.classList.remove('open');
-                        prodSection.classList.remove('catalog-open');
-                        card.classList.remove('catalog-active');
-                        return;
-                    }
-
-                    openCatalog(code, card);
-                });
-            }
-        },
-
-        setupNavigation() {
-            document.querySelectorAll('.nav-item[data-section]').forEach(item => {
-                item.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const section = item.dataset.section;
-                    this.showSection(section);
-                });
-            });
-
-            document.querySelectorAll('[data-section-link]').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    this.showSection(btn.dataset.sectionLink);
-                });
-            });
-
-            const btnVerTodos = document.getElementById('btnVerTodos');
-            if (btnVerTodos) {
-                btnVerTodos.addEventListener('click', () => {
-                    this.showSection('productos');
-                });
-            }
-        },
-
-        showSection(id) {
-            const next = document.getElementById(id);
-            if (!next) return;
-            if (id === 'productos' && window.ProtectaCatalog) {
-                document.querySelectorAll('#productos .products-section').forEach(function (s) {
-                    s.classList.remove('catalog-open');
-                });
-                window.ProtectaCatalog.applyToDOM(this.language || 'es');
-                // re-bind is already delegated
-            }
-
-            const current = document.querySelector('.section.active');
-            const nav = document.querySelector(`.nav-item[data-section="${id}"]`);
-
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if (nav) nav.classList.add('active');
-
-            document.getElementById('sidebar')?.classList.remove('open');
-            document.getElementById('sidebarOverlay')?.classList.remove('open');
-
-            // Same section — no transition needed
-            if (current === next) {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                return;
-            }
-
-            const reveal = () => {
-                next.classList.add('active');
-                // force reflow so transition runs
-                void next.offsetWidth;
-                next.classList.add('is-visible');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
-
-            if (current) {
-                current.classList.remove('is-visible');
-                current.classList.add('is-leaving');
-                setTimeout(() => {
-                    current.classList.remove('active', 'is-leaving');
-                    reveal();
-                }, 580);
-            } else {
-                reveal();
-            }
-        },
-
-        setupLanguage() {
-            const btn = document.getElementById('langBtn');
-            if (!btn) return;
-
-            btn.addEventListener('click', () => {
-                this.language = this.language === 'es' ? 'en' : 'es';
-                localStorage.setItem('protectaPortalLang', this.language);
-                this.applyLanguage();
-            });
-
-            const accountLang = document.getElementById('accountLang');
-            if (accountLang) {
-                accountLang.value = this.language;
-                accountLang.addEventListener('change', () => {
-                    this.language = accountLang.value;
-                    localStorage.setItem('protectaPortalLang', this.language);
-                    this.applyLanguage();
-                });
-            }
-        },
-
-        applyLanguage() {
-            const lang = this.language;
-
-            document.querySelectorAll('[data-es]').forEach(el => {
-                const text = el.getAttribute(`data-${lang}`);
-                if (text !== null) el.textContent = text;
-            });
-
-            document.querySelectorAll('[data-placeholder-es]').forEach(el => {
-                const ph = el.getAttribute(`data-placeholder-${lang}`);
-                if (ph) el.placeholder = ph;
-            });
-
-            const btn = document.getElementById('langBtn');
-            if (btn) btn.textContent = lang === 'es' ? '🇪🇸 ES' : '🇺🇸 EN';
-
-            const accountLang = document.getElementById('accountLang');
-            if (accountLang) accountLang.value = lang;
-        },
-
-        setupMobileMenu() {
-            const toggle = document.getElementById('menuToggle');
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-
-            if (!toggle || !sidebar) return;
-
-            toggle.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                overlay?.classList.toggle('open');
-            });
-
-            overlay?.addEventListener('click', () => {
-                sidebar.classList.remove('open');
-                overlay.classList.remove('open');
+            section.addEventListener('click', function (e) {
+                if (e.target.closest('#categoryCatalog')) return;
+                var card = e.target.closest('.product-card');
+                if (!card || !grid.contains(card)) return;
+                e.preventDefault();
+                var code = (card.getAttribute('data-code') || '').trim();
+                if (!code) return;
+                var full = window.ProtectaCatalog.getByCode(code);
+                if (!full) return;
+                section.classList.add('catalog-open');
+                card.classList.add('catalog-active');
+                var items = full.items || [];
+                var list = items.map(function (item, i) {
+                    var n = String(i + 1).padStart(2, '0');
+                    var img = full.image ? '<img class="product-photo-img" src="' + full.image + '" alt="">' : '';
+                    return '<article class="product-card has-photo">' +
+                        '<div class="product-image">' + img +
+                        '<div class="product-image-grid"></div>' +
+                        '<div class="product-placeholder"><span class="product-code">' + code + '-' + n + '</span>' +
+                        '<strong>' + (full.label || 'ITEM') + '</strong><span>PRODUCTO ' + n + '</span></div>' +
+                        '<div class="product-status">● DISPONIBLE</div></div>' +
+                        '<div class="product-info"><div class="product-category">' + (full.categoryLabel || '') + '</div>' +
+                        '<h3>' + (item[0] || '') + '</h3><p>' + (item[1] || '') + '</p></div></article>';
+                }).join('');
+                panel.innerHTML =
+                    '<div class="catalog-panel-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;">' +
+                    '<div><div class="catalog-code" style="color:#7dd3ff;">' + code + ' · ' + items.length + ' productos</div>' +
+                    '<h3 style="margin:4px 0 0;color:#fff;">' + full.title + '</h3></div>' +
+                    '<button type="button" class="catalog-close" id="catalogCloseBtn">← VOLVER A CATÁLOGOS</button></div>' +
+                    '<div class="products-grid">' + list + '</div>';
+                panel.classList.add('open');
+                document.getElementById('catalogCloseBtn').onclick = function () {
+                    panel.classList.remove('open');
+                    panel.innerHTML = '';
+                    section.classList.remove('catalog-open');
+                    document.querySelectorAll('.catalog-active').forEach(function (c) { c.classList.remove('catalog-active'); });
+                };
             });
         }
-    };
 
-    // Función global para botones "Ver catálogo" / "Ver todos"
-    window.portalGoTo = function (sectionId) {
-        portal.showSection(sectionId);
-    };
+        document.querySelectorAll('.product-filter').forEach(function (f) {
+            f.onclick = function () {
+                document.querySelectorAll('.product-filter').forEach(function (b) { b.classList.remove('active'); });
+                f.classList.add('active');
+                var cat = f.getAttribute('data-filter');
+                var vis = 0;
+                grid.querySelectorAll('.product-card').forEach(function (p) {
+                    var show = cat === 'all' || p.getAttribute('data-category') === cat;
+                    p.style.display = show ? '' : 'none';
+                    if (show) vis++;
+                });
+                var c = document.getElementById('productCount');
+                if (c) c.textContent = String(vis).padStart(2, '0');
+            };
+        });
+    }
 
-    document.addEventListener('DOMContentLoaded', () => portal.init());
+    // Hash
+    if (location.hash === '#productos') showSection('productos');
 })();
 </script>
-
 </body>
 </html>

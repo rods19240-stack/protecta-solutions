@@ -4,7 +4,7 @@
  * y se reflejan automáticamente en Clientes.
  */
 (function (global) {
-    const STORAGE_KEY = "protectaProductData_v1";
+    const STORAGE_KEY = "protectaProductData_v4";
 
     const DEFAULT_CATEGORIES = [
         {
@@ -16,7 +16,7 @@
             titleEn: "Alarm Control",
             desc: "Sistemas de control y monitoreo de alarmas para protección de instalaciones.",
             descEn: "Alarm control and monitoring systems for facility protection.",
-            image: "img/producto-01.jpeg",
+            image: "img/cat-18.jpeg",
             items: [
                 ["Panel de alarma central PS-A100", "Central de monitoreo 32 zonas"],
                 ["Sensor magnético de puerta SM-12", "Contacto magnético cableado"],
@@ -39,7 +39,7 @@
             titleEn: "Access Control",
             desc: "Sistemas de control y gestión de accesos para instalaciones empresariales.",
             descEn: "Access control and management systems for enterprise facilities.",
-            image: "img/producto-02.jpeg",
+            image: "img/cat-08.jpeg",
             items: [
                 ["Controlador de acceso CA-4", "Hasta 4 puertas"],
                 ["Lector de proximidad RFID RP-10", "Tarjetas y llaveros"],
@@ -62,7 +62,7 @@
             titleEn: "Fire Detection",
             desc: "Sistemas de detección temprana de incendios y alertas en tiempo real.",
             descEn: "Early fire detection systems and real-time alerts.",
-            image: "img/producto-03.jpeg",
+            image: "img/cat-15.jpeg",
             items: [
                 ["Central de detección CD-64", "Hasta 64 detectores"],
                 ["Detector de humo fotoeléctrico DH-1", "Techo interior"],
@@ -85,7 +85,7 @@
             titleEn: "Automations",
             desc: "Soluciones de automatización inteligente para edificios e instalaciones.",
             descEn: "Intelligent automation solutions for buildings and facilities.",
-            image: "img/producto-04.jpeg",
+            image: "img/cat-22.jpeg",
             items: [
                 ["PLC de automatización PLC-S1", "Control de escenarios"],
                 ["Módulo relé inteligente MR-8", "8 salidas conmutadas"],
@@ -108,7 +108,7 @@
             titleEn: "Video Surveillance",
             desc: "Sistema inteligente para monitoreo y análisis de espacios en tiempo real.",
             descEn: "Intelligent system for real-time space monitoring and analysis.",
-            image: "img/producto-05.jpeg",
+            image: "img/cat-01.jpeg",
             items: [
                 ["Cámara IP dome 4MP CD-4", "Interior, IR 30 m"],
                 ["Cámara bullet 5MP CB-5", "Exterior IP67"],
@@ -131,7 +131,7 @@
             titleEn: "Fiber Optics",
             desc: "Infraestructura de fibra óptica para conectividad de alta velocidad.",
             descEn: "Fiber optic infrastructure for high-speed connectivity.",
-            image: "img/producto-06.jpeg",
+            image: "img/cat-02.jpeg",
             items: [
                 ["Cable fibra monomodo FO-1K", "1 km bobina OS2"],
                 ["Cable fibra multimodo FO-MM", "OM3 300 m"],
@@ -154,7 +154,7 @@
             titleEn: "(HVAC) Air Conditioning",
             desc: "Sistemas de climatización y control de aire acondicionado para espacios críticos.",
             descEn: "Climate control and air conditioning systems for critical spaces.",
-            image: "img/producto-07.jpeg",
+            image: "img/cat-24.jpeg",
             items: [
                 ["Unidad interior split UI-12", "12,000 BTU inverter"],
                 ["Unidad exterior UE-18", "18,000 BTU R32"],
@@ -177,7 +177,7 @@
             titleEn: "(PCI) Fire Protection Systems",
             desc: "Sistemas de protección contra incendios: extinción, rociadores y seguridad pasiva.",
             descEn: "Fire protection systems: suppression, sprinklers and passive safety.",
-            image: "img/producto-08.jpeg",
+            image: "img/cat-27.jpeg",
             items: [
                 ["Rociador automático RA-68", "Temperatura 68 °C"],
                 ["Válvula de gobierno VG-4", "Sistema húmedo"],
@@ -200,7 +200,7 @@
             titleEn: "Special Engineering",
             desc: "Proyectos de ingeniería especializada adaptados a las necesidades del cliente.",
             descEn: "Specialized engineering projects tailored to client needs.",
-            image: "img/producto-09.jpeg",
+            image: "img/cat-16.jpeg",
             items: [
                 ["Estudio de ingeniería de seguridad", "Diseño a medida"],
                 ["Proyecto de cableado estructurado", "Norma TIA/EIA"],
