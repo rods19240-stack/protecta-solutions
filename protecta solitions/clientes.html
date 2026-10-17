@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#05070d">
+    <meta name="author" content="Estudiante de Programación — Proyecto Protecta Solutions">
+    <meta name="description" content="Portal cliente de Protecta Solutions. Catálogo de productos de seguridad y tecnología. Proyecto académico de programación a nivel secundaria.">
+    <meta name="keywords" content="Protecta, seguridad, alarmas, videovigilancia, catálogo, proyecto escolar">
+    <title>Protecta Solutions | Portal Cliente</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { font-size: 16px; line-height: 1.55; }
+        .client-shell { display: flex; min-height: 100vh; background: #05070d; color: #e8eef7; }
+        .client-side {
+            width: 260px; background: linear-gradient(180deg,#080b13,#05070d);
+            border-right: 1px solid rgba(255,255,255,.08); padding: 22px 16px;
+            display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 20;
+        }
+        .client-side .brand-logo { width: 200px; max-width: 100%; height: auto; }
+        .client-nav a {
+            display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-radius: 10px;
+            color: #9aa6b8; text-decoration: none; font-size: 18px; margin-bottom: 4px;
+        }
+        .client-nav a.active, .client-nav a:hover { background: rgba(0,168,255,.15); color: #fff; }
+        .client-main { margin-left: 260px; flex: 1; padding: 18px 24px 40px; }
+        .client-top {
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+            margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+        .session-exit {
+            display: inline-flex; align-items: center; gap: 8px; padding: 10px 14px;
+            border: 1px solid rgba(0,168,255,.35); border-radius: 10px; color: #cfe9ff;
+            text-decoration: none; font-size: 17px; background: rgba(0,168,255,.08);
+        }
+        .social-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 14px 0; }
+        .social-btn {
+            display: inline-flex; align-items: center; gap: 8px; padding: 11px 16px;
+            border-radius: 10px; text-decoration: none; font-size: 18px; font-weight: 600;
+            border: 1px solid rgba(255,255,255,.12); color: #fff; transition: .2s;
+        }
+        .social-btn.fb { background: #1877f2; }
+        .social-btn.ig { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+        .social-btn.wa { background: #25d366; color: #062; }
+        .social-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
+        .section-block {
+            display: none; background: rgba(8,14,24,.85); border: 1px solid rgba(0,168,255,.15);
+            border-radius: 14px; padding: 22px; margin-bottom: 18px;
+        }
+        .section-block.active { display: block; }
+        .section-block h2 { font-size: 30px; margin: 0 0 10px; color: #fff; }
+        .section-block p, .section-block li { font-size: 20px; color: #b7c2d0; line-height: 1.6; }
+        .academic-box, .author-box, .refs-box, .download-box, .dates-box {
+            background: rgba(0,20,40,.45); border: 1px solid rgba(0,168,255,.2);
+            border-radius: 12px; padding: 16px 18px; margin: 14px 0; font-size: 18px;
+        }
+        .academic-box h3, .author-box h3, .refs-box h3, .download-box h3 { color: #7dd3ff; font-size: 20px; margin: 0 0 8px; }
+        .download-box a {
+            display: inline-block; margin: 6px 8px 6px 0; padding: 10px 14px;
+            background: rgba(0,168,255,.15); border: 1px solid rgba(0,168,255,.4);
+            border-radius: 8px; color: #cfe9ff; text-decoration: none; font-size: 18px;
+        }
+        .product-photo-img {
+            position: absolute; inset: 0; width: 100%; height: 100%;
+            object-fit: cover; opacity: 0.42; z-index: 1; pointer-events: none;
+        }
+        .product-image::after { z-index: 5 !important; opacity: .85 !important; height: 2px !important; }
+        .product-info h3 { font-size: 24px !important; }
+        .product-info p { font-size: 18px !important; }
+        .catalog-panel { display: none; margin-top: 18px; }
+        .catalog-panel.open { display: block !important; }
+        .products-section.catalog-open > .products-grid,
+        .products-section.catalog-open > .products-filters { display: none; }
+        .catalog-close {
+            padding: 12px 18px; border: 1px solid rgba(0,168,255,.45);
+            background: rgba(0,168,255,.12); color: #fff; font-size: 17px;
+            font-weight: 700; cursor: pointer; border-radius: 8px;
+        }
+        @media (max-width: 850px) {
+            .client-side { position: relative; width: 100%; height: auto; }
+            .client-main { margin-left: 0; }
+            .client-shell { flex-direction: column; }
+        }
+    
+        /* Tipografía clientes: PC normal, cel un poco más grande */
+        body { font-size: 16px; line-height: 1.55; }
+        .client-nav a, .nav-link { font-size: 15px; }
+        .section-block h2 { font-size: 24px; }
+        .section-block p, .section-block li { font-size: 16px; }
+        .product-info h3 { font-size: 18px; }
+        .product-info p { font-size: 15px; }
+        .social-btn { font-size: 15px; padding: 12px 16px; white-space: normal; overflow-wrap: anywhere; }
+        button, .btn, input, textarea {
+            box-sizing: border-box; max-width: 100%;
+            white-space: normal; overflow-wrap: anywhere; word-break: break-word;
+        }
+        @media (max-width: 850px) {
+            body, .client-shell, .client-main, .section-block {
+                font-size: 18px !important;
+                line-height: 1.6 !important;
+            }
+            .client-nav a, .nav-link { font-size: 17px !important; }
+            .section-block h2 { font-size: 18px !important; }
+            .section-block p, .section-block li, .academic-box p, .author-box p {
+                font-size: 18px !important;
+            }
+            .product-info h3 { font-size: 20px !important; }
+            .product-info p { font-size: 17px !important; }
+            .social-btn { font-size: 16px !important; }
+            small, .panel-kicker { font-size: 15px !important; }
+            input, textarea, button, .btn {
+                width: 100%; max-width: 100%;
+                font-size: 17px !important;
+                padding: 0.7em 0.9em !important;
+            }
+        }
+</style>
+</head>
+<body>
+<div class="client-shell">
+    <aside class="client-side">
+        <div class="brand" style="margin-bottom:16px;">
+            <img src="img/protecta-logo-transparent.png" alt="Protecta Solutions" class="brand-logo"
+                 onerror="this.src='protecta-logo-transparent.png'">
+            <div style="font-size:16px;color:#7dd3ff;margin-top:6px;letter-spacing:1px;">PORTAL CLIENTE</div>
+        </div>
+        <nav class="client-nav">
+            <a href="#inicio" class="nav-link active" data-section="inicio">⌂ Inicio</a>
+            <a href="#productos" class="nav-link" data-section="productos">▣ Mis Productos</a>
+            <a href="#autor" class="nav-link" data-section="autor">👤 Autoría</a>
+            <a href="#objetivo" class="nav-link" data-section="objetivo">◎ Objetivo</a>
+            <a href="#referencias" class="nav-link" data-section="referencias">▦ Referencias</a>
+            <a href="#descargas" class="nav-link" data-section="descargas">↓ Descargas</a>
+            <a href="#contacto" class="nav-link" data-section="contacto">✉ Contacto</a>
+        </nav>
+        <div style="margin-top:auto;padding-top:16px;">
+            <div class="dates-box" style="font-size:16px;color:#8b97a8;">
+                <div><strong style="color:#7dd3ff;">Creación:</strong> 02/10/2026</div>
+                <div><strong style="color:#7dd3ff;">Última actualización:</strong> 14/10/2026</div>
+                <div style="margin-top:6px;">Nivel educativo: <strong style="color:#fff;">Secundaria</strong></div>
+            </div>
+            <a href="index.html" class="session-exit" style="margin-top:12px;width:100%;justify-content:center;">← Cerrar sesión / Inicio</a>
+        </div>
+    </aside>
+
+    <main class="client-main">
+        <div class="client-top">
+            <div style="font-size:18px;letter-spacing:1px;color:#7dd3ff;">PROTECTA / PORTAL CLIENTE</div>
+            <div class="social-bar" style="margin:0;">
+                <a class="social-btn fb" href="https://www.facebook.com/share/1C7NciZYQc/?mibextid=wwXIfr" target="_blank" rel="noopener" title="Facebook de Protecta">f Facebook</a>
+                <a class="social-btn ig" href="https://www.instagram.com/protecta.solutionsmx?obrf=MXRsY296Z20wYng5Ng==" target="_blank" rel="noopener" title="Instagram de Protecta">Instagram</a>
+                <a class="social-btn wa" href="https://wa.me/qr/2MJRS5OEYLBPH1" target="_blank" rel="noopener" title="WhatsApp de Protecta">WhatsApp</a>
+            </div>
+        </div>
+
+        <!-- INICIO -->
+        <section id="inicio" class="section-block active">
+            <h2>Bienvenido al Portal Cliente</h2>
+            <p>
+                Esta página web forma parte del <strong>proyecto académico Protecta Solutions</strong>,
+                desarrollado como trabajo final del curso de <strong>Programación de nivel secundaria</strong>.
+            </p>
+            <div class="academic-box">
+                <h3>¿Por qué se elaboró esta página?</h3>
+                <p style="margin:0;color:#c5d0de;">
+                    Se elaboró para demostrar de forma práctica el uso de HTML, CSS y JavaScript en un sistema real:
+                    un catálogo de productos de seguridad electrónica (alarmas, acceso, videovigilancia, fibra óptica, etc.),
+                    con vista para clientes y panel de administración para la empresa. El objetivo es aplicar lo aprendido
+                    en clase a un caso cercano a la industria.
+                </p>
+            </div>
+            <div class="academic-box">
+                <h3>Audiencia</h3>
+                <p style="margin:0;color:#c5d0de;">
+                    Está dirigida a <strong>estudiantes de secundaria</strong>, docentes evaluadores y, de forma simulada,
+                    a clientes de una empresa de soluciones de seguridad y tecnología.
+                </p>
+            </div>
+            <p>Usa el menú para ver productos, autoría, referencias, descargas y contacto. Síguenos en redes con los botones de arriba.</p>
+        </section>
+
+        <!-- PRODUCTOS -->
+        <section id="productos" class="section-block">
+            <div class="products-section" id="productosSection">
+                <div class="products-header" style="margin-bottom:16px;">
+                    <div>
+                        <div class="panel-kicker" style="color:#7dd3ff;font-size:16px;letter-spacing:1px;">PROTECTA SOLUTIONS</div>
+                        <h2 style="margin:6px 0;">Mis productos y soluciones</h2>
+                        <p style="color:#9aa6b8;font-size:20px;">9 líneas de producto. Haz clic en un catálogo para ver 10 artículos.</p>
+                    </div>
+                    <div class="products-counter" style="text-align:center;border:1px solid rgba(0,168,255,.25);padding:12px 18px;border-radius:10px;">
+                        <span style="font-size:16px;color:#7dd3ff;">CATALOG</span>
+                        <strong id="productCount" style="display:block;font-size:28px;">09</strong>
+                        <small style="font-size:16px;color:#8b97a8;">APARTADOS</small>
+                    </div>
+                </div>
+                <div class="products-filters" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+                    <button class="product-filter active" data-filter="all" style="padding:8px 14px;cursor:pointer;">TODOS</button>
+                    <button class="product-filter" data-filter="security" style="padding:8px 14px;cursor:pointer;">SEGURIDAD</button>
+                    <button class="product-filter" data-filter="technology" style="padding:8px 14px;cursor:pointer;">TECNOLOGÍA</button>
+                    <button class="product-filter" data-filter="network" style="padding:8px 14px;cursor:pointer;">REDES</button>
+                </div>
+                <div class="products-grid"></div>
+            </div>
+        </section>
+
+        <!-- AUTORÍA -->
+        <section id="autor" class="section-block">
+            <h2>Autoría del sitio</h2>
+            <div class="author-box">
+                <h3>Autor de la página web</h3>
+                <p style="margin:0 0 8px;color:#e8eef7;font-size:15px;">
+                    <strong>Estudiante de Programación — Proyecto Protecta Solutions</strong>
+                </p>
+                <p style="margin:0;color:#b7c2d0;">
+                    <strong>Estudios:</strong> Educación secundaria, curso de Programación.<br>
+                    <strong>Cargo / rol en el proyecto:</strong> Desarrollador del portal web (HTML, CSS y JavaScript).<br>
+                    <strong>Ocupación actual:</strong> Estudiante.<br>
+                    <strong>Institución:</strong> Proyecto escolar evaluado por la Mtra. Adilene Franco Biñuelo.
+                </p>
+            </div>
+            <div class="author-box">
+                <h3>Información de contacto</h3>
+                <p style="margin:0;color:#b7c2d0;">
+                    Correo académico: <a href="mailto:protecta.proyecto@escuela.edu" style="color:#7dd3ff;">protecta.proyecto@escuela.edu</a><br>
+                    WhatsApp escolar / demo: <a href="https://wa.me/qr/2MJRS5OEYLBPH1" style="color:#7dd3ff;" target="_blank" rel="noopener">+52 1 000 000 0000</a><br>
+                    Redes: usa los botones de Facebook, Instagram y WhatsApp en la barra superior.
+                </p>
+            </div>
+        </section>
+
+        <!-- OBJETIVO -->
+        <section id="objetivo" class="section-block">
+            <h2>Objetividad y propósito</h2>
+            <div class="academic-box">
+                <h3>Motivos de elaboración</h3>
+                <ul style="margin:0;padding-left:18px;color:#c5d0de;">
+                    <li>Aplicar HTML, CSS y JavaScript en un proyecto integral.</li>
+                    <li>Simular un portal real de empresa de seguridad electrónica (Protecta).</li>
+                    <li>Separar roles: vista de cliente (solo consulta) y vista de empresa (edición).</li>
+                    <li>Cumplir criterios de evaluación de página web académica.</li>
+                </ul>
+            </div>
+            <div class="academic-box">
+                <h3>Nivel educativo</h3>
+                <p style="margin:0;color:#c5d0de;">
+                    Contenido dirigido a <strong>nivel secundaria</strong>. Lenguaje accesible, enfoque práctico y demostración de habilidades de programación básica a intermedia.
+                </p>
+            </div>
+            <p style="color:#9aa6b8;">Este sitio <strong>no tiene fines comerciales ni publicidad pagada</strong>; es un trabajo escolar de demostración.</p>
+        </section>
+
+        <!-- REFERENCIAS -->
+        <section id="referencias" class="section-block">
+            <h2>Referencias y fuentes</h2>
+            <div class="refs-box">
+                <h3>Fuentes de información (citadas correctamente)</h3>
+                <ol style="margin:0;padding-left:18px;color:#c5d0de;font-size:18px;">
+                    <li>
+                        MDN Web Docs. (s. f.). <em>HTML: HyperText Markup Language</em>.
+                        Mozilla. <a href="https://developer.mozilla.org/es/docs/Web/HTML" target="_blank" rel="noopener" style="color:#7dd3ff;">https://developer.mozilla.org/es/docs/Web/HTML</a>
+                    </li>
+                    <li>
+                        MDN Web Docs. (s. f.). <em>CSS: Cascading Style Sheets</em>.
+                        Mozilla. <a href="https://developer.mozilla.org/es/docs/Web/CSS" target="_blank" rel="noopener" style="color:#7dd3ff;">https://developer.mozilla.org/es/docs/Web/CSS</a>
+                    </li>
+                    <li>
+                        MDN Web Docs. (s. f.). <em>JavaScript</em>.
+                        Mozilla. <a href="https://developer.mozilla.org/es/docs/Web/JavaScript" target="_blank" rel="noopener" style="color:#7dd3ff;">https://developer.mozilla.org/es/docs/Web/JavaScript</a>
+                    </li>
+                    <li>
+                        W3C. (s. f.). <em>Standards</em>. World Wide Web Consortium.
+                        <a href="https://www.w3.org/standards/" target="_blank" rel="noopener" style="color:#7dd3ff;">https://www.w3.org/standards/</a>
+                    </li>
+                    <li>
+                        Protecta Solutions — material interno del proyecto escolar (catálogo de productos de seguridad electrónica, 2026).
+                    </li>
+                </ol>
+            </div>
+            <p style="color:#9aa6b8;font-size:18px;">La misma información técnica general puede consultarse en otras páginas educativas (MDN, W3C). El diseño y el catálogo Protecta son de elaboración propia del estudiante.</p>
+        </section>
+
+        <!-- DESCARGAS -->
+        <section id="descargas" class="section-block">
+            <h2>Materiales para descargar</h2>
+            <div class="download-box">
+                <h3>Archivos del proyecto</h3>
+                <p style="color:#b7c2d0;margin:0 0 10px;">Puedes descargar materiales de apoyo del proyecto:</p>
+                <a href="catalog-shared.js" download>Descargar catálogo (JS)</a>
+                <a href="style.css" download>Descargar estilos (CSS)</a>
+                <a id="dlFicha" href="#" download="ficha-protecta.txt">Descargar ficha del proyecto (TXT)</a>
+            </div>
+            <p style="color:#9aa6b8;font-size:18px;">La ficha TXT se genera al hacer clic y resume autor, fechas y objetivo del sitio.</p>
+        </section>
+
+        <!-- CONTACTO -->
+        <section id="contacto" class="section-block">
+            <h2>Contacto y redes</h2>
+            <p>Para dudas sobre el proyecto escolar o la demo de Protecta:</p>
+            <div class="social-bar">
+                <a class="social-btn fb" href="https://www.facebook.com/share/1C7NciZYQc/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook</a>
+                <a class="social-btn ig" href="https://www.instagram.com/protecta.solutionsmx?obrf=MXRsY296Z20wYng5Ng==" target="_blank" rel="noopener">Instagram</a>
+                <a class="social-btn wa" href="https://wa.me/qr/2MJRS5OEYLBPH1" target="_blank" rel="noopener">WhatsApp</a>
+            </div>
+            <div class="author-box">
+                <p style="margin:0;color:#b7c2d0;">
+                    Correo: <a href="mailto:protecta.proyecto@escuela.edu" style="color:#7dd3ff;">protecta.proyecto@escuela.edu</a><br>
+                    Fecha de creación: <strong>02 de octubre de 2026</strong><br>
+                    Última actualización: <strong>14 de octubre de 2026</strong>
+                </p>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script src="catalog-shared.js"></script>
+<script>
+(function () {
+    function showSection(id) {
+        document.querySelectorAll('.section-block').forEach(function (s) { s.classList.remove('active'); });
+        document.querySelectorAll('.nav-link').forEach(function (a) { a.classList.remove('active'); });
+        var sec = document.getElementById(id);
+        if (sec) sec.classList.add('active');
+        var link = document.querySelector('.nav-link[data-section="' + id + '"]');
+        if (link) link.classList.add('active');
+        if (id === 'productos') renderProducts();
+    }
+
+    document.querySelectorAll('.nav-link').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            e.preventDefault();
+            showSection(a.getAttribute('data-section'));
+        });
+    });
+
+    // Ficha descargable
+    document.getElementById('dlFicha').addEventListener('click', function (e) {
+        e.preventDefault();
+        var txt =
+            'PROYECTO PROTECTA SOLUTIONS\n' +
+            '============================\n' +
+            'Autor: Estudiante de Programación (secundaria)\n' +
+            'Curso: Programación — Examen / proyecto final\n' +
+            'Docente: Mtra. Adilene Franco Biñuelo\n' +
+            'Fecha de creación: 02/10/2026\n' +
+            'Última actualización: 14/10/2026\n' +
+            'Nivel educativo: Secundaria\n' +
+            'Objetivo: Demostrar HTML, CSS y JavaScript con un portal de catálogo\n' +
+            'de productos de seguridad (empresa + clientes).\n' +
+            'Sin fines comerciales ni publicidad pagada.\n';
+        var blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'ficha-protecta.txt';
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+
+    function renderProducts() {
+        if (!window.ProtectaCatalog) return;
+        var section = document.getElementById('productosSection');
+        var grid = section.querySelector('.products-grid');
+        window.ProtectaCatalog.applyToDOM('es');
+        // Force fill this grid
+        var data = window.ProtectaCatalog.load();
+        grid.innerHTML = data.map(function (cat) {
+            return window.ProtectaCatalog.buildCategoryCardHTML(cat, 'es', { editable: false });
+        }).join('');
+        var counter = document.getElementById('productCount');
+        if (counter) counter.textContent = String(data.length).padStart(2, '0');
+
+        // Open catalog
+        if (section.dataset.bound !== '1') {
+            section.dataset.bound = '1';
+            var panel = document.getElementById('categoryCatalog');
+            if (!panel) {
+                panel = document.createElement('div');
+                panel.id = 'categoryCatalog';
+                panel.className = 'catalog-panel';
+                section.appendChild(panel);
+            }
+            section.addEventListener('click', function (e) {
+                if (e.target.closest('#categoryCatalog')) return;
+                var card = e.target.closest('.product-card');
+                if (!card || !grid.contains(card)) return;
+                e.preventDefault();
+                var code = (card.getAttribute('data-code') || '').trim();
+                if (!code) return;
+                var full = window.ProtectaCatalog.getByCode(code);
+                if (!full) return;
+                section.classList.add('catalog-open');
+                card.classList.add('catalog-active');
+                var items = full.items || [];
+                var list = items.map(function (item, i) {
+                    var n = String(i + 1).padStart(2, '0');
+                    var img = full.image ? '<img class="product-photo-img" src="' + full.image + '" alt="">' : '';
+                    return '<article class="product-card has-photo">' +
+                        '<div class="product-image">' + img +
+                        '<div class="product-image-grid"></div>' +
+                        '<div class="product-placeholder"><span class="product-code">' + code + '-' + n + '</span>' +
+                        '<strong>' + (full.label || 'ITEM') + '</strong><span>PRODUCTO ' + n + '</span></div>' +
+                        '<div class="product-status">● DISPONIBLE</div></div>' +
+                        '<div class="product-info"><div class="product-category">' + (full.categoryLabel || '') + '</div>' +
+                        '<h3>' + (item[0] || '') + '</h3><p>' + (item[1] || '') + '</p></div></article>';
+                }).join('');
+                panel.innerHTML =
+                    '<div class="catalog-panel-header" style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;">' +
+                    '<div><div class="catalog-code" style="color:#7dd3ff;">' + code + ' · ' + items.length + ' productos</div>' +
+                    '<h3 style="margin:4px 0 0;color:#fff;">' + full.title + '</h3></div>' +
+                    '<button type="button" class="catalog-close" id="catalogCloseBtn">← VOLVER A CATÁLOGOS</button></div>' +
+                    '<div class="products-grid">' + list + '</div>';
+                panel.classList.add('open');
+                document.getElementById('catalogCloseBtn').onclick = function () {
+                    panel.classList.remove('open');
+                    panel.innerHTML = '';
+                    section.classList.remove('catalog-open');
+                    document.querySelectorAll('.catalog-active').forEach(function (c) { c.classList.remove('catalog-active'); });
+                };
+            });
+        }
+
+        document.querySelectorAll('.product-filter').forEach(function (f) {
+            f.onclick = function () {
+                document.querySelectorAll('.product-filter').forEach(function (b) { b.classList.remove('active'); });
+                f.classList.add('active');
+                var cat = f.getAttribute('data-filter');
+                var vis = 0;
+                grid.querySelectorAll('.product-card').forEach(function (p) {
+                    var show = cat === 'all' || p.getAttribute('data-category') === cat;
+                    p.style.display = show ? '' : 'none';
+                    if (show) vis++;
+                });
+                var c = document.getElementById('productCount');
+                if (c) c.textContent = String(vis).padStart(2, '0');
+            };
+        });
+    }
+
+    // Hash
+    if (location.hash === '#productos') showSection('productos');
+})();
+</script>
+</body>
+</html>
