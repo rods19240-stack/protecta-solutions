@@ -7059,3 +7059,163 @@ button, .btn, .primary-button, .secondary-button,
         padding: 0.7em 0.9em !important;
     }
 }
+
+/* ========== ORGANIZACIÓN MÓVIL (sin cambiar tamaño de letra) ========== */
+@media (max-width: 850px) {
+    .app {
+        display: flex !important;
+        flex-direction: column !important;
+        overflow-x: hidden !important;
+    }
+    .sidebar {
+        position: relative !important;
+        width: 100% !important;
+        min-height: auto !important;
+        height: auto !important;
+        padding: 12px 12px 8px !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--border);
+    }
+    .brand {
+        height: auto !important;
+        justify-content: center !important;
+        margin-bottom: 8px !important;
+    }
+    .brand-logo {
+        width: min(220px, 60vw) !important;
+        height: auto !important;
+        max-width: 100% !important;
+    }
+    .system-label {
+        text-align: center;
+        margin-bottom: 6px;
+    }
+    .navigation {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        gap: 4px !important;
+        padding: 6px 0 8px !important;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .navigation::-webkit-scrollbar { display: none; }
+    .nav-item {
+        flex: 0 0 auto !important;
+        white-space: nowrap !important;
+        padding: 10px 12px !important;
+        margin: 0 !important;
+        justify-content: center !important;
+    }
+    .sidebar-bottom {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+        margin-top: 8px !important;
+        justify-content: center !important;
+    }
+    .connection-card, .user-box {
+        display: none !important;
+    }
+    .main {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .topbar {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+        padding: 12px !important;
+    }
+    .top-actions {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .search {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+    }
+    .content {
+        padding: 12px !important;
+    }
+    .hero {
+        flex-direction: column !important;
+        padding: 20px 14px !important;
+        text-align: left !important;
+    }
+    .hero-logo-wrap, .hero-logo-img {
+        max-width: 180px !important;
+        margin: 12px auto 0 !important;
+        display: block !important;
+    }
+    .metrics {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+    .dashboard-grid, .bottom-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+    .products-header {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 12px !important;
+    }
+    .products-filters {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+    .product-filter {
+        flex: 1 1 calc(50% - 8px) !important;
+        text-align: center !important;
+    }
+    .products-grid {
+        grid-template-columns: 1fr !important;
+        gap: 14px !important;
+    }
+    .product-card {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    .catalog-panel-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+    }
+    .catalog-close {
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .session-exit, .session-exit-top {
+        display: inline-flex !important;
+        width: auto !important;
+        max-width: 100% !important;
+    }
+    #academico {
+        padding: 16px 12px !important;
+    }
+    #academico > div {
+        padding: 16px !important;
+    }
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .metrics {
+        grid-template-columns: 1fr !important;
+    }
+    .product-filter {
+        flex: 1 1 100% !important;
+    }
+    .brand-logo {
+        width: min(180px, 70vw) !important;
+    }
+}

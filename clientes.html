@@ -76,10 +76,137 @@
             background: rgba(0,168,255,.12); color: #fff; font-size: 17px;
             font-weight: 700; cursor: pointer; border-radius: 8px;
         }
+        /* Organización móvil — sin cambiar tamaños de letra */
         @media (max-width: 850px) {
-            .client-side { position: relative; width: 100%; height: auto; }
-            .client-main { margin-left: 0; }
-            .client-shell { flex-direction: column; }
+            .client-shell {
+                flex-direction: column !important;
+                overflow-x: hidden;
+            }
+            .client-side {
+                position: relative !important;
+                width: 100% !important;
+                height: auto !important;
+                padding: 14px 14px 10px !important;
+                border-right: none !important;
+                border-bottom: 1px solid rgba(255,255,255,.1);
+            }
+            .client-side .brand-logo {
+                width: 160px !important;
+                max-width: 55vw !important;
+                display: block;
+                margin: 0 auto 8px;
+            }
+            .client-nav {
+                display: flex !important;
+                flex-direction: row !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                gap: 6px !important;
+                padding: 8px 0 10px !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .client-nav::-webkit-scrollbar { display: none; }
+            .client-nav a, .nav-link {
+                flex: 0 0 auto !important;
+                white-space: nowrap !important;
+                padding: 10px 14px !important;
+                margin: 0 !important;
+                border-radius: 10px !important;
+            }
+            .client-main {
+                margin-left: 0 !important;
+                padding: 14px 12px 28px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .client-top {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 10px !important;
+            }
+            .social-bar {
+                display: grid !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 8px !important;
+                width: 100% !important;
+            }
+            .social-btn {
+                justify-content: center !important;
+                text-align: center !important;
+                padding: 12px 8px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .section-block {
+                padding: 16px 14px !important;
+                margin-bottom: 14px !important;
+            }
+            .products-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 12px !important;
+            }
+            .products-filters {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
+            }
+            .products-filters .product-filter,
+            .product-filter {
+                flex: 1 1 auto !important;
+                min-width: calc(50% - 8px) !important;
+                text-align: center !important;
+            }
+            .products-grid {
+                display: grid !important;
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
+            }
+            .product-card {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+            .product-image {
+                min-height: 160px !important;
+            }
+            .dates-box {
+                text-align: center;
+                margin-top: 10px;
+            }
+            .session-exit {
+                width: 100% !important;
+                justify-content: center !important;
+                box-sizing: border-box !important;
+            }
+            .academic-box, .author-box, .refs-box, .download-box {
+                padding: 14px !important;
+            }
+            .download-box a {
+                display: block !important;
+                width: 100% !important;
+                text-align: center !important;
+                margin: 6px 0 !important;
+                box-sizing: border-box !important;
+            }
+            img {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .social-bar {
+                grid-template-columns: 1fr !important;
+            }
+            .products-filters .product-filter,
+            .product-filter {
+                min-width: 100% !important;
+            }
+            .client-side .brand-logo {
+                width: 140px !important;
+            }
         }
     
         /* Tipografía clientes: PC normal, cel un poco más grande */
