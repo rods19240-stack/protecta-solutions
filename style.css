@@ -6306,7 +6306,7 @@ footer strong {
 
     .products-grid {
 
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr 1fr !important;
 
     }
 
@@ -7175,8 +7175,12 @@ button, .btn, .primary-button, .secondary-button,
         text-align: center !important;
     }
     .products-grid {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 12px !important;
+    }
+    .catalog-panel .products-grid,
+    #categoryCatalog .products-grid {
         grid-template-columns: 1fr !important;
-        gap: 14px !important;
     }
     .product-card {
         width: 100% !important;

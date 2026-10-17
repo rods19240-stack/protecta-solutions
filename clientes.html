@@ -76,6 +76,28 @@
             background: rgba(0,168,255,.12); color: #fff; font-size: 17px;
             font-weight: 700; cursor: pointer; border-radius: 8px;
         }
+        .btn-ver-catalogos {
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto 16px;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 1px solid rgba(0,168,255,.45);
+            background: rgba(0,168,255,.15);
+            color: #fff;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .btn-ver-catalogos:hover {
+            background: rgba(0,168,255,.28);
+        }
+        .products-grid.show-all {
+            /* marker class */
+        }
         /* Organización móvil — sin cambiar tamaños de letra */
         @media (max-width: 850px) {
             .client-shell {
@@ -161,8 +183,12 @@
             }
             .products-grid {
                 display: grid !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+            /* Cuando se abren los 10 productos de un catálogo, 1 por fila se lee mejor */
+            .catalog-panel .products-grid {
                 grid-template-columns: 1fr !important;
-                gap: 14px !important;
             }
             .product-card {
                 width: 100% !important;
@@ -326,7 +352,8 @@
                     <button class="product-filter" data-filter="technology" style="padding:8px 14px;cursor:pointer;">TECNOLOGÍA</button>
                     <button class="product-filter" data-filter="network" style="padding:8px 14px;cursor:pointer;">REDES</button>
                 </div>
-                <div class="products-grid"></div>
+                <button type="button" class="btn-ver-catalogos" id="btnVerCatalogos">VER CATÁLOGOS (9)</button>
+                <div class="products-grid" id="catalogosGrid"></div>
             </div>
         </section>
 
@@ -477,18 +504,38 @@
         URL.revokeObjectURL(url);
     });
 
+    var catalogosExpanded = false;
+    var PREVIEW_COUNT = 3;
+
+    function paintCatalogos(expanded) {
+        if (!window.ProtectaCatalog) return;
+        var section = document.getElementById('productosSection');
+        if (!section) return;
+        var grid = section.querySelector('.products-grid') || document.getElementById('catalogosGrid');
+        if (!grid) return;
+        var data = window.ProtectaCatalog.load();
+        var list = expanded ? data : data.slice(0, PREVIEW_COUNT);
+        grid.innerHTML = list.map(function (cat) {
+            return window.ProtectaCatalog.buildCategoryCardHTML(cat, 'es', { editable: false });
+        }).join('');
+        grid.classList.toggle('show-all', !!expanded);
+        var counter = document.getElementById('productCount');
+        if (counter) counter.textContent = String(list.length).padStart(2, '0');
+        var btn = document.getElementById('btnVerCatalogos');
+        if (btn) {
+            btn.textContent = expanded ? 'MOSTRAR SOLO 3' : 'VER CATÁLOGOS (9)';
+            btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        }
+        catalogosExpanded = !!expanded;
+    }
+
     function renderProducts() {
         if (!window.ProtectaCatalog) return;
         var section = document.getElementById('productosSection');
-        var grid = section.querySelector('.products-grid');
+        if (!section) return;
         window.ProtectaCatalog.applyToDOM('es');
-        // Force fill this grid
-        var data = window.ProtectaCatalog.load();
-        grid.innerHTML = data.map(function (cat) {
-            return window.ProtectaCatalog.buildCategoryCardHTML(cat, 'es', { editable: false });
-        }).join('');
-        var counter = document.getElementById('productCount');
-        if (counter) counter.textContent = String(data.length).padStart(2, '0');
+        paintCatalogos(catalogosExpanded);
+        var grid = section.querySelector('.products-grid') || document.getElementById('catalogosGrid');
 
         // Open catalog
         if (section.dataset.bound !== '1') {
@@ -556,6 +603,27 @@
             };
         });
     }
+
+
+    var btnCat = document.getElementById('btnVerCatalogos');
+    if (btnCat && !btnCat.dataset.bound) {
+        btnCat.dataset.bound = '1';
+        btnCat.addEventListener('click', function () {
+            paintCatalogos(!catalogosExpanded);
+            var sec = document.getElementById('productos');
+            if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
+    // Al ir a Productos desde el menú, enfocamos catálogos
+    document.querySelectorAll('.nav-link[data-section="productos"]').forEach(function (a) {
+        a.addEventListener('click', function () {
+            setTimeout(function () {
+                var target = document.getElementById('btnVerCatalogos') || document.getElementById('productos');
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 80);
+        });
+    });
 
     // Hash
     if (location.hash === '#productos') showSection('productos');
