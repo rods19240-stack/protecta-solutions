@@ -41,7 +41,7 @@
         }
         .social-btn.fb { background: #1877f2; }
         .social-btn.ig { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
-        .social-btn.wa { background: #25d366; color: #062; }
+        .social-btn.wa { background: #25d366; color: #fff; }
         .social-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
         .section-block {
             display: none; background: rgba(8,14,24,.85); border: 1px solid rgba(0,168,255,.15);
@@ -75,6 +75,32 @@
             padding: 12px 18px; border: 1px solid rgba(0,168,255,.45);
             background: rgba(0,168,255,.12); color: #fff; font-size: 17px;
             font-weight: 700; cursor: pointer; border-radius: 8px;
+        }
+        .product-card.catalog-compact {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+        .product-card.catalog-compact .product-image {
+            min-height: 120px;
+            height: 140px;
+            flex-shrink: 0;
+        }
+        .product-card.catalog-compact .product-info-compact {
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .product-card.catalog-compact .product-info-compact h3 {
+            margin: 0;
+            font-size: 15px !important;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .product-card.catalog-compact .product-photo-img {
+            opacity: 0.75;
         }
         .btn-ver-catalogos {
             display: block;
@@ -515,8 +541,12 @@
         if (!grid) return;
         var data = window.ProtectaCatalog.load();
         var list = expanded ? data : data.slice(0, PREVIEW_COUNT);
+        var isMobile = window.matchMedia('(max-width: 850px)').matches;
         grid.innerHTML = list.map(function (cat) {
-            return window.ProtectaCatalog.buildCategoryCardHTML(cat, 'es', { editable: false });
+            return window.ProtectaCatalog.buildCategoryCardHTML(cat, 'es', {
+                editable: false,
+                compact: true
+            });
         }).join('');
         grid.classList.toggle('show-all', !!expanded);
         var counter = document.getElementById('productCount');
@@ -604,6 +634,20 @@
         });
     }
 
+
+
+    var catalogMobileMq = window.matchMedia('(max-width: 850px)');
+    function onCatalogLayoutChange() {
+        var sec = document.getElementById('productos');
+        if (sec && sec.classList.contains('active')) {
+            paintCatalogos(catalogosExpanded);
+        }
+    }
+    if (catalogMobileMq.addEventListener) {
+        catalogMobileMq.addEventListener('change', onCatalogLayoutChange);
+    } else if (catalogMobileMq.addListener) {
+        catalogMobileMq.addListener(onCatalogLayoutChange);
+    }
 
     var btnCat = document.getElementById('btnVerCatalogos');
     if (btnCat && !btnCat.dataset.bound) {
