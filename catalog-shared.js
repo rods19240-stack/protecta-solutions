@@ -372,8 +372,8 @@
     function buildCategoryCardHTML(cat, lang, options) {
         lang = lang || "es";
         options = options || {};
-        const title = lang === "en" ? cat.titleEn : cat.title;
-        const desc = lang === "en" ? cat.descEn : cat.desc;
+        const title = lang === "en" ? (cat.titleEn || cat.title) : cat.title;
+        const desc = lang === "en" ? (cat.descEn || cat.desc) : cat.desc;
         const count = (cat.items && cat.items.length) || 0;
         const photo = cat.image
             ? '<img class="product-photo-img" src="' + cat.image + '" alt="">'
@@ -383,9 +383,22 @@
         const editBtn = options.editable
             ? '<button type="button" class="product-edit-btn" data-edit-code="' + cat.code + '">EDITAR</button>'
             : "";
-        const actionLabel = options.editable
-            ? (lang === "en" ? "VIEW CATALOG" : "VER CATÁLOGO")
-            : (lang === "en" ? "VIEW CATALOG" : "VER CATÁLOGO");
+        const actionLabel = (lang === "en" ? "VIEW CATALOG" : "VER CATÁLOGO");
+
+        // Compact: solo imagen + nombre (más espacio, no se estira)
+        if (options.compact) {
+            return (
+                '<article class="product-card catalog-compact' + hasPhoto + noScanCls + '" data-category="' + (cat.filter || "technology") + '" data-code="' + cat.code + '">' +
+                '<div class="product-image">' +
+                photo +
+                '<div class="product-image-grid"></div>' +
+                editBtn +
+                '</div>' +
+                '<div class="product-info product-info-compact">' +
+                '<h3>' + title + '</h3>' +
+                '</div></article>'
+            );
+        }
 
         return (
             '<article class="product-card' + hasPhoto + noScanCls + '" data-category="' + (cat.filter || "technology") + '" data-code="' + cat.code + '">' +
@@ -492,7 +505,7 @@
             }
 
             grid.innerHTML = data.map(function (cat) {
-                return buildCategoryCardHTML(cat, lang, { editable: editable });
+                return buildCategoryCardHTML(cat, lang, { editable: editable, compact: true });
             }).join("");
         });
 

@@ -41,7 +41,7 @@
         }
         .social-btn.fb { background: #1877f2; }
         .social-btn.ig { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
-        .social-btn.wa { background: #25d366; color: #fff; }
+        .social-btn.wa { background: #25d366; color: #062; }
         .social-btn:hover { transform: translateY(-2px); filter: brightness(1.08); }
         .section-block {
             display: none; background: rgba(8,14,24,.85); border: 1px solid rgba(0,168,255,.15);
@@ -293,6 +293,119 @@
                 padding: 0.7em 0.9em !important;
             }
         }
+
+        /* Catálogo abierto: igual que Empresa (se oculta la lista y solo se ve el catálogo) */
+        .products-section.catalog-open > .products-grid,
+        .products-section.catalog-open > .products-filters,
+        .products-section.catalog-open > .btn-ver-catalogos {
+            display: none !important;
+        }
+
+        /* ===== Asistente IA ===== */
+        .ai-box { display: flex; gap: 10px; margin: 16px 0 10px; align-items: stretch; }
+        .ai-box textarea {
+            flex: 1; resize: vertical; min-height: 56px; padding: 12px 14px;
+            background: rgba(0,0,0,.35); border: 1px solid rgba(0,168,255,.3);
+            border-radius: 10px; color: #fff; font-family: inherit; font-size: 16px; outline: none;
+        }
+        .ai-box textarea:focus { border-color: rgba(0,168,255,.7); box-shadow: 0 0 0 3px rgba(0,168,255,.12); }
+        .ai-send {
+            padding: 0 22px; border: none; border-radius: 10px; cursor: pointer;
+            background: linear-gradient(135deg,#123bff,#00a8ff); color: #fff;
+            font-weight: 700; font-size: 16px; font-family: inherit;
+        }
+        .ai-send:disabled { opacity: .6; cursor: wait; }
+        .ai-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .ai-chip {
+            padding: 8px 12px; border-radius: 999px; cursor: pointer; font-family: inherit;
+            border: 1px solid rgba(0,168,255,.35); background: rgba(0,168,255,.08);
+            color: #cfe9ff; font-size: 14px;
+        }
+        .ai-chip:hover { background: rgba(0,168,255,.2); }
+        .ai-msg {
+            background: rgba(0,20,40,.55); border: 1px solid rgba(0,168,255,.25);
+            border-radius: 12px; padding: 14px 16px; margin: 10px 0 16px;
+        }
+        .ai-msg-tag { color: #7dd3ff; font-size: 14px; letter-spacing: 1px; margin-bottom: 6px; }
+        .ai-msg p { margin: 0; color: #e8eef7; font-size: 17px; line-height: 1.55; }
+        .ai-note { display: block; margin-top: 8px; color: #8b97a8; }
+        .ai-subtitle { color: #fff; font-size: 18px; margin: 18px 0 10px; }
+        .ai-prod-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; }
+        .ai-prod {
+            display: flex; flex-direction: column; gap: 6px; padding: 14px; cursor: pointer;
+            background: rgba(255,255,255,.03); border: 1px solid rgba(0,168,255,.2);
+            border-radius: 12px; transition: .2s;
+        }
+        .ai-prod:hover { border-color: rgba(0,168,255,.6); transform: translateY(-2px); }
+        .ai-prod strong { color: #fff; font-size: 16px; }
+        .ai-prod span { color: #b7c2d0; font-size: 15px; }
+        .ai-prod small { color: #7dd3ff; font-size: 13px; }
+        .ai-prod-btn {
+            margin-top: 4px; align-self: flex-start; background: transparent; border: none;
+            color: #7dd3ff; font-weight: 700; cursor: pointer; font-family: inherit; font-size: 14px; padding: 0;
+        }
+        .ai-contact { color: #9aa6b8; font-size: 15px; margin-top: 16px; }
+        .ai-contact a { color: #7dd3ff; }
+        .ai-disclaimer { color: #6f7a8c !important; font-size: 13px !important; margin-top: 18px; }
+        .ai-cats .product-card { cursor: pointer; }
+        .ai-loading { color: #9aa6b8; display: flex; align-items: center; gap: 8px; }
+        .ai-loading span {
+            width: 8px; height: 8px; border-radius: 50%; background: #00a8ff;
+            animation: aiDot 1s infinite ease-in-out;
+        }
+        .ai-loading span:nth-child(2) { animation-delay: .15s; }
+        .ai-loading span:nth-child(3) { animation-delay: .3s; }
+        @keyframes aiDot { 0%,80%,100% { opacity: .25; transform: scale(.8); } 40% { opacity: 1; transform: scale(1.1); } }
+        @media (max-width: 850px) {
+            .ai-box { flex-direction: column; }
+            .ai-send { padding: 12px !important; }
+            .ai-prod-grid { grid-template-columns: 1fr; }
+            .ai-chip { font-size: 15px !important; width: auto !important; padding: 8px 12px !important; }
+            .ai-prod-btn { width: auto !important; padding: 0 !important; }
+        }
+
+        /* ===== Detalle de producto (modal) ===== */
+        #categoryCatalog .product-card[data-item-index] { cursor: pointer; }
+        .pm-overlay {
+            position: fixed; inset: 0; z-index: 100000; display: none;
+            align-items: center; justify-content: center; padding: 16px;
+            background: rgba(5,7,13,.85); backdrop-filter: blur(8px);
+        }
+        .pm-overlay.open { display: flex; }
+        .pm-panel {
+            position: relative; width: 100%; max-width: 560px; max-height: 92vh; overflow-y: auto;
+            background: #0b0f18; border: 1px solid rgba(0,168,255,.35); border-radius: 14px;
+            box-shadow: 0 0 50px rgba(0,168,255,.15), 0 30px 60px rgba(0,0,0,.5);
+        }
+        .pm-img { position: relative; height: 280px; background: #080c15; overflow: hidden; border-radius: 14px 14px 0 0; }
+        .pm-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .pm-img::after {
+            content: ""; position: absolute; inset: 0;
+            background: linear-gradient(180deg, transparent 55%, #0b0f18);
+        }
+        .pm-close {
+            position: absolute; top: 10px; right: 10px; z-index: 3;
+            width: 40px !important; height: 40px !important; min-height: 0 !important;
+            padding: 0 !important; border-radius: 50%; cursor: pointer;
+            border: 1px solid rgba(255,255,255,.25); background: rgba(5,7,13,.75);
+            color: #fff; font-size: 22px !important; line-height: 1 !important;
+        }
+        .pm-body { padding: 4px 22px 22px; }
+        .pm-cat { color: #7dd3ff; font-size: 14px; letter-spacing: 1px; margin-bottom: 6px; }
+        .pm-code { color: #657083; font-size: 13px; letter-spacing: 1px; margin-bottom: 10px; }
+        .pm-name { color: #fff; font-size: 26px; line-height: 1.25; margin: 0 0 12px; }
+        .pm-desc { color: #b7c2d0; font-size: 17px; line-height: 1.6; margin: 0 0 20px; }
+        .pm-wa {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 14px 18px; border-radius: 10px; text-decoration: none;
+            background: #25d366; color: #fff !important; font-weight: 700; font-size: 17px;
+        }
+        .pm-wa:hover { filter: brightness(1.08); }
+        .pm-hint { color: #6f7a8c; font-size: 13px; margin: 10px 0 0; text-align: center; }
+        @media (max-width: 850px) {
+            .pm-img { height: 220px; }
+            .pm-name { font-size: 22px !important; }
+        }
 </style>
 </head>
 <body>
@@ -306,6 +419,7 @@
         <nav class="client-nav">
             <a href="#inicio" class="nav-link active" data-section="inicio">⌂ Inicio</a>
             <a href="#productos" class="nav-link" data-section="productos">▣ Mis Productos</a>
+            <a href="#asistente" class="nav-link" data-section="asistente">✦ Asistente IA</a>
             <a href="#autor" class="nav-link" data-section="autor">👤 Autoría</a>
             <a href="#objetivo" class="nav-link" data-section="objetivo">◎ Objetivo</a>
             <a href="#referencias" class="nav-link" data-section="referencias">▦ Referencias</a>
@@ -383,6 +497,19 @@
             </div>
         </section>
 
+        <!-- ASISTENTE IA -->
+        <section id="asistente" class="section-block">
+            <h2>✦ ¿Qué estás buscando?</h2>
+            <p>Cuéntanos con tus palabras lo que necesitas y nuestro asistente te recomendará los catálogos y productos que mejor se adaptan.</p>
+            <div class="ai-box">
+                <textarea id="aiInput" rows="2" maxlength="300" placeholder="Ej: Necesito cámaras para vigilar mi negocio y que pueda verlas desde el celular..."></textarea>
+                <button type="button" id="aiEnviar" class="ai-send">Buscar</button>
+            </div>
+            <div class="ai-chips" id="aiChips"></div>
+            <div id="aiResultados"></div>
+            <p class="ai-disclaimer">Las respuestas son generadas por inteligencia artificial y pueden contener errores. Confirma los detalles con nosotros.</p>
+        </section>
+
         <!-- AUTORÍA -->
         <section id="autor" class="section-block">
             <h2>Autoría del sitio</h2>
@@ -401,7 +528,7 @@
             <div class="author-box">
                 <h3>Información de contacto</h3>
                 <p style="margin:0;color:#b7c2d0;">
-                    Correo académico: <a href="mailto:protecta.proyecto@escuela.edu" style="color:#7dd3ff;">protecta.proyecto@escuela.edu</a><br>
+                    Correo: <a href="mailto:global@protectasolutions.net?subject=Contacto%20desde%20el%20portal%20cliente" style="color:#7dd3ff;">global@protectasolutions.net</a><br>
                     WhatsApp escolar / demo: <a href="https://wa.me/qr/2MJRS5OEYLBPH1" style="color:#7dd3ff;" target="_blank" rel="noopener">+52 1 000 000 0000</a><br>
                     Redes: usa los botones de Facebook, Instagram y WhatsApp en la barra superior.
                 </p>
@@ -477,7 +604,7 @@
             </div>
             <div class="author-box">
                 <p style="margin:0;color:#b7c2d0;">
-                    Correo: <a href="mailto:protecta.proyecto@escuela.edu" style="color:#7dd3ff;">protecta.proyecto@escuela.edu</a><br>
+                    Correo: <a href="mailto:global@protectasolutions.net?subject=Contacto%20desde%20el%20portal%20cliente" style="color:#7dd3ff;">global@protectasolutions.net</a><br>
                     Fecha de creación: <strong>02 de octubre de 2026</strong><br>
                     Última actualización: <strong>14 de octubre de 2026</strong>
                 </p>
@@ -487,6 +614,7 @@
 </div>
 
 <script src="catalog-shared.js"></script>
+<script src="ai-asistente.js"></script>
 <script>
 (function () {
     function showSection(id) {
@@ -545,7 +673,7 @@
         grid.innerHTML = list.map(function (cat) {
             return window.ProtectaCatalog.buildCategoryCardHTML(cat, 'es', {
                 editable: false,
-                compact: true
+                compact: isMobile
             });
         }).join('');
         grid.classList.toggle('show-all', !!expanded);
@@ -592,7 +720,7 @@
                 var list = items.map(function (item, i) {
                     var n = String(i + 1).padStart(2, '0');
                     var img = full.image ? '<img class="product-photo-img" src="' + full.image + '" alt="">' : '';
-                    return '<article class="product-card has-photo">' +
+                    return '<article class="product-card has-photo" data-parent-code="' + code + '" data-item-index="' + i + '">' +
                         '<div class="product-image">' + img +
                         '<div class="product-image-grid"></div>' +
                         '<div class="product-placeholder"><span class="product-code">' + code + '-' + n + '</span>' +
@@ -608,11 +736,13 @@
                     '<button type="button" class="catalog-close" id="catalogCloseBtn">← VOLVER A CATÁLOGOS</button></div>' +
                     '<div class="products-grid">' + list + '</div>';
                 panel.classList.add('open');
+                setTimeout(function () { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 60);
                 document.getElementById('catalogCloseBtn').onclick = function () {
                     panel.classList.remove('open');
                     panel.innerHTML = '';
                     section.classList.remove('catalog-open');
                     document.querySelectorAll('.catalog-active').forEach(function (c) { c.classList.remove('catalog-active'); });
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 };
             });
         }
@@ -635,6 +765,86 @@
     }
 
 
+
+    // ===== Detalle de producto =====
+    var WA_PHONE = '527751838493'; // WhatsApp de Protecta (+52 775 183 8493)
+    var pmModal = null;
+
+    function ensurePmModal() {
+        if (pmModal) return pmModal;
+        pmModal = document.createElement('div');
+        pmModal.className = 'pm-overlay';
+        pmModal.innerHTML =
+            '<div class="pm-panel" role="dialog" aria-modal="true">' +
+            '<button type="button" class="pm-close" aria-label="Cerrar">×</button>' +
+            '<div class="pm-img"><img id="pmImg" alt=""></div>' +
+            '<div class="pm-body">' +
+            '<div class="pm-cat" id="pmCat"></div>' +
+            '<div class="pm-code" id="pmCode"></div>' +
+            '<h3 class="pm-name" id="pmName"></h3>' +
+            '<p class="pm-desc" id="pmDesc"></p>' +
+            '<a class="pm-wa" id="pmWa" target="_blank" rel="noopener">Más detalles por WhatsApp</a>' +
+            '<p class="pm-hint">Se abrirá un chat con nuestro personal con este producto ya mencionado.</p>' +
+            '</div></div>';
+        document.body.appendChild(pmModal);
+        pmModal.addEventListener('click', function (e) {
+            if (e.target === pmModal || e.target.closest('.pm-close')) cerrarProducto();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') cerrarProducto();
+        });
+        return pmModal;
+    }
+
+    function cerrarProducto() {
+        if (!pmModal) return;
+        pmModal.classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    window.protectaVerProducto = function (code, idx) {
+        if (!window.ProtectaCatalog) return;
+        var cat = window.ProtectaCatalog.getByCode(code);
+        if (!cat || !cat.items || !cat.items[idx]) return;
+        var it = cat.items[idx];
+        var itemCode = code + '-' + String(idx + 1).padStart(2, '0');
+        var m = ensurePmModal();
+
+        var img = m.querySelector('#pmImg');
+        if (cat.image) { img.src = cat.image; img.parentNode.style.display = ''; }
+        else { img.removeAttribute('src'); img.parentNode.style.display = 'none'; }
+        img.alt = it[0] || '';
+
+        m.querySelector('#pmCat').textContent = 'Catálogo: ' + cat.title;
+        m.querySelector('#pmCode').textContent = itemCode;
+        m.querySelector('#pmName').textContent = it[0] || '';
+        m.querySelector('#pmDesc').textContent = it[1] || 'Sin descripción disponible.';
+
+        var msg = 'Hola, me interesa el producto "' + (it[0] || '') + '" (código ' + itemCode +
+            ') del catálogo "' + cat.title + '". ¿Me pueden dar más información?';
+        m.querySelector('#pmWa').href = 'https://wa.me/' + WA_PHONE + '?text=' + encodeURIComponent(msg);
+
+        m.classList.add('open');
+        document.body.style.overflow = 'hidden';
+    };
+
+    // Clic en un producto dentro del catálogo abierto → muestra su detalle
+    document.addEventListener('click', function (e) {
+        var card = e.target.closest('#categoryCatalog .product-card[data-item-index]');
+        if (!card) return;
+        var code = card.getAttribute('data-parent-code');
+        var idx = parseInt(card.getAttribute('data-item-index'), 10);
+        if (code && !isNaN(idx)) window.protectaVerProducto(code, idx);
+    });
+
+    // Lo usa el Asistente IA: va a Mis Productos y abre ese catálogo
+    window.protectaAbrirCatalogo = function (code) {
+        showSection('productos');
+        paintCatalogos(true);
+        var g = document.getElementById('catalogosGrid');
+        var card = g && g.querySelector('.product-card[data-code="' + code + '"]');
+        if (card) card.click();
+    };
 
     var catalogMobileMq = window.matchMedia('(max-width: 850px)');
     function onCatalogLayoutChange() {
